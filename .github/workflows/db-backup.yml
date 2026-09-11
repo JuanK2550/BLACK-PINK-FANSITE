@@ -1,0 +1,99 @@
+name: Copia de seguridad de la base
+
+# Cron diario que vuelca la base de producción entera —los tres esquemas:
+# content, media y chat— y la guarda como artefacto cifrado.
+#
+# PG_DUMP DE LA MISMA VERSIÓN QUE EL SERVIDOR. Se ejecuta dentro de la imagen
+# oficial `postgres:16-alpine` en vez del pg_dump que traiga el runner: un
+# pg_dump más viejo que el servidor se niega a volcar, y uno más nuevo produce
+# un archivo que el servidor no sabe restaurar. Es la misma regla que sigue
+# `infra/scripts/db-backup.mjs` en local.
+#
+# CIFRADO SIMÉTRICO CON GPG, SIEMPRE. Los artefactos de un repositorio los
+# puede descargar cualquiera con acceso de lectura, y un volcado sin cifrar
+# es la base entera en un zip. Sin BACKUP_PASSPHRASE el workflow FALLA en vez
+# de subir la copia en claro: una copia que no se debe publicar no se publica.
+#
+# 30 días de retención. Para restaurar:
+#   gpg -d blackpink-AAAAMMDD.dump.gpg > blackpink.dump
+#   pg_restore --clean --if-exists -d "$DATABASE_URL" blackpink.dump
+#
+# Secretos:
+#   DATABASE_URL_PROD    URL de conexión a la base (sin ?schema: se vuelcan todos)
+#   BACKUP_PASSPHRASE    frase para cifrar el volcado
+
+on:
+  schedule:
+    # Todos los días a las 03:17 UTC: la hora de menos visitas en Europa y
+    # América a la vez, y minuto impar para no caer en la cola de las en punto.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  volcar:
+    name: pg_dump cifrado
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Comprobar secretos
+        env:
+          URL: ${{ secrets.DATABASE_URL_PROD }}
+          FRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::Falta DATABASE_URL_PROD."
+            exit 1
+          fi
+          if [ -z "$FRASE" ]; then
+            echo "::error::Falta BACKUP_PASSPHRASE. No se sube una copia de la base sin cifrar."
+            exit 1
+          fi
+
+      - name: Volcar
+        env:
+          URL: ${{ secrets.DATABASE_URL_PROD }}
+        run: |
+          # Prisma añade `?schema=content` a sus URL; pg_dump no lo entiende y
+          # además aquí se quiere la base ENTERA, así que se quita.
+          url="${URL%%\?*}"
+          fecha=$(date -u +%Y%m%d)
+          echo "FECHA=$fecha" >> "$GITHUB_ENV"
+          docker run --rm --network host -v "$PWD:/copia" postgres:16-alpine \
+            pg_dump --format=custom --no-owner --no-privileges \
+            --file="/copia/blackpink-${fecha}.dump" "$url"
+          ls -lh "blackpink-${fecha}.dump"
+
+      # Una copia que no se puede restaurar no es una copia. `pg_restore --list`
+      # lee el índice del archivo entero: si el volcado está truncado, falla aquí
+      # y no el día que haga falta.
+      - name: Comprobar que el volcado se puede leer
+        run: |
+          docker run --rm -v "$PWD:/copia" postgres:16-alpine \
+            pg_restore --list "/copia/blackpink-${FECHA}.dump" | tail -5
+
+      - name: Cifrar
+        env:
+          FRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$FRASE" \
+            --symmetric --cipher-algo AES256 \
+            --output "blackpink-${FECHA}.dump.gpg" "blackpink-${FECHA}.dump"
+          # El volcado en claro no sobrevive al paso siguiente.
+          shred -u "blackpink-${FECHA}.dump"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blackpink-${{ env.FECHA }}
+          path: blackpink-${{ env.FECHA }}.dump.gpg
+          retention-days: 30
+          # Ya está cifrado y comprimido por pg_dump: comprimirlo otra vez
+          # solo gasta tiempo.
+          compression-level: 0

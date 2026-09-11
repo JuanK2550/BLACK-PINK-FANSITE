@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/*.log
+.git
+.github
+.husky
+.env
+.env.*
+!.env.example
+infra/postgres/data
+README.md

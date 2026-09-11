@@ -1,0 +1,46 @@
+# Solo las dependencias de datos (Postgres + Redis).
+# Pensado para el dia a dia: los servicios se ejecutan en local con `pnpm dev`
+# y hablan con estos dos contenedores.
+#
+#   pnpm docker:up:deps
+
+name: blackpink-fansite-deps
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: bp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-blackpink}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blackpink_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-blackpink}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - bp-postgres-data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-blackpink} -d ${POSTGRES_DB:-blackpink}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: bp-redis
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - bp-redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  bp-postgres-data:
+  bp-redis-data:

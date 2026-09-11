@@ -1,0 +1,68 @@
+name: Lighthouse
+
+# Audita rendimiento, accesibilidad, buenas prácticas y SEO en cada pull
+# request, con un presupuesto mínimo de 90 en cada categoría. Seis páginas,
+# tres pasadas cada una, y se toma la MEDIANA: una sola pasada en un runner
+# compartido no distingue una regresión de un vecino ruidoso (medido en local:
+# la misma página dio de 36 a 71 con el mismo build).
+#
+# DOS PERFILES, Y NO SON LO MISMO:
+#
+#   ESCRITORIO (lighthouserc.desktop.json): las cuatro categorías BLOQUEAN por
+#   debajo de 90. Medido antes de fijarlo: rendimiento 95–99, el resto 100.
+#
+#   MÓVIL (lighthouserc.json): accesibilidad, buenas prácticas y SEO BLOQUEAN
+#   por debajo de 90. El RENDIMIENTO AVISA pero no bloquea, y no es un
+#   descuido: da 57–78 por una causa ya medida y documentada en CLAUDE.md
+#   (Fase 12C) —221 KB de reglas @font-face de Noto Sans KR bloqueando el
+#   primer pintado en los tres idiomas—. Bloquear por ella haría fallar TODOS
+#   los pull requests por algo que ninguno de ellos ha causado, y un check que
+#   siempre falla se acaba ignorando. En cuanto se subsetee la fuente, se
+#   cambia "warn" por "error" en lighthouserc.json y el presupuesto queda
+#   completo.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    name: Lighthouse (móvil y escritorio, mínimo 90)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Levantar la pila
+        uses: ./.github/actions/levantar-pila
+
+      - name: Lighthouse — escritorio
+        run: pnpm dlx @lhci/cli@0.15 autorun --config=lighthouserc.desktop.json
+        env:
+          # Con el token de la app de Lighthouse CI el resultado aparece como
+          # check en el pull request. Sin él, el workflow funciona igual.
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Lighthouse — móvil
+        if: ${{ !cancelled() }}
+        run: pnpm dlx @lhci/cli@0.15 autorun --config=lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Informes de Lighthouse
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          # Cada `autorun` vacía .lighthouseci al empezar: los informes van a su
+          # propia carpeta por perfil, o el segundo borraría el primero.
+          path: lighthouse-informes/
+          retention-days: 14

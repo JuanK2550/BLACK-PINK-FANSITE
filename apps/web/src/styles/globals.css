@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+@import '@blackpink/config/tailwind/theme.css';
+/*
+ * Los estilos propios de packages/ui. Sin esta linea el fichero existia, se
+ * exportaba en su package.json y NO LO IMPORTABA NADIE: las clases que define
+ * -los puntos de "escribiendo" del chat, la animacion del avatar, la pieza de
+ * carga- salian sin ningun estilo y el fallo era invisible, porque un elemento
+ * sin clase aplicada no da error, simplemente no se mueve.
+ */
+@import '@blackpink/ui/styles.css';
+
+/* Tailwind v4 escanea el proyecto automaticamente; packages/ui queda fuera de
+   apps/web, asi que lo declaramos como fuente adicional de clases. */
+@source '../../../../packages/ui/src';
+
+/* La variante dark: se ata al atributo, no a prefers-color-scheme:
+   el tema oscuro es el defecto y el claro es una eleccion explicita. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@layer base {
+  html {
+    /* Bloquea el rebote horizontal en moviles estrechos (320px). */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    /* El header sticky no debe tapar el destino de un ancla. */
+    scroll-padding-top: calc(var(--spacing-header-lg) + 1rem);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ------------------------------------------------------------------------
+     HANGUL
+     ------------------------------------------------------------------------
+     El coreano no puede parecer un idioma de segunda. Tres ajustes, y ninguno
+     es cosmetico:
+
+     1. FAMILIA. Syne no tiene glifos hangul. Sin esto el navegador elegiria un
+        respaldo cualquiera del sistema y el coreano se veria de otro sitio.
+
+     2. INTERLINEADO. El hangul necesita mas aire que el latino al mismo tamano:
+        cada bloque silabico es una rejilla de dos o tres partes apiladas, asi
+        que a 1.5 el texto se lee apretado aunque en espanol resulte comodo.
+
+     3. QUIEBRE DE LINEA. `keep-all` impide partir una palabra coreana por la
+        mitad. El navegador, por defecto, puede cortar entre dos silabas
+        cualesquiera del hangul -no hay guion que lo delate-, y el resultado es
+        una palabra partida sin ninguna senal de que lo esta.
+     ------------------------------------------------------------------------ */
+  :lang(ko) {
+    font-family: var(--font-kr);
+    line-height: 1.75;
+    word-break: keep-all;
+    /* Red de seguridad de `keep-all`: una cadena larga sin espacios -una URL,
+       un nombre latino dentro de un texto coreano- ya no puede partirse por
+       silabas, asi que sin esto desbordaria su caja y el cuerpo de la pagina
+       acabaria con scroll horizontal, que es una regla dura del sistema. */
+    overflow-wrap: anywhere;
+  }
+
+  /* Los interlineados de la escala display estan calculados para MAYUSCULAS
+     LATINAS, que ocupan alrededor del 70% de la caja em. El hangul la llena
+     casi entera, asi que a 0.95 o 1.05 las lineas de un titular coreano se
+     tocan y en dos lineas llegan a solaparse.
+
+     Se sube el minimo a 1.2 para cualquier titular en coreano. No es el mismo
+     valor que el cuerpo (1.75): un titular sigue queriendo ir compacto, solo
+     que su compacto no es el del alfabeto latino. */
+  :lang(ko) :is(h1, h2, h3, .font-display),
+  :is(h1, h2, h3, .font-display):lang(ko) {
+    line-height: 1.2;
+    /* El tracking negativo de la display (hasta -0.04em) junta los bloques
+       silabicos hasta emborronar el limite entre uno y otro. En hangul el
+       espacio entre bloques es lo que hace legible la palabra. */
+    letter-spacing: 0;
+  }
+
+  /* `text-wrap: balance` reparte las lineas de un titular contando palabras.
+     Con `keep-all`, una frase coreana tiene muy pocos puntos de corte, asi que
+     el balanceo produce una primera linea larguisima y una segunda de una sola
+     palabra. Se deja que el navegador rompa donde puede. */
+  :lang(ko) .text-balance,
+  .text-balance:lang(ko) {
+    text-wrap: pretty;
+  }
+
+  /* --- Superficies del navegador ---
+     Seleccion, cursor, scrollbar, foco y subrayados vienen con estilos por
+     defecto que no pertenecen a ningun sistema de diseno. Se tematizan. */
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-fg);
+  }
+
+  :root {
+    caret-color: var(--color-accent);
+    scrollbar-color: var(--color-line-strong) transparent;
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-line-strong);
+    border: 3px solid var(--color-canvas);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-accent);
+  }
+
+  /* Un solo anillo de foco para todo el sitio, visible sobre cualquier fondo. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Cifras tabulares donde hay que comparar en vertical: anos de discografia,
+     fechas de cronologia, marcadores del quiz. */
+  time,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* El hangul y los signos coreanos no llevan mayusculas: uppercase no hace
+     nada visible pero si ensancha el tracking de forma extrana. */
+  :lang(ko) [data-uppercase] {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  [data-uppercase] {
+    text-transform: uppercase;
+  }
+}
+
+@layer utilities {
+  /* Corta el texto en el numero de lineas indicado. */
+  .bp-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  /*
+   * Titular display que CABE EN SU COLUMNA. La escala `text-5xl` crece con la
+   * ventana, no con la columna, y una palabra no se parte: «BLACKPINK» o
+   * «DEADLINE» se salían 120-390px por la derecha en la ficha de disco. El
+   * tamaño sale del ancho de la palabra más larga, en em (`--bp-title-em`, lo
+   * calcula `lib/display-fit.ts` con los anchos medidos de la fuente), contra
+   * el ancho del contenedor (`cqi`), y nunca pasa de la escala. El 1.04 es
+   * margen para el interletraje, que la suma letra a letra no ve.
+   */
+  .bp-fit-title {
+    font-size: min(var(--text-5xl), calc(100cqi / (var(--bp-title-em, 7) * 1.04)));
+    line-height: var(--text-5xl--line-height);
+    letter-spacing: var(--text-5xl--letter-spacing);
+  }
+}
+
+/* Movimiento reducido: se conservan opacidad y color, que ayudan a entender
+   lo que pasa; se elimina el desplazamiento, que es lo que marea. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

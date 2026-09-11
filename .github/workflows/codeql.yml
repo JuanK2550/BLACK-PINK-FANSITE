@@ -1,0 +1,59 @@
+name: CodeQL
+
+# Análisis estático de seguridad del código TypeScript y JavaScript: la web,
+# los cinco servicios, los paquetes y los scripts de infra.
+#
+# `security-extended` y no el conjunto por defecto: añade las consultas de
+# inyección y de manejo de secretos que más se parecen a los riesgos reales de
+# este proyecto —un gateway que reenvía rutas, un chatbot que mete texto de la
+# base en un prompt, un servicio que recibe audio de cualquiera—.
+#
+# Además del pull request, corre cada semana: una vulnerabilidad nueva en una
+# consulta de CodeQL puede afectar a código que no ha cambiado.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Lunes a las 05:23 UTC. Minuto impar a propósito: a las en punto se
+    # encolan los crons de medio GitHub y el trabajo espera.
+    - cron: '23 5 * * 1'
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  analizar:
+    name: CodeQL (javascript-typescript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+          config: |
+            paths-ignore:
+              - '**/node_modules'
+              - '**/dist'
+              - '**/.next'
+              - '**/prisma/generated'
+              # Las skills de diseño son herramientas locales, no código del sitio.
+              - '.claude'
+              - '.github/skills'
+              - '.agents'
+              - '.codex'
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript-typescript'

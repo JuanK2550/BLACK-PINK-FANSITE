@@ -1,0 +1,51 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "globalDependencies": [".env", "tsconfig.json", "pnpm-lock.yaml"],
+  "globalEnv": ["NODE_ENV", "CI"],
+  "globalPassThroughEnv": [
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "REDIS_URL",
+    "INTERNAL_API_KEY",
+    "LOG_LEVEL",
+    "ANTHROPIC_API_KEY",
+    "EMBEDDINGS_API_KEY",
+    "ASR_API_KEY"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": false
+    },
+    "db:seed": {
+      "cache": false,
+      "persistent": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

@@ -1,0 +1,58 @@
+name: Dato incorrecto
+description: Una fecha, un nombre, un premio o una curiosidad que no es cierta.
+title: 'dato: '
+labels: [contenido]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias. En este sitio cada dato lleva su fuente y solo se publica lo
+        contrastado, así que una corrección se acepta cuando trae **la fuente
+        que la respalda**. Sin fuente no se puede sustituir un dato por otro:
+        solo se podría cambiar una afirmación sin respaldo por otra igual.
+
+  - type: input
+    id: url
+    attributes:
+      label: Página
+      description: La dirección donde aparece el dato.
+      placeholder: https://.../es/cronologia
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Qué dice ahora
+    validations:
+      required: true
+
+  - type: textarea
+    id: correcto
+    attributes:
+      label: Qué debería decir
+    validations:
+      required: true
+
+  - type: input
+    id: fuente
+    attributes:
+      label: Fuente
+      description: >
+        Un enlace verificable: canales oficiales del grupo o de YG, prensa,
+        Wikipedia con su referencia. Un comentario en redes no basta.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: fechas
+    attributes:
+      label: ¿Es una fecha?
+      description: >
+        El sitio fecha los lanzamientos en hora de Corea (KST) y registra la
+        edición física cuando digital y física difieren. Una diferencia de un
+        día puede venir de ahí y no ser un error.
+      options:
+        - No es una fecha
+        - Sí, y ya he tenido en cuenta KST y digital/física
+        - Sí, y no sé si influye

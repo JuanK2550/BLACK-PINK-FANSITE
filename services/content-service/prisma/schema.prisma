@@ -1,0 +1,697 @@
+// ============================================================================
+// content-service - Esquema de datos
+// ============================================================================
+// Miembros, discografia, cronologia, curiosidades, premios y quiz.
+//
+// TRES DECISIONES QUE ATRAVIESAN TODO EL ESQUEMA:
+//
+// 1. TRAZABILIDAD. Cada modelo de contenido lleva `source` y `verified`.
+//    `source` dice de donde sale el dato; `verified` es false mientras no se
+//    haya contrastado. Es preferible un dato marcado como no verificado a un
+//    dato inventado, y el frontend puede filtrar por `verified` para no
+//    publicar nada sin contrastar.
+//
+// 2. TRADUCCIONES EN TABLA APARTE cuando hay prosa (biografias, descripciones,
+//    enunciados) y en JSON cuando solo hay un rotulo corto (el titulo de una
+//    cancion). La tabla permite filtrar e indexar por locale; el JSON evita
+//    una tabla entera para guardar tres cadenas sin estructura.
+//
+// 3. TODO LO OPCIONAL ES NULLABLE DE VERDAD. Las duraciones, los
+//    identificadores de Spotify y de YouTube y las URL de imagen se quedan a
+//    null hasta que media-service (Fase 5) los resuelva contra las APIs
+//    oficiales. El sitio no aloja audio ni video: esos campos solo guardan
+//    identificadores para incrustar reproductores oficiales.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated/client"
+}
+
+// Prisma 7 saca la cadena de conexion del esquema: vive en prisma.config.ts,
+// que la lee del .env de la raiz del monorepo.
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// ENUMERACIONES
+// ============================================================================
+
+enum Locale {
+  es
+  en
+  ko
+}
+
+enum AlbumType {
+  SINGLE
+  EP
+  ALBUM
+  COMPILATION
+  /// Una cancion del grupo publicada en el disco de OTRO artista
+  /// (Kiss and Make Up, Sour Candy): no es un sencillo de BLACKPINK.
+  COLLABORATION
+}
+
+enum SoloWorkType {
+  SINGLE
+  EP
+  ALBUM
+  COLLABORATION
+  OST
+  OTHER
+}
+
+enum TimelineCategory {
+  DEBUT
+  COMEBACK
+  AWARD
+  TOUR
+  RECORD
+  SOLO
+  OTHER
+}
+
+enum TriviaCategory {
+  GROUP
+  MEMBER
+  MUSIC
+  RECORD
+  FANDOM
+  STAGE
+  OTHER
+}
+
+enum QuizDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ============================================================================
+// INTEGRANTES
+// ============================================================================
+
+/// De donde salio un identificador externo (hoy, el de Spotify).
+///
+/// El proyecto distingue entre lo que resolvio una maquina y lo que confirmo
+/// una persona. Un SCRIPT acierta casi siempre, pero "casi siempre" no es
+/// "siempre": una version en directo, un remix o una reedicion pueden colarse
+/// con el mismo titulo. MANUAL significa que alguien lo miro y dijo que si.
+///
+/// Sin esta distincion, en seis meses nadie sabria cuales revisar.
+enum IdSource {
+  /// Resuelto automaticamente por infra/scripts/spotify-ids.mjs.
+  SCRIPT
+  /// Confirmado por una persona, a mano o validando una candidata dudosa.
+  MANUAL
+}
+
+model Member {
+  id String @id @default(cuid())
+
+  /// Identificador de la URL: /integrantes/jisoo
+  slug String @unique
+
+  /// Nombre artistico tal y como se muestra: JISOO
+  stageName String
+  /// Nombre completo en alfabeto latino
+  fullName String
+  /// Nombre en hangul
+  koreanName String?
+
+  birthDate   DateTime? @db.Date
+  nationality String
+  /// Papel canonico dentro del grupo. La version traducida vive en
+  /// MemberTranslation.position.
+  position String
+
+  /// Biografia en el idioma canonico (es). Las otras dos van en traducciones.
+  bio String? @db.Text
+
+  /// ==========================================================================
+  /// LA FOTO Y SU LICENCIA. Van juntas y no se separan.
+  ///
+  /// Estos campos NO son adorno: la licencia CC BY exige atribucion, y una
+  /// atribucion que vive en otro sitio distinto del dato es una atribucion que
+  /// se pierde el dia que alguien cambia la foto. Si `imageUrl` tiene valor,
+  /// `imageAuthor`, `imageLicense` y `imageSource` tienen que tenerlo tambien.
+  ///
+  /// Ninguno describe a la persona retratada: describen el ARCHIVO.
+  /// ==========================================================================
+
+  /// Ruta de la imagen. Null mientras no haya una con licencia.
+  imageUrl String?
+  /// Ancho y alto REALES del archivo servido, no los del original.
+  /// Sin ellos `next/image` no puede reservar el hueco y la rejilla salta al
+  /// cargar; con la ruta viniendo de la base, las medidas tienen que venir de
+  /// la base tambien o habria que escribirlas a mano en el frontend.
+  imageWidth  Int?
+  imageHeight Int?
+  /// Autor tal y como lo pide la licencia. Se muestra junto a la foto.
+  imageAuthor String?
+  /// Nombre legible de la licencia: "CC BY 3.0".
+  imageLicense String?
+  /// URL del texto de la licencia. Enlazarla es parte de la atribucion.
+  imageLicenseUrl String?
+  /// Pagina de origen (Wikimedia Commons), para poder comprobarlo.
+  imageSource String? @db.Text
+  /// Fecha en que se tomo la foto, no en que se subio el archivo.
+  imageDate DateTime? @db.Date
+  /// Punto de interes para `object-position`, en porcentaje: "50% 30%".
+  /// Es una propiedad de ESTA foto -donde cae la cara-, no del maquetado: al
+  /// cambiar la foto hay que cambiarlo, y por eso viaja con ella.
+  imageFocus String?
+  /// Color de acento personal, en hexadecimal.
+  colorAccent String?
+
+  /// Cuentas publicas oficiales: { "instagram": "https://...", ... }
+  /// Nunca datos personales privados.
+  socials Json?
+
+  /// Orden con el que se presentan en el sitio.
+  displayOrder Int @default(0)
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations   MemberTranslation[]
+  soloWorks      SoloWork[]
+  timelineEvents TimelineEvent[]
+  trivia         Trivia[]
+
+  @@index([displayOrder])
+  @@index([verified])
+  @@map("members")
+}
+
+model MemberTranslation {
+  id       String @id @default(cuid())
+  memberId String
+  locale   Locale
+
+  /// Papel dentro del grupo, traducido: "Vocalista principal" / "Main vocalist"
+  position    String?
+  /// Nacionalidad traducida: "Corea del Sur" / "South Korea" / "대한민국".
+  ///
+  /// Estaba SOLO en `Member`, en castellano, y la API la devolvia igual en los
+  /// tres idiomas: /ko/integrantes/rose decia «국적 Nueva Zelanda». Es un
+  /// nombre de pais, no un identificador, asi que se traduce como el papel.
+  nationality String?
+  nickname    String?
+  bio         String? @db.Text
+  description String? @db.Text
+
+  /// Texto alternativo de la foto, en este idioma.
+  ///
+  /// Va en la traduccion y no en `Member` porque un alt es TEXTO VISIBLE para
+  /// quien usa un lector de pantalla, y el sitio habla tres idiomas. Y describe
+  /// lo que se ve en la foto concreta -la ropa, el sitio, el gesto-, no
+  /// "Fotografia de Jisoo": un alt generico no aporta nada que no diga ya el
+  /// nombre que hay al lado.
+  imageAlt String? @db.Text
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, locale])
+  @@index([locale])
+  @@map("member_translations")
+}
+
+// ============================================================================
+// DISCOGRAFIA DEL GRUPO
+// ============================================================================
+
+model Album {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  title       String
+  type        AlbumType
+  releaseDate DateTime  @db.Date
+
+  /// ==========================================================================
+  /// LA PORTADA. Se ENLAZA, no se aloja.
+  ///
+  /// `coverUrl` apunta a la CDN de Spotify (i.scdn.co), que es quien sirve el
+  /// archivo. El sitio no descarga la imagen ni la reescala: eso seria alojar
+  /// una portada con copyright -lo que prohibe la regla 1 del proyecto- y
+  /// ademas modificar contenido de Spotify, que sus terminos no permiten.
+  /// Spotify publica tres tamanos ya hechos (640, 300, 64) y se elige uno.
+  ///
+  /// Por eso `coverWidth` y `coverHeight` son los del archivo REMOTO: sin
+  /// ellos `next/image` no puede reservar el hueco, y como la imagen no pasa
+  /// por nuestro optimizador, nadie mas puede averiguarlos.
+  /// ==========================================================================
+
+  /// URL de la portada GRANDE (640px) en la CDN de Spotify. Es la que se usa
+  /// donde la portada es el objeto principal: la ficha del album.
+  coverUrl String?
+  /// Medidas del archivo remoto que apunta `coverUrl`.
+  coverWidth  Int?
+  coverHeight Int?
+
+  /// La MISMA portada en el tamano pequeno (300px) que publica Spotify.
+  ///
+  /// No es una variante nuestra: Spotify sirve cada portada en 640, 300 y 64,
+  /// y aqui se ELIGE una. Elegir entre las suyas es lo contrario de
+  /// modificarlas, que es lo que sus terminos no permiten.
+  ///
+  /// Existe porque las portadas van `unoptimized` -no pasan por el optimizador
+  /// de Next, para no re-alojar ni reescalar material con copyright-, y sin
+  /// optimizador NO HAY srcset: `sizes` no hace nada. La unica forma de no
+  /// mandar 640px a un hueco de 56 es guardar la URL pequena.
+  /// Medido: 17,8 KB frente a 6,1 KB por miniatura.
+  coverThumbUrl String?
+  coverThumbWidth  Int?
+  coverThumbHeight Int?
+  /// Quien puso la portada: el script o una persona. Null si no hay portada.
+  coverSource IdSource?
+  /// El album de Spotify del que salio la portada.
+  ///
+  /// NO es decorativo: es lo que hace la eleccion AUDITABLE. Con este id
+  /// cualquiera puede abrir el album en Spotify y comprobar que la portada
+  /// corresponde. Sin el, la unica prueba seria la palabra del script.
+  coverAlbumId String?
+
+  label String?
+
+  description String? @db.Text
+
+  /// Identificadores para incrustar los reproductores OFICIALES.
+  /// El sitio no sirve audio: solo pasa este id al iframe de Spotify.
+  spotifyId         String?
+  /// RESERVADO, FUERA DEL CONTRATO. El sitio usa Spotify como unica fuente y
+  /// la API no expone este campo: un campo publico que siempre vale null es
+  /// una promesa que nadie cumple. La columna se conserva porque es donde
+  /// irian los datos si se retoma YouTube, y volver a crearla es una
+  /// migracion; volver a exponerla son diez lineas.
+  youtubePlaylistId String?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tracks       Track[]
+  translations AlbumTranslation[]
+
+  @@index([releaseDate])
+  @@index([type])
+  @@index([type, releaseDate])
+  @@index([verified])
+  @@map("albums")
+}
+
+model AlbumTranslation {
+  id      String @id @default(cuid())
+  albumId String
+  locale  Locale
+
+  /// Titulo localizado cuando existe (por ejemplo el titulo coreano).
+  title       String?
+  /// Formato en palabras: "Album de estudio" / "Studio album" / "정규 앨범"
+  formatLabel String?
+  description String? @db.Text
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, locale])
+  @@index([locale])
+  @@map("album_translations")
+}
+
+model Track {
+  id      String @id @default(cuid())
+  albumId String
+
+  title       String
+  trackNumber Int
+
+  /// Duracion en segundos. Null mientras no se lea de la API oficial:
+  /// una duracion inventada es peor que ninguna.
+  durationSec Int?
+
+  isTitleTrack Boolean @default(false)
+
+  spotifyId String?
+
+  /// RESERVADO, FUERA DEL CONTRATO. El sitio usa Spotify como unica fuente y
+  /// la API no expone este campo: un campo publico que siempre vale null es
+  /// una promesa que nadie cumple. La columna se conserva porque es donde
+  /// irian los datos si se retoma YouTube, y volver a crearla es una
+  /// migracion; volver a exponerla son diez lineas.
+  youtubeId String?
+
+  /// Quien puso `spotifyId`: el script o una persona. Null si no hay id.
+  spotifyIdSource IdSource?
+
+  lyricsAvailable Boolean @default(false)
+
+  /// Titulos por idioma: { "ko": "휘파람" }. Es un rotulo corto sin prosa,
+  /// asi que no merece una tabla de traducciones propia.
+  titleLocalized Json?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, trackNumber])
+  @@index([albumId])
+  @@index([isTitleTrack])
+  @@map("tracks")
+}
+
+// ============================================================================
+// TRABAJO EN SOLITARIO
+// ============================================================================
+
+model SoloWork {
+  id       String @id @default(cuid())
+  memberId String
+
+  slug        String       @unique
+  title       String
+  type        SoloWorkType
+  releaseDate DateTime     @db.Date
+
+  /// Portada. Mismas reglas que en Album: se enlaza a la CDN de Spotify, no se
+  /// aloja ni se reescala, y las medidas son las del archivo remoto.
+  coverUrl String?
+  coverWidth  Int?
+  coverHeight Int?
+  /// La misma portada en 300px, para miniaturas. Ver la nota en Album.
+  coverThumbUrl String?
+  coverThumbWidth  Int?
+  coverThumbHeight Int?
+  coverSource IdSource?
+  coverAlbumId String?
+
+  /// Duracion en segundos. Igual que en Track: null mientras no se lea de la
+  /// API oficial, porque una duracion inventada es peor que ninguna.
+  durationSec Int?
+
+  spotifyId String?
+
+  /// RESERVADO, FUERA DEL CONTRATO. El sitio usa Spotify como unica fuente y
+  /// la API no expone este campo: un campo publico que siempre vale null es
+  /// una promesa que nadie cumple. La columna se conserva porque es donde
+  /// irian los datos si se retoma YouTube, y volver a crearla es una
+  /// migracion; volver a exponerla son diez lineas.
+  youtubeId String?
+
+  /// Quien puso `spotifyId`: el script o una persona. Null si no hay id.
+  spotifyIdSource IdSource?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member                @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  translations SoloWorkTranslation[]
+  tracks       SoloTrack[]
+
+  @@index([memberId])
+  @@index([releaseDate])
+  @@index([type])
+  @@map("solo_works")
+}
+
+/// Las canciones de una obra en solitario.
+///
+/// NACE PORQUE UNA OBRA ERA UNA SOLA CANCION. `SoloWork` guardaba un unico
+/// `spotifyId`, y de `Ruby` o de `Alter Ego` -quince canciones cada uno- el
+/// sitio ensenaba una. La tabla es gemela de `Track` y no se reutiliza `Track`
+/// con un `albumId` opcional: una pista con dos padres posibles y ninguno
+/// obligatorio es un registro que puede quedarse huerfano sin que nada falle.
+///
+/// `SoloWork.spotifyId` se conserva: es la cancion principal, la que se usa
+/// cuando hace falta UNA (el reproductor de una colaboracion, el menu).
+model SoloTrack {
+  id         String @id @default(cuid())
+  soloWorkId String
+
+  title       String
+  trackNumber Int
+
+  /// Igual que en Track: null mientras no se lea de la API oficial.
+  durationSec Int?
+
+  isTitleTrack Boolean @default(false)
+
+  /// Artistas invitados tal como los acredita el lanzamiento: «Dua Lipa»,
+  /// «Doja Cat, RAYE». Texto y no relacion: son artistas ajenos al catalogo, y
+  /// una tabla de artistas para escribir su nombre seria mas codigo que dato.
+  featuring String?
+
+  spotifyId       String?
+  spotifyIdSource IdSource?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  soloWork SoloWork @relation(fields: [soloWorkId], references: [id], onDelete: Cascade)
+
+  @@unique([soloWorkId, trackNumber])
+  @@index([soloWorkId])
+  @@map("solo_tracks")
+}
+
+model SoloWorkTranslation {
+  id         String @id @default(cuid())
+  soloWorkId String
+  locale     Locale
+
+  title       String?
+  formatLabel String?
+  description String? @db.Text
+
+  soloWork SoloWork @relation(fields: [soloWorkId], references: [id], onDelete: Cascade)
+
+  @@unique([soloWorkId, locale])
+  @@index([locale])
+  @@map("solo_work_translations")
+}
+
+// ============================================================================
+// CRONOLOGIA
+// ============================================================================
+
+model TimelineEvent {
+  id String @id @default(cuid())
+
+  date     DateTime         @db.Date
+  title    String
+  description String?       @db.Text
+  category TimelineCategory
+
+  imageUrl String?
+
+  /// Un hito puede ser de una integrante concreta o del grupo entero.
+  memberId String?
+
+  /// De 1 a 5. La restriccion 1..5 se aplica en la base de datos con un
+  /// CHECK anadido en la migracion: un rango que solo vive en el codigo
+  /// deja de existir en cuanto alguien inserta a mano.
+  importance Int @default(3)
+
+  /// Precision real de la fecha. Muchos hitos se conocen por mes o por ano
+  /// pero no por dia; guardar el dia 1 y callarlo seria inventar precision.
+  datePrecision String @default("day")
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member?                    @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  translations TimelineEventTranslation[]
+
+  @@index([date])
+  @@index([category])
+  @@index([category, date])
+  @@index([memberId])
+  @@index([importance])
+  @@index([verified])
+  @@map("timeline_events")
+}
+
+model TimelineEventTranslation {
+  id      String @id @default(cuid())
+  eventId String
+  locale  Locale
+
+  title       String?
+  description String? @db.Text
+
+  event TimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, locale])
+  @@index([locale])
+  @@map("timeline_event_translations")
+}
+
+// ============================================================================
+// CURIOSIDADES
+// ============================================================================
+
+model Trivia {
+  id String @id @default(cuid())
+
+  category TriviaCategory
+  content  String         @db.Text
+
+  /// De donde sale el dato. Obligatorio: sin fuente no entra.
+  source String @db.Text
+
+  memberId String?
+
+  /// false mientras el dato no se haya contrastado contra la fuente.
+  /// El sitio publica por defecto solo los verificados.
+  verified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member?             @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  translations TriviaTranslation[]
+
+  @@index([category])
+  @@index([memberId])
+  @@index([verified])
+  @@index([category, verified])
+  @@map("trivia")
+}
+
+model TriviaTranslation {
+  id       String @id @default(cuid())
+  triviaId String
+  locale   Locale
+
+  content String @db.Text
+
+  trivia Trivia @relation(fields: [triviaId], references: [id], onDelete: Cascade)
+
+  @@unique([triviaId, locale])
+  @@index([locale])
+  @@map("trivia_translations")
+}
+
+// ============================================================================
+// PREMIOS
+// ============================================================================
+
+model Award {
+  id String @id @default(cuid())
+
+  name         String
+  category     String
+
+  /// EL ANO ES EL DE LA CEREMONIA, no el de la obra premiada. Un disco de
+  /// septiembre se premia en la gala del ano siguiente, y ordenar por el ano
+  /// de la obra desordenaria el palmares respecto a como lo cuenta cualquier
+  /// fuente. No se guarda la edicion numerada de la gala (la "31 edicion"):
+  /// es un dato de la CEREMONIA, no de este premio, y repetirlo en cada fila
+  /// de la misma gala solo abre la puerta a que dos filas se contradigan.
+  year         Int
+  organization String
+
+  /// La obra premiada, cuando el premio es por una en concreto: una cancion,
+  /// un album o una gira. Null en los premios al artista (revelacion, grupo
+  /// del ano), que no van por obra.
+  work String?
+
+  /// true = ganado, false = nominado sin ganar.
+  won Boolean @default(false)
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations AwardTranslation[]
+
+  @@unique([organization, year, category, name])
+  @@index([year])
+  @@index([organization])
+  @@index([won])
+  @@index([verified])
+  @@map("awards")
+}
+
+model AwardTranslation {
+  id      String @id @default(cuid())
+  awardId String
+  locale  Locale
+
+  name     String?
+  category String?
+
+  award Award @relation(fields: [awardId], references: [id], onDelete: Cascade)
+
+  @@unique([awardId, locale])
+  @@index([locale])
+  @@map("award_translations")
+}
+
+// ============================================================================
+// QUIZ
+// ============================================================================
+
+model QuizQuestion {
+  id String @id @default(cuid())
+
+  question String @db.Text
+
+  /// Array de opciones: ["2016", "2017", "2018", "2019"]
+  options Json
+
+  /// Indice de la respuesta correcta dentro de `options`. Base 0.
+  /// El rango se valida en la base de datos con un CHECK (>= 0).
+  correctIndex Int
+
+  difficulty  QuizDifficulty @default(EASY)
+  explanation String?        @db.Text
+
+  /// Curiosidad o hito del que sale la pregunta, para poder rehacerla
+  /// si el dato de origen cambia.
+  source String? @db.Text
+
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations QuizQuestionTranslation[]
+
+  @@index([difficulty])
+  @@index([verified])
+  @@index([difficulty, verified])
+  @@map("quiz_questions")
+}
+
+model QuizQuestionTranslation {
+  id         String @id @default(cuid())
+  questionId String
+  locale     Locale
+
+  question String @db.Text
+  /// Las opciones traducidas, en el MISMO orden que el original: correctIndex
+  /// se comparte entre idiomas y reordenarlas romperia la correccion.
+  options  Json
+  explanation String? @db.Text
+
+  question_ QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, locale])
+  @@index([locale])
+  @@map("quiz_question_translations")
+}
