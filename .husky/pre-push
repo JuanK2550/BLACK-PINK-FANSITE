@@ -1,0 +1,10 @@
+# Antes de subir: typecheck del monorepo entero.
+#
+# No va en el pre-commit porque tarda: un commit es un punto de guardado y
+# tiene que ser instantaneo, o la gente deja de hacerlos pequenos. Al subir
+# ya se esta diciendo «esto esta listo para que lo vean otros», y ahi un
+# error de tipos no debe salir del ordenador. Turbo cachea: si no ha cambiado
+# nada desde el ultimo typecheck, esto tarda un segundo.
+#
+# Saltarlo en una emergencia: git push --no-verify (y CI lo pillara igual).
+pnpm typecheck

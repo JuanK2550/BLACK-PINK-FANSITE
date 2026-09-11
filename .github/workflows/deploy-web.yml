@@ -1,0 +1,85 @@
+name: Desplegar web (Vercel)
+
+# Despliega apps/web a Vercel en producción cuando se fusiona en main.
+#
+# NO SE DISPARA CON EL PUSH, SINO CON EL FINAL DE CI. Un `on: push` desplegaría
+# en paralelo a los tests, y un main en rojo llegaría a producción antes de que
+# nadie viera el rojo. Con `workflow_run` solo se despliega un commit cuyo CI
+# terminó en verde.
+#
+# Se construye EN EL RUNNER (`vercel build`) y se sube el resultado
+# (`--prebuilt`): lo que llega a producción es el mismo artefacto que se probó,
+# y no depende de que el entorno de build de Vercel coincida con el nuestro.
+#
+# Secretos necesarios (Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN        token personal de Vercel
+#   VERCEL_ORG_ID       id del equipo o cuenta  (`vercel link` → .vercel/project.json)
+#   VERCEL_PROJECT_ID   id del proyecto         (ídem)
+# Las variables de entorno de producción de la web (API_GATEWAY_URL,
+# NEXT_PUBLIC_SITE_URL, REVALIDATE_SECRET...) viven en el proyecto de Vercel:
+# `vercel pull` las trae.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  # Un despliegue a medias no se cancela: se deja terminar y el siguiente espera.
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    name: Vercel (producción)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production-web
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # El commit que pasó CI, no la punta de main en este instante.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Comprobar secretos
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::error::Faltan VERCEL_TOKEN, VERCEL_ORG_ID o VERCEL_PROJECT_ID. Ver la cabecera de este workflow."
+            exit 1
+          fi
+
+      - name: Traer la configuración de producción
+        run: pnpm dlx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Construir
+        run: pnpm dlx vercel@latest build --prod --token="$VERCEL_TOKEN"
+
+      - name: Desplegar
+        id: deploy
+        run: |
+          url=$(pnpm dlx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Desplegado en $url"

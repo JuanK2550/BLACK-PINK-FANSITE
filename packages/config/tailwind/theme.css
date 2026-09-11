@@ -1,0 +1,566 @@
+/*
+ * ============================================================================
+ * SISTEMA DE DISENO - BLACKPINK Fansite
+ * ============================================================================
+ * Tokens compartidos para Tailwind CSS v4. Se importan desde
+ * apps/web/src/styles/globals.css.
+ *
+ * ARQUITECTURA EN TRES CAPAS. Respetala:
+ *
+ *   1. PALETA CRUDA   -> @theme, valores literales. Escalas noir/pink/blush.
+ *   2. SEMANTICA      -> :root y [data-theme], variables que cambian con el tema.
+ *   3. UTILIDADES     -> @theme inline, expone la semantica como clases Tailwind.
+ *
+ * Los componentes consumen SOLO la capa 3 (bg-canvas, text-fg-muted, border-line,
+ * bg-accent...). Ningun componente escribe un color literal ni usa la escala
+ * cruda directamente, salvo para efectos puntuales de marca.
+ * Cambiar de tema oscuro a claro es reescribir la capa 2, nada mas.
+ * ============================================================================
+ */
+
+@theme {
+  /* ==========================================================================
+   * 1. PALETA CRUDA
+   * ======================================================================= */
+
+  /* --- Neutros: negro profundo con un matiz violaceo minimo.
+         Un #000 plano se lee a terminal; esto se lee a tinta de imprenta. --- */
+  --color-noir-950: #08070a;
+  --color-noir-900: #0d0b10;
+  --color-noir-850: #131018;
+  --color-noir-800: #1a1620;
+  --color-noir-700: #262130;
+  --color-noir-600: #3a3346;
+  --color-noir-500: #524a60;
+  --color-noir-400: #6e6579;
+  /*
+   * ACLARADO DESDE #6e6579 DESPUES DE MEDIRLO CON LIGHTHOUSE.
+   *
+   * El tenue de esta escala se usa para TEXTO de 11 y 12px -nombres en
+   * hangul, etiquetas, numeros de pista- y ahi AA pide 4.5:1. #6e6579 sobre
+   * el lienzo da 3.64 y suspendia en 30 nodos de la portada. Este da 4.92 y
+   * sigue muy por debajo del secundario (7.87), asi que los tres escalones de
+   * la jerarquia se conservan.
+   *
+   * El 3.64 pasaba la comprobacion del proyecto porque este par se verificaba
+   * contra 3:1, el umbral de texto GRANDE. Ese era el fallo: el umbral, no el
+   * color. Corregido tambien en check-contrast.mjs.
+   *
+   * Y SE MIDE CONTRA LAS TRES SUPERFICIES, no solo contra el lienzo. El primer
+   * intento (#837a8f) daba 4.92 sobre el lienzo y 4.36 sobre el overlay, que
+   * es mas claro: quedaba un nodo suspendiendo, el boton del panel del chat.
+   * Este pasa en las tres: 5.50 lienzo, 5.36 superficie, 4.88 overlay.
+   */
+  --color-noir-350: #8b8299;
+  --color-noir-300: #a79fb0;
+  --color-noir-200: #d6d0dc;
+  --color-noir-100: #ede9f0;
+  --color-noir-50: #f7f5f9;
+
+  /* --- Rosa acento: el caracteristico. 500 es el color de marca. --- */
+  --color-pink-50: #fff0f6;
+  --color-pink-100: #ffd9e8;
+  --color-pink-200: #ffb0cf;
+  --color-pink-300: #ff7fb2;
+  --color-pink-400: #ff5497;
+  --color-pink-500: #ff2e88;
+  --color-pink-600: #ee0f73;
+  --color-pink-700: #cc0066;
+  --color-pink-800: #a30052;
+  --color-pink-900: #6b0036;
+
+  /* --- Leonado: el pelaje de PINKY. ----------------------------------------
+         El sistema no tenia ningun calido, y hace falta uno: un leon con el
+         pelaje en gris se lee a estatua. Estan desaturados a proposito -no son
+         un naranja de juguete- para convivir con el rosa de marca sin pelearse
+         con el, y son CLAROS: sobre el negro del sitio, un marron oscuro
+         desaparece igual que desaparecio la primera ardilla. --- */
+  --color-tawny-300: #d9a97e;
+  --color-tawny-400: #c68f61;
+  --color-tawny-500: #ad7449;
+  --color-tawny-600: #8d5a37;
+  --color-tawny-700: #6b4226;
+
+  /* --- Rosa pastel secundario. --- */
+  --color-blush-100: #ffeaf2;
+  --color-blush-200: #ffd6e6;
+  --color-blush-300: #ffc2da;
+  --color-blush-400: #f2a9c6;
+
+  /* ==========================================================================
+   * TIPOGRAFIA
+   * Las tres familias se inyectan desde apps/web/src/app/layout.tsx con
+   * next/font (auto-hospedadas, sin peticion a Google en tiempo de ejecucion).
+   * Syne no tiene glifos hangul: en coreano la display cae a Noto Sans KR 900.
+   * ======================================================================= */
+  --font-display: var(--font-syne), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
+  --font-kr: var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Escala tipografica fluida. Sin breakpoints: clamp() hace el trabajo. --- */
+  --text-2xs: 0.75rem;
+  --text-2xs--line-height: 1.4;
+  --text-2xs--letter-spacing: 0.08em;
+
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5;
+
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.55;
+
+  --text-base: 1rem;
+  --text-base--line-height: 1.65;
+
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.6;
+
+  --text-xl: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-xl--line-height: 1.35;
+  --text-xl--letter-spacing: -0.005em;
+
+  --text-2xl: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --text-2xl--line-height: 1.25;
+  --text-2xl--letter-spacing: -0.01em;
+
+  --text-3xl: clamp(1.875rem, 1.4rem + 2vw, 2.75rem);
+  --text-3xl--line-height: 1.15;
+  --text-3xl--letter-spacing: -0.015em;
+
+  --text-4xl: clamp(2.25rem, 1.5rem + 3.5vw, 4rem);
+  --text-4xl--line-height: 1.05;
+  --text-4xl--letter-spacing: -0.02em;
+
+  --text-5xl: clamp(3rem, 1.5rem + 7vw, 6.5rem);
+  --text-5xl--line-height: 0.95;
+  --text-5xl--letter-spacing: -0.03em;
+
+  /* Solo para el wordmark del hero: es una portada, no un titular. */
+  --text-hero: clamp(3.25rem, 13vw, 11rem);
+  --text-hero--line-height: 0.82;
+  --text-hero--letter-spacing: -0.04em;
+
+  /* ==========================================================================
+   * ESPACIADO Y MEDIDAS
+   * Base 4px (escala Tailwind) + ritmos con nombre para el layout.
+   * ======================================================================= */
+  --spacing-gutter: clamp(1.25rem, 4vw, 3rem);
+  --spacing-block: clamp(2rem, 4vw, 3.5rem);
+  --spacing-section: clamp(4rem, 9vw, 9rem);
+  --spacing-header: 4rem;
+  --spacing-header-lg: 4.75rem;
+
+  --container-prose: 68ch;
+  --container-content: 80rem;
+  --container-wide: 100rem;
+
+  /* ==========================================================================
+   * RADIOS
+   * Regla del sistema: las superficies editoriales son RECTAS (radio 0).
+   * Solo lo que se pulsa lleva radio.
+   * ======================================================================= */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+
+  /* ==========================================================================
+   * SOMBRAS
+   * Sobre negro una sombra apenas se ve: la profundidad la dan el filete,
+   * la elevacion y el halo. Todas llevan desplazamiento y desenfoque.
+   * ======================================================================= */
+  --shadow-hairline: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  --shadow-lift-1: 0 1px 2px rgb(0 0 0 / 0.6), 0 8px 24px -12px rgb(0 0 0 / 0.8);
+  --shadow-lift-2: 0 2px 4px rgb(0 0 0 / 0.5), 0 24px 60px -24px rgb(0 0 0 / 0.9);
+  --shadow-glow: 0 8px 40px -8px rgb(255 46 136 / 0.45);
+  --shadow-glow-sm: 0 4px 18px -6px rgb(255 46 136 / 0.4);
+
+  /* ==========================================================================
+   * CURVAS DE ANIMACION
+   * Ningun easing por defecto de CSS: son demasiado debiles.
+   * Y ningun ease-in en toda la aplicacion: empieza lento justo en el
+   * instante que el usuario mas mira, y hace que la interfaz pese.
+   * ======================================================================= */
+  --ease-out-bp: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out-bp: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /*
+   * MUELLE EN CSS. `linear()` interpola una lista de puntos, asi que aproxima
+   * un muelle real -sobrepasa y vuelve- sin salir de una animacion CSS, que
+   * es lo unico que corre fuera del hilo principal. Un muelle de Framer
+   * Motion daria lo mismo en pantalla y saltaria justo durante un stream.
+   * Rebote contenido (~1.06): PINKY es una mascota, no un juguete.
+   */
+  --ease-spring-bp: linear(
+    0,
+    0.0088,
+    0.0344,
+    0.1042 8.8%,
+    0.2634,
+    0.4471,
+    0.6317,
+    0.7963 26.4%,
+    0.9047,
+    0.9885,
+    1.0468 36.5%,
+    1.0782,
+    1.0898 43.2%,
+    1.0879,
+    1.0782 51.5%,
+    1.0424 61.3%,
+    1.0111 71.5%,
+    0.9937,
+    0.9891 84%,
+    0.9977 96%,
+    1
+  );
+
+  /* ==========================================================================
+   * ANIMACIONES CON NOMBRE
+   * ======================================================================= */
+  --animate-bp-drift: bp-drift 44s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  --animate-bp-rise: bp-rise 0.52s cubic-bezier(0.23, 1, 0.32, 1) both;
+  --animate-bp-fade: bp-fade 0.32s cubic-bezier(0.33, 1, 0.68, 1) both;
+  /* Carga: un brillo que recorre la pieza, no un latido de opacidad. El
+     latido parpadea y en una rejilla entera hace vibrar la pantalla. */
+  --animate-bp-shimmer: bp-shimmer 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+
+  @keyframes bp-drift {
+    0% {
+      transform: translate3d(-12%, -6%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(14%, 8%, 0) scale(1.12);
+    }
+    100% {
+      transform: translate3d(-12%, -6%, 0) scale(1);
+    }
+  }
+
+  @keyframes bp-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 24px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes bp-shimmer {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+    to {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+
+  @keyframes bp-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/*
+ * ============================================================================
+ * 2. CAPA SEMANTICA
+ * Lo unico que cambia entre tema oscuro y claro.
+ * El tema por defecto es OSCURO: no hay consulta a prefers-color-scheme.
+ * El claro se activa solo cuando el usuario lo elige (data-theme="light").
+ * ============================================================================
+ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bp-canvas: var(--color-noir-950);
+  --bp-surface: var(--color-noir-900);
+  --bp-overlay: var(--color-noir-800);
+  --bp-glass: rgb(8 7 10 / 0.72);
+
+  --bp-fg: #ffffff;
+  --bp-fg-muted: var(--color-noir-300);
+  --bp-fg-subtle: var(--color-noir-350);
+  --bp-fg-inverse: var(--color-noir-950);
+
+  --bp-line: rgb(255 255 255 / 0.08);
+  --bp-line-strong: var(--color-noir-700);
+
+  --bp-accent: var(--color-pink-500);
+  --bp-accent-hover: var(--color-pink-400);
+  --bp-accent-active: var(--color-pink-600);
+  /* Texto sobre el acento: negro. Blanco sobre #ff2e88 da 3.5:1 y suspende AA. */
+  --bp-accent-fg: var(--color-noir-950);
+  /* El acento usado COMO texto sobre el fondo: 5.7:1 sobre #08070a. */
+  --bp-accent-text: var(--color-pink-500);
+  --bp-accent-tint: rgb(255 46 136 / 0.12);
+
+  --bp-blush: var(--color-blush-300);
+  --bp-focus: var(--color-pink-400);
+
+  /*
+   * CUANTO DEL COLOR PROPIO DE UNA INTEGRANTE SOBREVIVE CUANDO SE USA COMO
+   * TEXTO. Lo decide el TEMA, porque el problema es del fondo, no del color.
+   *
+   * Medido con los cuatro colores del catalogo:
+   *   sobre negro, sin mezclar .......... 5.9:1 el peor (Jennie)
+   *   sobre papel claro, sin mezclar .... 1.9:1 el peor (Jisoo)
+   *   sobre el rosa del modo BLINK ...... 1.3:1 el peor (Jisoo)
+   * Al 45% el amarillo de Lisa todavia se queda en 4.47 sobre rosa. Al 40%
+   * los cuatro pasan AA en los tres temas, y ese es el numero.
+   */
+  /* Sobre negro el color propio se lee tal cual: no se mezcla nada. */
+  --bp-member-mix: 100%;
+
+  /* --- PINKY, la ardilla. -------------------------------------------------
+   * Tiene paleta propia porque es un PERSONAJE, no un elemento de interfaz:
+   * su pelaje no puede seguir a `--bp-fg` ni su vientre a `--bp-surface`, o
+   * cambiaria de especie al cambiar de tema.
+   *
+   * EL PELAJE ES MAS CLARO QUE EL FONDO, y esto se aprendio mirandolo. El
+   * primer intento uso el 850, mas oscuro que el 800 de la burbuja: la
+   * ardilla salia como un agujero negro donde solo se veian el vientre, los
+   * ojos y la punta rosa de la cola. Brazos, patas y cola desaparecian.
+   *
+   * El 700 sigue siendo negro a la vista -es el color de los bordes fuertes
+   * del sitio- pero se despega del 800 de la burbuja y del 950 del lienzo, y
+   * eso es lo que permite distinguir un brazo del torso por el que pasa. El
+   * filete de `--bp-pinky-line` remata el contorno donde la diferencia entre
+   * dos piezas del mismo pelaje no basta.
+   * --------------------------------------------------------------------- */
+  --bp-pinky-fur: var(--color-tawny-500);
+  /* Zona de luz y zona de sombra. El volumen se hace con estas dos, no con
+     lineas de detalle: a 64px una linea interior es suciedad. */
+  --bp-pinky-fur-hi: var(--color-tawny-400);
+  --bp-pinky-fur-sh: var(--color-tawny-700);
+  --bp-pinky-line: rgb(255 255 255 / 0.26);
+  --bp-pinky-cream: var(--color-blush-100);
+  --bp-pinky-belly: var(--color-blush-200);
+  /* La melena: negro de verdad, mas oscuro que el pelaje y mas claro que el
+     lienzo. Es la forma que decide que esto es un leon. */
+  --bp-pinky-mane: var(--color-noir-800);
+  --bp-pinky-mane-hi: var(--color-noir-700);
+  /* La cola, un paso mas clara que el cuerpo. Del mismo tono se fundia con el
+     torso y las dos masas oscuras se leian como una sola mancha; ademas es
+     verdad del animal: la cola es lo que recoge la luz. */
+  --bp-pinky-tail: var(--color-noir-600);
+  --bp-pinky-ear: var(--color-pink-300);
+  --bp-pinky-blush: var(--color-pink-400);
+  --bp-pinky-eye: var(--color-noir-950);
+
+  /* Duraciones. Ninguna animacion de interfaz pasa de 320ms. */
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 240ms;
+  --dur-4: 320ms;
+  --dur-5: 520ms;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bp-canvas: #fbf9fa;
+  --bp-surface: #ffffff;
+  --bp-overlay: #ffffff;
+  --bp-glass: rgb(251 249 250 / 0.78);
+
+  --bp-fg: var(--color-noir-950);
+  --bp-fg-muted: #5b5266;
+  --bp-fg-subtle: var(--color-noir-500);
+  --bp-fg-inverse: #ffffff;
+
+  --bp-line: rgb(8 7 10 / 0.1);
+  --bp-line-strong: var(--color-noir-200);
+
+  /*
+   * En claro el acento se OSCURECE, y el hover oscurece todavia mas.
+   * Blanco sobre el 600 da 4.24:1 y suspende AA; sobre el 700 da 5.59:1.
+   * Por eso aqui el hover no aclara: aclarar bajaria el contraste del texto
+   * del boton justo en el momento en que el usuario lo esta mirando.
+   */
+  --bp-accent: var(--color-pink-700);
+  --bp-accent-hover: var(--color-pink-800);
+  --bp-accent-active: var(--color-pink-900);
+  --bp-accent-fg: #ffffff;
+  /* El 500 sobre blanco solo da 3.5:1: en claro el acento de texto es el 700. */
+  --bp-accent-text: var(--color-pink-700);
+  --bp-accent-tint: rgb(255 46 136 / 0.1);
+
+  --bp-blush: var(--color-pink-700);
+  --bp-focus: var(--color-pink-700);
+
+  /* Sobre papel casi blanco hay que oscurecerlo: sin mezcla, el lila de
+     Jisoo da 1.9:1. */
+  --bp-member-mix: 40%;
+
+  /*
+   * En claro el pelaje BAJA a negro de verdad: sobre un lienzo casi blanco no
+   * hay riesgo de que la silueta se pierda, y el contraste es lo que hace que
+   * se lea la forma. El filete, en cambio, se queda claro: separa dos piezas
+   * del mismo pelaje por dentro de la silueta, que es un problema del negro
+   * sobre negro, no del negro sobre blanco.
+   */
+  /*
+   * En claro el pelaje BAJA un paso y la melena baja a negro de verdad: sobre
+   * un lienzo casi blanco no hay riesgo de perder la silueta, y lo que importa
+   * es que la melena se separe del pelaje.
+   */
+  --bp-pinky-fur: var(--color-tawny-500);
+  --bp-pinky-fur-hi: var(--color-tawny-400);
+  --bp-pinky-fur-sh: var(--color-tawny-700);
+  --bp-pinky-line: rgb(255 255 255 / 0.28);
+  --bp-pinky-cream: var(--color-blush-100);
+  --bp-pinky-belly: var(--color-blush-200);
+  --bp-pinky-mane: var(--color-noir-900);
+  --bp-pinky-mane-hi: var(--color-noir-700);
+  /* La cola, un paso mas clara que el cuerpo. Del mismo tono se fundia con el
+     torso y las dos masas oscuras se leian como una sola mancha; ademas es
+     verdad del animal: la cola es lo que recoge la luz. */
+  --bp-pinky-tail: var(--color-noir-700);
+  --bp-pinky-ear: var(--color-pink-300);
+  --bp-pinky-blush: var(--color-pink-400);
+  --bp-pinky-eye: var(--color-noir-950);
+}
+
+/*
+ * ----------------------------------------------------------------------------
+ * MODO BLINK — el easter egg del codigo Konami
+ * ----------------------------------------------------------------------------
+ * NO ES UN FILTRO NI UN GIRO DE TONO. Es el sistema con la tinta invertida:
+ * el rosa deja de ser el acento y pasa a ser el PAPEL, y el negro deja de ser
+ * el lienzo y pasa a ser la TINTA.
+ *
+ * Es la unica broma que este sistema puede gastar sin contradecirse. DESIGN.md
+ * define el sitio como «una revista de moda impresa en negativo»; esto es la
+ * misma revista impresa en positivo. Y la regla del rosa se conserva entera,
+ * solo que del otro lado: sigue habiendo una tinta escasa que señala donde
+ * cae el ojo, y ahora esa tinta es negra sobre rosa.
+ *
+ * CONTRASTE COMPROBADO, no supuesto. Sobre el lienzo #ffc2da:
+ *   texto principal #08070a ............ 13.6:1
+ *   texto secundario noir-600 ........... 7.9:1
+ *   texto tenue noir-500 ................ 5.4:1
+ *   acento como texto #08070a .......... 13.6:1
+ *   blush-100 sobre el boton negro ..... 13.1:1
+ * Todos por encima de AA, y `pnpm check:contrast` los verifica en cada push
+ * junto a los del tema oscuro y el claro.
+ *
+ * SE GUARDA EN `bp-theme`, la misma clave que los otros dos temas, y por dos
+ * razones: el guion en linea de la cabecera lo restaura sin parpadeo, y el
+ * boton de tema ES la salida. Un easter egg del que no se sabe salir deja de
+ * ser una broma a los diez segundos.
+ * ----------------------------------------------------------------------------
+ */
+[data-theme='blink'] {
+  color-scheme: light;
+
+  --bp-canvas: var(--color-blush-300);
+  /* Las superficies SUBEN sobre el papel, no bajan: sobre un lienzo claro la
+     elevacion se lee aclarando, al reves que sobre negro. */
+  --bp-surface: var(--color-blush-200);
+  --bp-overlay: var(--color-blush-100);
+  --bp-glass: rgb(255 194 218 / 0.8);
+
+  --bp-fg: var(--color-noir-950);
+  --bp-fg-muted: var(--color-noir-600);
+  --bp-fg-subtle: var(--color-noir-500);
+  --bp-fg-inverse: var(--color-blush-100);
+
+  --bp-line: rgb(8 7 10 / 0.16);
+  --bp-line-strong: rgb(8 7 10 / 0.32);
+
+  /*
+   * EL ACENTO ES NEGRO. Aqui esta la inversion: en un sitio rosa, lo que
+   * destaca no puede ser rosa. Un acento rosa sobre papel rosa no señalaria
+   * nada, que es exactamente el error que el sistema evita en oscuro.
+   */
+  --bp-accent: var(--color-noir-950);
+  --bp-accent-hover: var(--color-noir-800);
+  --bp-accent-active: var(--color-noir-700);
+  --bp-accent-fg: var(--color-blush-100);
+  --bp-accent-text: var(--color-noir-950);
+  --bp-accent-tint: rgb(8 7 10 / 0.08);
+
+  /* El pastel ya es el fondo, asi que el dato secundario se apoya en el
+     acento oscuro para no desaparecer. */
+  --bp-blush: var(--color-pink-800);
+  --bp-focus: var(--color-noir-950);
+
+  /* Sobre el rosa es donde peor se porta: sin mezcla, 1.3:1. */
+  --bp-member-mix: 40%;
+
+  /*
+   * PINKY NO CAMBIA DE ESPECIE. Su paleta es la de un personaje, no la de la
+   * interfaz: el pelaje sigue siendo calido y la melena negra. Lo unico que
+   * se ajusta es el filete, que sobre un fondo claro tiene que oscurecer en
+   * vez de aclarar, y las mejillas, que sobre rosa se perdian.
+   */
+  --bp-pinky-fur: var(--color-tawny-500);
+  --bp-pinky-fur-hi: var(--color-tawny-400);
+  --bp-pinky-fur-sh: var(--color-tawny-700);
+  --bp-pinky-line: rgb(8 7 10 / 0.24);
+  --bp-pinky-cream: var(--color-blush-100);
+  --bp-pinky-belly: var(--color-blush-200);
+  --bp-pinky-mane: var(--color-noir-900);
+  --bp-pinky-mane-hi: var(--color-noir-700);
+  --bp-pinky-tail: var(--color-noir-700);
+  --bp-pinky-ear: var(--color-pink-400);
+  --bp-pinky-blush: var(--color-pink-600);
+  --bp-pinky-eye: var(--color-noir-950);
+}
+
+/*
+ * ============================================================================
+ * 3. UTILIDADES SEMANTICAS
+ * @theme inline mantiene la referencia a var(), asi que las clases siguen
+ * al tema activo en lugar de congelar el valor del tema oscuro.
+ * ============================================================================
+ */
+
+@theme inline {
+  --color-canvas: var(--bp-canvas);
+  --color-surface: var(--bp-surface);
+  --color-overlay: var(--bp-overlay);
+  --color-glass: var(--bp-glass);
+
+  --color-fg: var(--bp-fg);
+  --color-fg-muted: var(--bp-fg-muted);
+  --color-fg-subtle: var(--bp-fg-subtle);
+  --color-fg-inverse: var(--bp-fg-inverse);
+
+  --color-line: var(--bp-line);
+  --color-line-strong: var(--bp-line-strong);
+
+  --color-accent: var(--bp-accent);
+  --color-accent-hover: var(--bp-accent-hover);
+  --color-accent-active: var(--bp-accent-active);
+  --color-accent-fg: var(--bp-accent-fg);
+  --color-accent-text: var(--bp-accent-text);
+  --color-accent-tint: var(--bp-accent-tint);
+
+  --color-blush: var(--bp-blush);
+  --color-focus: var(--bp-focus);
+
+  --color-pinky-fur: var(--bp-pinky-fur);
+  --color-pinky-fur-hi: var(--bp-pinky-fur-hi);
+  --color-pinky-line: var(--bp-pinky-line);
+  --color-pinky-cream: var(--bp-pinky-cream);
+  --color-pinky-fur-sh: var(--bp-pinky-fur-sh);
+  --color-pinky-mane: var(--bp-pinky-mane);
+  --color-pinky-mane-hi: var(--bp-pinky-mane-hi);
+  --color-pinky-belly: var(--bp-pinky-belly);
+  --color-pinky-tail: var(--bp-pinky-tail);
+  --color-pinky-ear: var(--bp-pinky-ear);
+  --color-pinky-blush: var(--bp-pinky-blush);
+  --color-pinky-eye: var(--bp-pinky-eye);
+}

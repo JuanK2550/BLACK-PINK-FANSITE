@@ -1,0 +1,52 @@
+packages:
+  - 'apps/*'
+  - 'services/*'
+  - 'packages/*'
+
+# pnpm exige aprobar explicitamente los paquetes que ejecutan scripts de instalacion.
+# msgpackr-extract y workerd son builds nativos opcionales de herramientas de
+# desarrollo: sin compilar funcionan igual, solo algo mas lentos.
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  # Telemetria de instalacion: denegada a proposito.
+  '@scarf/scarf': false
+  '@swc/core': true
+  '@tailwindcss/oxide': true
+  esbuild: true
+  msgpackr-extract: false
+  prisma: true
+  sharp: true
+  unrs-resolver: true
+  workerd: false
+
+# Version unica para las dependencias compartidas por varios paquetes.
+# Sin esto, un `pnpm add` en un servicio resuelve una version distinta a la
+# del resto, pnpm duplica los peers de NestJS y TypeScript empieza a decir
+# que INestApplication no es asignable a INestApplication.
+catalog:
+  # Solo la usa el script de acopio de la galeria, para reescalar y pasar a
+  # JPEG lo que Commons sirve como PNG de cinco megas.
+  'sharp': '^0.34.0'
+  '@nestjs/cli': '^11.0.0'
+  '@nestjs/common': '^11.0.0'
+  '@nestjs/config': '^4.0.0'
+  '@nestjs/core': '^11.0.0'
+  '@nestjs/platform-express': '^11.0.0'
+  '@nestjs/schematics': '^11.0.0'
+  '@nestjs/swagger': '^11.4.7'
+  '@nestjs/testing': '^11.2.3'
+  '@nestjs/throttler': '^6.4.0'
+  'class-transformer': '^0.5.1'
+  'compression': '^1.8.1'
+  'class-validator': '^0.15.1'
+  'helmet': '^8.1.0'
+  'ioredis': '^5.11.1'
+  'nestjs-pino': '^4.6.1'
+  'pino': '^10.3.1'
+  'pg': '^8.16.3'
+  'pino-http': '^11.0.0'
+  'reflect-metadata': '^0.2.2'
+  'rxjs': '^7.8.1'
+  'supertest': '^7.2.2'

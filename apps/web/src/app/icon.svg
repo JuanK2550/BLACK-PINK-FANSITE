@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="BLACKPINK Fansite">
+  <!--
+    ICONO DE PESTAÑA: BP.
+
+    Antes eran dos barras abstractas -la tinta blanca arriba, la rosa debajo- y
+    a 16px no se leían: en la barra de pestañas quedaba un cuadro negro. Un
+    icono que no se distingue del fondo de la pestaña no es un icono.
+
+    SON LAS INICIALES DEL GRUPO, con la misma lógica de dos tintas que el
+    wordmark: la B en blanco, la P en rosa. Es lo que hace que la pestaña se
+    reconozca de un vistazo entre otras veinte.
+
+    VAN DIBUJADAS COMO TRAZADO, NO COMO <text>. Un favicon se rasteriza fuera
+    de la página y no hereda ninguna tipografía del sitio: con <text>, cada
+    navegador pondría la sans que tuviera a mano y el icono cambiaría de forma
+    según la máquina.
+
+    LOS TRAZOS SON GRUESOS Y LOS HUECOS GRANDES a propósito. A 16px un asta de
+    un píxel desaparece y un contrapunzón pequeño se cierra: las astas miden 4
+    de 32 -dos píxeles reales- y los huecos son casi cuadrados.
+
+    Sin radio en el fondo: en este sistema el radio es de lo que se pulsa.
+  -->
+  <rect width="32" height="32" fill="#08070a" />
+
+  <!-- B: asta, panza superior y panza inferior, con el hueco calado. -->
+  <path
+    fill="#ffffff"
+    fill-rule="evenodd"
+    d="M3 5h9.2a5.4 5.4 0 0 1 3.5 9.5A5.7 5.7 0 0 1 12.6 27H3V5Zm4.3 3.6v5h4.6a2.5 2.5 0 0 0 0-5H7.3Zm0 8.4v6h4.9a3 3 0 0 0 0-6H7.3Z"
+  />
+
+  <!-- P: la misma asta y una sola panza, en la tinta de acento. -->
+  <path
+    fill="#ff2e88"
+    fill-rule="evenodd"
+    d="M18 5h8.4a6.6 6.6 0 0 1 0 13.2h-4.1V27H18V5Zm4.3 3.7v5.8h3.9a2.9 2.9 0 0 0 0-5.8h-3.9Z"
+  />
+</svg>

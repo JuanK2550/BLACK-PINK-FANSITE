@@ -1,0 +1,111 @@
+name: CI
+
+# Corre en cada pull request y en cada push a main. Que FALLE EL PR cuando
+# algo falla depende de una segunda pieza que no vive en este fichero: marcar
+# el trabajo «Lint, typecheck, test y build» como obligatorio en la regla de
+# protección de main (Settings → Branches). Ver el README.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, typecheck, test y build
+    runs-on: ubuntu-latest
+
+    # Postgres para la comprobacion de los volcados de Spotify.
+    #
+    # No es para los tests -corren con la capa de datos simulada- sino para el
+    # ultimo paso: sembrar de verdad y comprobar que los volcados reconstruyen
+    # las 54 filas. Sin base no hay nada contra lo que comprobarlos.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: blackpink
+          POSTGRES_PASSWORD: blackpink_dev_password
+          POSTGRES_DB: blackpink
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U blackpink"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # La versión sale de .nvmrc: escrita aquí a mano, un día diverge de
+          # la que usa quien desarrolla y los fallos de CI dejan de reproducirse.
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Preparar entorno
+        run: cp .env.example .env
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Tests
+        run: pnpm test
+
+      # La cobertura se EXIGE, no se informa: los umbrales (60% en líneas,
+      # ramas, funciones y sentencias) viven en apps/web/vitest.config.ts y
+      # Vitest sale con error si no se alcanzan. Acotada a los componentes con
+      # comportamiento y a las bibliotecas puras: ahí es donde el número dice
+      # algo. Las páginas se prueban de verdad en e2e.yml.
+      - name: Cobertura del frontend (mínimo 60%)
+        run: pnpm test:coverage
+
+      - name: Formato
+        run: pnpm format:check
+
+      # El contraste AA es un requisito del proyecto: se comprueba en cada
+      # push, no en la revision visual de quien abre el pull request.
+      - name: Contraste AA de los tokens
+        run: pnpm check:contrast
+
+      # Los identificadores y las portadas de Spotify viven en dos volcados
+      # versionados, y el seed los aplica. Esto comprueba el VIAJE DE IDA Y
+      # VUELTA: se siembra una base vacia y se verifica que queda exactamente
+      # como dicen los volcados, marcas MANUAL incluidas.
+      #
+      # Es la version automatica de la prueba de `pnpm db:reset`: si alguien
+      # rompe como el seed aplica los volcados, o renombra un slug y deja una
+      # entrada huerfana, el pull request falla aqui y no seis meses despues
+      # con un hueco en la pagina.
+      #
+      # No necesita credenciales de Spotify: ni --check ni el seed hablan con
+      # la API.
+      - name: Volcados de Spotify (ida y vuelta)
+        run: |
+          pnpm --filter @blackpink/content-service db:migrate
+          pnpm --filter @blackpink/content-service db:seed
+          pnpm check:spotify
+
+      # La galería: el disco contra su volcado, sin llamar a Commons. Así no
+      # falla porque Wikimedia tenga un mal día.
+      - name: Galería (disco contra volcado)
+        run: pnpm check:gallery
+
+      - name: Build
+        run: pnpm build

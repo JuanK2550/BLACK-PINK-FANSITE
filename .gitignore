@@ -1,0 +1,58 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Caches
+.turbo/
+.eslintcache
+coverage/
+.vitest/
+
+# Entorno  ---  NUNCA subir secretos
+.env
+.env.*
+!.env.example
+
+# Prisma
+**/prisma/*.db
+**/prisma/generated/
+
+# Copias de seguridad de la base de datos (contienen datos, no van al repo)
+infra/backups/
+
+# Media subida por el usuario (se sirve desde CDN, no desde el repo)
+apps/web/public/uploads/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea/
+test-results/
+playwright-report/
+blob-report/
+.lighthouseci/
+lighthouse-informes/
+
+# Herramientas de IA: se quedan en el equipo local, no van al repositorio
+.claude/
+.agents/
+.codex/
+skills-lock.json
+CLAUDE.md
+DESIGN.md
+PRODUCT.md
+.github/skills/
+.github/agents/
+.github/hooks/

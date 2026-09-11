@@ -1,0 +1,56 @@
+{
+  "name": "@blackpink/chatbot-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PINKY: asistente conversacional con RAG sobre el contenido del sitio",
+  "main": "dist/main.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "lint": "eslint . --cache --cache-location .eslintcache",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "db:migrate": "echo chatbot-service no tiene migraciones: crea su esquema al arrancar (VectorStoreService.migrate, idempotente).",
+    "db:seed": "echo chatbot-service no siembra datos: indexa el contenido de content-service al arrancar.",
+    "clean": "rimraf dist .turbo"
+  },
+  "dependencies": {
+    "@blackpink/service-core": "workspace:*",
+    "@blackpink/types": "workspace:*",
+    "@nestjs/common": "catalog:",
+    "@nestjs/config": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-express": "catalog:",
+    "@nestjs/swagger": "catalog:",
+    "@nestjs/throttler": "catalog:",
+    "class-transformer": "catalog:",
+    "class-validator": "catalog:",
+    "ioredis": "catalog:",
+    "nestjs-pino": "catalog:",
+    "pg": "catalog:",
+    "pino": "catalog:",
+    "pino-http": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:"
+  },
+  "devDependencies": {
+    "@blackpink/config": "workspace:*",
+    "@nestjs/cli": "catalog:",
+    "@nestjs/schematics": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@swc/core": "^1.15.2",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.6",
+    "eslint": "^9.17.0",
+    "rimraf": "^6.0.1",
+    "supertest": "catalog:",
+    "typescript": "^5.7.0",
+    "unplugin-swc": "^1.5.7",
+    "vitest": "^2.1.8 || ^3.0.0"
+  }
+}

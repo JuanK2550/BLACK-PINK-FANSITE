@@ -1,0 +1,75 @@
+name: E2E
+
+# Recorre el sitio de verdad con Playwright: la web construida, el gateway y
+# los cinco servicios levantados con docker compose. Es la única capa que puede
+# afirmar que las respuestas del quiz no están en el HTML, que cambiar de
+# idioma conserva la página o que el reproductor no se monta hasta que se pide.
+#
+# El chat se prueba con el stream SIMULADO: la cuota gratuita de Gemini es por
+# clave, y una suite que la gasta en cada pull request la agota para los
+# visitantes. Para probar contra el modelo real, lanzar este workflow a mano
+# con `chat_real` activado y el secreto GOOGLE_AI_API_KEY configurado.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      chat_real:
+        description: 'Probar el chat contra Gemini de verdad (gasta cuota)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    name: Playwright (escritorio y móvil) + axe
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Levantar la pila
+        uses: ./.github/actions/levantar-pila
+
+      # El contenedor del chatbot ya arrancó con el .env de antes: hay que
+      # RECREARLO para que lea la clave. Sin `--force-recreate` seguiría sin
+      # ella y el test fallaría como si Gemini no respondiera.
+      - name: Clave de Gemini (solo si se pidió el chat real)
+        if: ${{ inputs.chat_real }}
+        env:
+          CLAVE: ${{ secrets.GOOGLE_AI_API_KEY }}
+        run: |
+          sed -i "s|^GOOGLE_AI_API_KEY=.*|GOOGLE_AI_API_KEY=${CLAVE}|" .env
+          docker compose --env-file .env -f infra/docker-compose.yml up -d --force-recreate chatbot-service
+          for i in $(seq 1 30); do curl -fsS http://localhost:4003/health && exit 0; sleep 3; done
+          exit 1
+
+      - name: Instalar Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Playwright
+        env:
+          E2E_BASE_URL: http://localhost:3000
+          E2E_CHAT_REAL: ${{ inputs.chat_real && '1' || '0' }}
+        run: pnpm test:e2e
+
+      - name: Informe de Playwright
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Logs de los servicios si algo falló
+        if: ${{ failure() }}
+        run: docker compose -f infra/docker-compose.yml logs --tail 200

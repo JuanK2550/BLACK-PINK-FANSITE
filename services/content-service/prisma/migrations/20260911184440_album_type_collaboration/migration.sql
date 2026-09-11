@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "AlbumType" ADD VALUE 'COLLABORATION';

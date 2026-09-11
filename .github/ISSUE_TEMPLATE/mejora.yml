@@ -1,0 +1,29 @@
+name: Propuesta
+description: Algo que el sitio no hace y debería hacer.
+title: 'propuesta: '
+labels: [mejora]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Qué problema resuelve
+      description: >
+        El problema primero y la solución después. «Quiero X» se discute mal;
+        «no encuentro Y cuando busco Z» se puede resolver de varias formas.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Cómo lo imaginas
+
+  - type: checkboxes
+    id: reglas
+    attributes:
+      label: Encaja en las reglas del sitio
+      options:
+        - label: >-
+            No implica alojar audio, vídeo ni imágenes con copyright (el sitio
+            solo usa el reproductor oficial de Spotify e imágenes con licencia libre).
+        - label: No hace pasar el sitio por oficial.

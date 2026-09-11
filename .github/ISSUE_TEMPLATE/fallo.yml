@@ -1,0 +1,56 @@
+name: Algo no funciona
+description: Un error del sitio, de PINKY o de la reproducción.
+title: 'fallo: '
+labels: [fallo]
+body:
+  - type: textarea
+    id: que
+    attributes:
+      label: Qué pasa
+      description: Lo que viste, y lo que esperabas ver en su lugar.
+    validations:
+      required: true
+
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Cómo reproducirlo
+      placeholder: |
+        1. Ir a /es/discografia/born-pink
+        2. Pulsar la primera canción
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Página
+      placeholder: https://.../es/...
+
+  - type: dropdown
+    id: idioma
+    attributes:
+      label: Idioma
+      options: [Español, English, 한국어]
+
+  - type: dropdown
+    id: dispositivo
+    attributes:
+      label: Dispositivo
+      options: [Escritorio, Móvil, Tableta]
+
+  - type: input
+    id: navegador
+    attributes:
+      label: Navegador y versión
+      placeholder: Chrome 131, Safari 18...
+
+  - type: checkboxes
+    id: pinky
+    attributes:
+      label: Si es sobre PINKY
+      options:
+        - label: >-
+            No he pegado aquí ninguna conversación con datos personales. (El
+            sitio no guarda las conversaciones; este issue sería público.)

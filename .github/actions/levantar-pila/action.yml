@@ -1,0 +1,74 @@
+name: Levantar la pila completa
+description: >
+  Instala dependencias, levanta Postgres, Redis y los cinco servicios con
+  docker compose, migra y siembra, construye la web y la arranca en el puerto
+  3000. La usan e2e.yml y lighthouse.yml, que necesitan el sitio ENTERO: sin
+  los servicios, cada pagina seria un 503 o una rejilla vacia, y ni Playwright
+  ni Lighthouse medirian nada real.
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: pnpm
+
+    - name: Instalar dependencias
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    # El .env de ejemplo apunta a localhost, que es desde donde corren la
+    # migracion, el seed y la web: los servicios publican sus puertos al host.
+    #
+    # Los secretos se SUSTITUYEN en su linea, no se añaden al final: `dotenv`
+    # se queda con la PRIMERA aparicion de una clave, asi que una linea nueva
+    # al final no cambiaria nada en Node aunque si en docker compose, y los dos
+    # lados verian valores distintos.
+    - name: Preparar entorno
+      shell: bash
+      run: |
+        cp .env.example .env
+        sed -i "s|^INTERNAL_API_KEY=.*|INTERNAL_API_KEY=ci-$(openssl rand -hex 24)|" .env
+        sed -i "s|^NEXT_PUBLIC_SITE_URL=.*|NEXT_PUBLIC_SITE_URL=http://localhost:3000|" .env
+
+    - name: Levantar la pila con docker compose
+      shell: bash
+      run: pnpm docker:up
+
+    # `depends_on` con `service_healthy` ordena el arranque, pero no garantiza
+    # que el GATEWAY responda cuando termina `up -d`. Se espera a su /health.
+    - name: Esperar al gateway
+      shell: bash
+      run: |
+        for i in $(seq 1 60); do
+          curl -fsS http://localhost:4000/health && exit 0
+          sleep 3
+        done
+        docker compose -f infra/docker-compose.yml logs --tail 80
+        exit 1
+
+    - name: Migrar y sembrar
+      shell: bash
+      run: |
+        pnpm --filter @blackpink/content-service db:migrate
+        pnpm --filter @blackpink/content-service db:seed
+
+    # La web se construye DESPUES de sembrar: sus paginas se prerenderizan en
+    # el build, y construidas contra una base vacia saldrian vacias.
+    - name: Construir la web
+      shell: bash
+      run: pnpm --filter @blackpink/web build
+
+    - name: Arrancar la web
+      shell: bash
+      run: |
+        pnpm --filter @blackpink/web exec next start --port 3000 > web.log 2>&1 &
+        for i in $(seq 1 40); do
+          curl -fsS -o /dev/null http://localhost:3000/es && exit 0
+          sleep 3
+        done
+        tail -50 web.log
+        exit 1

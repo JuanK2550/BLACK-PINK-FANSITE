@@ -1,0 +1,1863 @@
+/*
+ * Estilos propios del paquete de UI.
+ * Los tokens de color y tipografia viven en @blackpink/config/tailwind/theme.css.
+ */
+
+@layer components {
+  .bp-focus-ring {
+    outline: 2px solid var(--color-bp-pink-500);
+    outline-offset: 2px;
+  }
+
+  /*
+   * Pieza de carga. El brillo va en un pseudo-elemento y se desplaza con
+   * translate3d: se compone en GPU y no provoca ni layout ni pintado, que es
+   * lo que permite tener treinta piezas a la vez sin que la pagina se atasque.
+   */
+  .bp-skeleton {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .bp-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    animation: var(--animate-bp-shimmer);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-accent-tint) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Con movimiento reducido no hay brillo: la pieza se queda quieta y sigue
+     comunicando "aqui va a haber algo" por su sola presencia. */
+  @media (prefers-reduced-motion: reduce) {
+    .bp-skeleton::after {
+      animation: none;
+    }
+  }
+
+  /*
+   * Tarjeta volteable. El giro va en CSS y no en JavaScript: es una animación
+   * predeterminada, y CSS se ejecuta fuera del hilo principal, así que sigue
+   * fluida aunque la página esté cargando datos en ese momento.
+   */
+  .bp-flip {
+    perspective: 1200px;
+  }
+
+  .bp-flip-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 520ms var(--ease-in-out-bp);
+  }
+
+  .bp-flip[data-flipped='true'] .bp-flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .bp-flip-face {
+    display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* El reverso se apila sobre el anverso y arranca ya girado. */
+  .bp-flip-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+  }
+
+  /*
+   * Con movimiento reducido no hay giro: se cambia de cara sin más. El giro 3D
+   * es de los efectos que peor sientan a quien sufre mareo por movimiento.
+   */
+  .bp-flip[data-static='true'] .bp-flip-inner {
+    transition: none;
+    transform: none;
+  }
+
+  .bp-flip[data-static='true'] .bp-flip-face {
+    backface-visibility: visible;
+  }
+
+  .bp-flip[data-static='true'] .bp-flip-back {
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .bp-flip[data-static='true'][data-flipped='true'] .bp-flip-front {
+    opacity: 0;
+  }
+
+  .bp-flip[data-static='true'][data-flipped='true'] .bp-flip-back {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------------
+     CHATBOT: PUNTOS DE "ESCRIBIENDO" Y PINKY EN 2D
+     ------------------------------------------------------------------------
+     Todo en CSS y no en Framer Motion a proposito: son animaciones continuas
+     y predeterminadas, y las de CSS corren fuera del hilo principal. Mientras
+     llega un stream el hilo esta ocupado pintando texto, que es exactamente
+     cuando una animacion de JS empieza a saltar.
+     ------------------------------------------------------------------------ */
+  .bp-typing-dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background-color: var(--bp-fg-subtle);
+    animation: bp-typing 1.1s ease-in-out infinite;
+  }
+
+  .bp-typing-dot[data-dot='1'] {
+    animation-delay: 0.14s;
+  }
+  .bp-typing-dot[data-dot='2'] {
+    animation-delay: 0.28s;
+  }
+
+  @keyframes bp-typing {
+    0%,
+    60%,
+    100% {
+      opacity: 0.28;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  /*
+   * El punto de "grabando". Late siempre, y en CSS: durante una grabacion el
+   * hilo principal esta ocupado leyendo el analizador sesenta veces por
+   * segundo, que es justo cuando una animacion movida por JS empieza a saltar.
+   *
+   * NO se apaga con movimiento reducido, solo se suaviza: este punto no es
+   * decoracion, es lo unico que dice que el microfono esta abierto. Apagarlo
+   * dejaria a alguien grabando sin saberlo.
+   */
+  .bp-rec-dot {
+    animation: bp-rec-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes bp-rec-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.82);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-rec-dot {
+      animation: bp-rec-fade 1.6s ease-in-out infinite;
+    }
+
+    @keyframes bp-rec-fade {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  /* ========================================================================
+     PINKY, EL LEON: EL MOVIMIENTO
+     ========================================================================
+     Las formas estan en `apps/web/src/components/chat/pinky-lion.tsx`; aqui
+     esta todo lo que se mueve. Separado a proposito: un cambio de ritmo no
+     deberia obligar a tocar una coordenada, ni al reves.
+
+     TRES CAPAS, Y NINGUNA PISA A OTRA. Es lo que permite que un gesto ocurra
+     ENCIMA de un estado sin que haya que apagar el estado primero:
+
+       `-pose`   la postura del estado. Solo `transition`.
+       `-loop`   el ritmo continuo. Solo `animation`, y no se apaga nunca.
+       gesto     una `animation` de una pasada sobre `-pose`, disparada por
+                 `data-gesture`. Una animacion gana a una transicion mientras
+                 corre, asi que el gesto manda y al acabar la postura vuelve
+                 sola. No hay que coordinar nada.
+
+     Cada elemento pertenece a UNA capa y solo una: los gestos tocan `-pose`,
+     `-mane`, `-muzzle`, `-legs` y los parpados; los bucles perpetuos viven en
+     `-loop` y en `-eyes`. Sin esa disciplina, dos `animation` sobre el mismo
+     elemento se pisan y gana la ultima declarada, que es justo el tipo de
+     fallo que no se ve hasta que un gesto concreto coincide con un estado
+     concreto.
+
+     Todo en CSS y nada en Framer Motion: son animaciones predeterminadas, y
+     mientras llega un stream el hilo principal esta pintando texto, que es
+     cuando una animacion movida por JS empieza a saltar.
+     ======================================================================== */
+
+  /*
+   * `transform-box: view-box` ancla el origen al viewBox, asi que las
+   * coordenadas de aqui son las mismas que las del dibujo. Por defecto el
+   * origen se mide sobre la caja del propio grupo, que cambia de tamano en
+   * cuanto algo se anima: una oreja rotaria alrededor de un punto movil.
+   */
+  .bp-ln-lean,
+  .bp-ln-legs,
+  .bp-ln-breath,
+  .bp-ln-beat,
+  .bp-ln-tail-pose,
+  .bp-ln-tail-loop,
+  .bp-ln-tuft,
+  .bp-ln-head-pose,
+  .bp-ln-head-loop,
+  .bp-ln-mane,
+  .bp-ln-muzzle,
+  .bp-ln-arm-l-pose,
+  .bp-ln-arm-l-loop,
+  .bp-ln-arm-r-pose,
+  .bp-ln-ear-l,
+  .bp-ln-ear-r,
+  .bp-ln-eyes,
+  .bp-ln-eye-l,
+  .bp-ln-eye-r,
+  .bp-ln-lid-l,
+  .bp-ln-lid-r {
+    transform-box: view-box;
+  }
+
+  .bp-ln-lean {
+    transform-origin: 100px 184px;
+  }
+  .bp-ln-legs {
+    transform-origin: 100px 182px;
+  }
+  .bp-ln-breath,
+  .bp-ln-beat {
+    transform-origin: 100px 180px;
+  }
+  .bp-ln-tail-pose,
+  .bp-ln-tail-loop {
+    transform-origin: 128px 164px;
+  }
+  .bp-ln-tuft {
+    transform-origin: 167px 124px;
+  }
+  .bp-ln-head-pose,
+  .bp-ln-head-loop {
+    transform-origin: 100px 126px;
+  }
+  .bp-ln-mane {
+    transform-origin: 100px 76px;
+  }
+  .bp-ln-muzzle {
+    transform-origin: 100px 92px;
+  }
+  .bp-ln-arm-l-pose,
+  .bp-ln-arm-l-loop {
+    transform-origin: 74px 140px;
+  }
+  .bp-ln-arm-r-pose {
+    transform-origin: 126px 140px;
+  }
+  .bp-ln-ear-l {
+    transform-origin: 68px 46px;
+  }
+  .bp-ln-ear-r {
+    transform-origin: 132px 46px;
+  }
+  .bp-ln-eyes {
+    transform-origin: 100px 74px;
+  }
+  .bp-ln-eye-l,
+  .bp-ln-lid-l {
+    transform-origin: 85px 74px;
+  }
+  .bp-ln-eye-r,
+  .bp-ln-lid-r {
+    transform-origin: 115px 74px;
+  }
+
+  /* ---------------------------------------------------------- POSTURAS --- */
+
+  .bp-ln-lean,
+  .bp-ln-tail-pose,
+  .bp-ln-head-pose,
+  .bp-ln-arm-r-pose,
+  .bp-ln-ear-l,
+  .bp-ln-ear-r,
+  .bp-ln-muzzle,
+  .bp-ln-mane,
+  .bp-ln-eye-l,
+  .bp-ln-eye-r,
+  .bp-ln-lid-l,
+  .bp-ln-lid-r {
+    transition: transform var(--dur-4) var(--ease-out-bp);
+  }
+
+  /*
+   * El brazo izquierdo es el unico gesto grande -saluda, se rasca, se tapa el
+   * ojo- y el unico con muelle. Un rebote en las orejas seria ruido; aqui es
+   * lo que separa "levanta la pata" de "la pata se teletransporta arriba".
+   */
+  .bp-ln-arm-l-pose {
+    transition: transform var(--dur-5) var(--ease-spring-bp);
+  }
+
+  /* ------------------------------------------------------------ RITMOS --- */
+
+  /* Las amplitudes se interpolan; el bucle no se detiene jamas. */
+  .bp-ln {
+    transition:
+      --ln-breath var(--dur-5) var(--ease-out-bp),
+      --ln-beat var(--dur-4) var(--ease-out-bp),
+      --ln-tail-amp var(--dur-5) var(--ease-out-bp),
+      --ln-tail-beat var(--dur-4) var(--ease-out-bp),
+      --ln-head-drift var(--dur-4) var(--ease-out-bp);
+  }
+
+  /*
+   * Respiracion. Las patas se quedan fuera, plantadas en el suelo: si subieran
+   * con el pecho no seria respirar, seria flotar.
+   */
+  .bp-ln-breath {
+    animation: ln-breath 4.1s ease-in-out infinite;
+  }
+
+  @keyframes ln-breath {
+    0%,
+    100% {
+      transform: translateY(0) scaleY(1);
+    }
+    50% {
+      transform: translateY(calc(-1 * var(--ln-breath))) scaleY(1.018);
+    }
+  }
+
+  /* Rebote al hablar. Amplitud 0 en el resto: el bucle sigue corriendo en
+     vacio y por eso puede crecer sin dar un tiron de fase. */
+  .bp-ln-beat {
+    animation: ln-beat 0.46s var(--ease-in-out-bp) infinite;
+  }
+
+  @keyframes ln-beat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    42% {
+      transform: translateY(calc(-1 * var(--ln-beat)));
+    }
+  }
+
+  /* Cola: vaiven lento de fondo y, encima, un meneo rapido que solo sube de
+     amplitud al saludar y al hablar. */
+  .bp-ln-tail-loop {
+    animation: ln-tail 4.9s ease-in-out infinite;
+  }
+
+  @keyframes ln-tail {
+    0%,
+    100% {
+      transform: rotate(calc(-1 * var(--ln-tail-amp)));
+    }
+    50% {
+      transform: rotate(var(--ln-tail-amp));
+    }
+  }
+
+  /*
+   * Ladeo de cabeza en reposo. 12.9s y no 10: es un gesto que tiene que
+   * sorprender. En cuanto se puede predecir deja de parecer un ser vivo.
+   */
+  .bp-ln-head-loop {
+    animation: ln-head-drift 12.9s ease-in-out infinite;
+  }
+
+  @keyframes ln-head-drift {
+    0%,
+    36%,
+    78%,
+    100% {
+      transform: rotate(0deg);
+    }
+    46%,
+    58% {
+      transform: rotate(calc(-1 * var(--ln-head-drift)));
+    }
+    70% {
+      transform: rotate(calc(0.3 * var(--ln-head-drift)));
+    }
+  }
+
+  /* Bucle del saludo con la pata. La postura la levanta; esto la agita. */
+  .bp-ln-arm-l-loop {
+    animation: ln-wave 0.48s var(--ease-in-out-bp) infinite;
+  }
+
+  @keyframes ln-wave {
+    0%,
+    100% {
+      transform: rotate(calc(-1 * var(--ln-wave)));
+    }
+    50% {
+      transform: rotate(var(--ln-wave));
+    }
+  }
+
+  /*
+   * Parpadeo. Tres por vuelta a intervalos deliberadamente desiguales sobre un
+   * ciclo de 6.9s. Uno cada cuatro segundos exactos se lee a metronomo.
+   *
+   * Se escala el grupo entero de los ojos, no los parpados: los parpados los
+   * usan los estados y los gestos, y si el parpadeo tambien los tocara, un
+   * gesto que cierra un ojo se pelearia con el bucle.
+   */
+  .bp-ln-eyes {
+    animation: ln-blink 6.9s ease-in-out infinite;
+  }
+
+  @keyframes ln-blink {
+    0%,
+    38.4%,
+    41%,
+    59%,
+    61.4%,
+    85%,
+    87.6%,
+    100% {
+      transform: scaleY(1);
+    }
+    39.6%,
+    60.2%,
+    86.3% {
+      transform: scaleY(0.08);
+    }
+  }
+
+  /* ========================================================================
+     LOS CINCO ESTADOS
+     ========================================================================
+     REPOSO no aparece: son los valores iniciales de las @property y las
+     posturas sin transformar. Es el defecto y no necesita reglas.
+     ======================================================================== */
+
+  /* --- SALUDO ------------------------------------------------------------
+     Es una SECUENCIA, no una postura: mira, se ilumina, saluda con la pata y
+     mueve la cola, en ese orden y con sus tiempos. Un solo movimiento se lee
+     a icono animado; cuatro encadenados se leen a criatura que te ha visto
+     entrar.
+
+     Cada pieza lleva su propio retardo dentro de sus keyframes en vez de
+     `animation-delay`, para que las cuatro compartan reloj: con retardos
+     distintos, una pausa del navegador las desincroniza y el saludo se
+     descoloca. --------------------------------------------------------- */
+  .bp-ln[data-state='greeting'] {
+    --ln-breath: 2.4px;
+    --ln-tail-amp: 7deg;
+    /* Ni ladeo de reposo ni nada mas: ya esta ocupada saludando. */
+    --ln-head-drift: 0deg;
+    --ln-wave: 0deg;
+  }
+
+  .bp-ln[data-state='greeting'] .bp-ln-head-pose {
+    animation: ln-greet-head 2.6s var(--ease-out-bp) 1 forwards;
+  }
+  .bp-ln[data-state='greeting'] .bp-ln-eye-l,
+  .bp-ln[data-state='greeting'] .bp-ln-eye-r {
+    animation: ln-greet-eyes 2.6s var(--ease-out-bp) 1 forwards;
+  }
+  .bp-ln[data-state='greeting'] .bp-ln-arm-l-pose {
+    animation: ln-greet-arm 2.6s var(--ease-out-bp) 1 forwards;
+  }
+  .bp-ln[data-state='greeting'] .bp-ln-tail-pose {
+    animation: ln-greet-tail 2.6s var(--ease-in-out-bp) 1 forwards;
+  }
+
+  /* 1. MIRA: gira la cabeza hacia quien mira y la endereza. */
+  @keyframes ln-greet-head {
+    0% {
+      transform: rotate(0deg);
+    }
+    14% {
+      transform: rotate(-9deg);
+    }
+    30% {
+      transform: rotate(3deg);
+    }
+    46%,
+    100% {
+      transform: rotate(-2deg);
+    }
+  }
+
+  /* 2. SE ILUMINA: los ojos se abren de golpe y se quedan grandes. */
+  @keyframes ln-greet-eyes {
+    0%,
+    12% {
+      transform: scale(1);
+    }
+    26% {
+      transform: scale(1.16);
+    }
+    40%,
+    100% {
+      transform: scale(1.08);
+    }
+  }
+
+  /*
+   * 3. SALUDA: la pata sube por fuera describiendo un arco y ahi se queda
+   * agitandose. El `scale` la acorta mientras sube: una rotacion sola
+   * conserva el largo y la pata acaba en el aire, lejos de la cara.
+   */
+  @keyframes ln-greet-arm {
+    0%,
+    26% {
+      transform: rotate(0deg) scale(1);
+    }
+    44% {
+      transform: rotate(128deg) scale(0.95);
+    }
+    56% {
+      transform: rotate(108deg) scale(0.95);
+    }
+    68% {
+      transform: rotate(132deg) scale(0.95);
+    }
+    80% {
+      transform: rotate(110deg) scale(0.95);
+    }
+    92%,
+    100% {
+      transform: rotate(124deg) scale(0.95);
+    }
+  }
+
+  /* 4. Y LA COLA: entra la ultima, cuando la pata ya esta arriba. */
+  @keyframes ln-greet-tail {
+    0%,
+    50% {
+      transform: rotate(0deg);
+    }
+    62% {
+      transform: rotate(-14deg);
+    }
+    74% {
+      transform: rotate(10deg);
+    }
+    86% {
+      transform: rotate(-8deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  /* --- ESCUCHANDO: se acerca, orejas al frente, cola quieta. ------------- */
+  .bp-ln[data-state='listening'] {
+    --ln-breath: 2.8px;
+    /* No 0: una cola completamente inmovil parece un dibujo pegado. */
+    --ln-tail-amp: 0.5deg;
+    --ln-head-drift: 0deg;
+  }
+
+  .bp-ln[data-state='listening'] .bp-ln-lean {
+    transform: translateY(3px) scale(1.05);
+  }
+  .bp-ln[data-state='listening'] .bp-ln-head-pose {
+    transform: translateY(2px);
+  }
+  .bp-ln[data-state='listening'] .bp-ln-ear-l {
+    transform: rotate(-13deg);
+  }
+  .bp-ln[data-state='listening'] .bp-ln-ear-r {
+    transform: rotate(13deg);
+  }
+  /* Los ojos un pelo mas abiertos: atencion. */
+  .bp-ln[data-state='listening'] .bp-ln-eye-l,
+  .bp-ln[data-state='listening'] .bp-ln-eye-r {
+    transform: scale(1.06);
+  }
+
+  /* --- PENSANDO: ladea, entorna los ojos y se lleva la pata al menton. --- */
+  .bp-ln[data-state='thinking'] {
+    --ln-breath: 1.3px;
+    --ln-tail-amp: 1deg;
+    --ln-head-drift: 0deg;
+  }
+
+  .bp-ln[data-state='thinking'] .bp-ln-head-pose {
+    transform: rotate(-11deg);
+  }
+  /* Pata a la barbilla (98,116): 34 del hombro, dentro de su alcance. */
+  .bp-ln[data-state='thinking'] .bp-ln-arm-l-pose {
+    transform: rotate(-158deg) scale(0.86);
+  }
+  .bp-ln[data-state='thinking'] .bp-ln-tail-pose {
+    transform: rotate(-16deg) scale(0.92);
+  }
+  /*
+   * LOS PARPADOS HACEN LA EXPRESION. Bajan a medias Y se inclinan hacia
+   * dentro: bajados rectos sale sueno, inclinados hacia dentro sale
+   * concentracion. Es el mismo movimiento con cinco grados de diferencia.
+   */
+  .bp-ln[data-state='thinking'] .bp-ln-lid-l {
+    transform: translateY(9px) rotate(11deg);
+  }
+  .bp-ln[data-state='thinking'] .bp-ln-lid-r {
+    transform: translateY(9px) rotate(-11deg);
+  }
+
+  /* --- HABLANDO: rebota al ritmo del texto; cola y hocico acompanan. ----- */
+  .bp-ln[data-state='speaking'] {
+    --ln-breath: 1.4px;
+    --ln-beat: 2.8px;
+    --ln-tail-amp: 2.2deg;
+    --ln-head-drift: 0deg;
+  }
+
+  .bp-ln[data-state='speaking'] .bp-ln-muzzle {
+    animation: ln-talk 0.46s var(--ease-in-out-bp) infinite;
+  }
+
+  /* El hocico se estira en vertical, no se abre una boca: no se esta fingiendo
+     que pronuncie palabras, se esta marcando el ritmo. */
+  @keyframes ln-talk {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1.1) translateY(1px);
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     UN LIMITE FISICO QUE MANDA SOBRE TRES GESTOS
+     ------------------------------------------------------------------------
+     El brazo mide 36 unidades del hombro (74,140) a la pata (58,172). El ojo
+     esta en (85,74), a 67 del hombro. LA PATA NO LLEGA A LA CARA, y no es
+     cuestion de girar mas: ninguna rotacion alarga un brazo.
+
+     Se comprobo midiendo despues de ver el gesto de espiar y no entender por
+     que la pata acababa en la barbilla.
+
+     La salida no es estirar el brazo -un leon con brazos de tres cuartos de su
+     altura deja de ser este personaje- sino la que usa cualquier animador con
+     un personaje de brazos cortos: BAJAR LA CABEZA A LA PATA. El leon agacha
+     la cabeza y sube la pata, y se encuentran a medio camino. Ademas es mejor
+     dibujo: mover la cabeza mueve el 55% de la silueta y se lee desde lejos;
+     mover solo un brazo, no.
+
+     Los angulos de abajo estan calculados para que la pata caiga donde dice el
+     comentario, no tanteados. Rotacion desde (74,140) y `scale` para ajustar
+     el alcance.
+     ------------------------------------------------------------------------ */
+
+  /* ========================================================================
+     LOS GESTOS
+     ========================================================================
+     Una pasada, encima del reposo, disparados por `data-gesture`. Quien
+     decide cual y cuando es `use-pinky-gestures`; aqui solo se pintan.
+
+     `both` en vez de `forwards`: con `forwards` el ultimo fotograma se queda
+     clavado y el leon se quedaria tieso en la postura final hasta el gesto
+     siguiente. Con `both` tampoco: por eso TODOS los gestos terminan en el
+     mismo sitio donde empiezan. Un gesto que no vuelve a su sitio es un gesto
+     que rompe el reposo.
+     ======================================================================== */
+
+  /* --- SE ESTIRA Y BOSTEZA ---------------------------------------------- */
+  .bp-ln[data-gesture='stretch'] .bp-ln-lean {
+    animation: ln-g-stretch 2.4s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='stretch'] .bp-ln-head-pose {
+    animation: ln-g-stretch-head 2.4s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='stretch'] .bp-ln-muzzle {
+    animation: ln-g-yawn 2.4s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='stretch'] .bp-ln-lid-l,
+  .bp-ln[data-gesture='stretch'] .bp-ln-lid-r {
+    animation: ln-g-squeeze 2.4s var(--ease-in-out-bp) 1;
+  }
+
+  @keyframes ln-g-stretch {
+    0%,
+    100% {
+      transform: scale(1, 1) translateY(0);
+    }
+    /* Anticipacion: se encoge ANTES de estirarse. Sin ese medio segundo, el
+       estiramiento sale de la nada y se lee a fallo de dibujo. */
+    16% {
+      transform: scale(1.04, 0.94) translateY(3px);
+    }
+    46% {
+      transform: scale(0.94, 1.12) translateY(-8px);
+    }
+    62% {
+      transform: scale(0.97, 1.06) translateY(-4px);
+    }
+    82% {
+      transform: scale(1.02, 0.98) translateY(1px);
+    }
+  }
+
+  @keyframes ln-g-stretch-head {
+    0%,
+    100% {
+      transform: rotate(0deg) translateY(0);
+    }
+    16% {
+      transform: rotate(0deg) translateY(3px);
+    }
+    46% {
+      transform: rotate(-4deg) translateY(-6px);
+    }
+    70% {
+      transform: rotate(2deg) translateY(-2px);
+    }
+  }
+
+  /* El bostezo: el hocico se alarga hacia abajo. */
+  @keyframes ln-g-yawn {
+    0%,
+    24%,
+    100% {
+      transform: scaleY(1) translateY(0);
+    }
+    44%,
+    58% {
+      transform: scaleY(1.5) translateY(4px);
+    }
+    76% {
+      transform: scaleY(1.12) translateY(1px);
+    }
+  }
+
+  /* Los ojos se cierran al bostezar. Bostezar con los ojos abiertos no existe. */
+  @keyframes ln-g-squeeze {
+    0%,
+    26%,
+    100% {
+      transform: translateY(0);
+    }
+    42%,
+    62% {
+      transform: translateY(25px);
+    }
+    78% {
+      transform: translateY(6px);
+    }
+  }
+
+  /* --- SE RASCA DETRAS DE LA OREJA -------------------------------------- */
+  .bp-ln[data-gesture='scratch'] .bp-ln-arm-l-pose {
+    animation: ln-g-scratch 2.2s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='scratch'] .bp-ln-head-pose {
+    animation: ln-g-scratch-head 2.2s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='scratch'] .bp-ln-lid-l {
+    animation: ln-g-scratch-eye 2.2s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='scratch'] .bp-ln-ear-l {
+    animation: ln-g-scratch-ear 2.2s var(--ease-out-bp) 1;
+  }
+
+  /* Pata al lateral de la cabeza (62,108), y desde ahi cuatro sacudidas. */
+  @keyframes ln-g-scratch {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    18% {
+      transform: rotate(130deg) scale(0.9);
+    }
+    30% {
+      transform: rotate(138deg) scale(0.86);
+    }
+    40% {
+      transform: rotate(124deg) scale(0.92);
+    }
+    50% {
+      transform: rotate(138deg) scale(0.86);
+    }
+    60% {
+      transform: rotate(124deg) scale(0.92);
+    }
+    70% {
+      transform: rotate(136deg) scale(0.87);
+    }
+    84% {
+      transform: rotate(56deg) scale(0.95);
+    }
+  }
+
+  /* La cabeza se inclina HACIA la pata. Un gato que se rasca acerca la cabeza
+     a la pata tanto como la pata a la cabeza. */
+  /* Y LA CABEZA BAJA A LA PATA. Sin esto la pata se queda a un palmo del
+     craneo rascando el aire, que es lo que pasaba antes de medirlo. */
+  @keyframes ln-g-scratch-head {
+    0%,
+    100% {
+      transform: rotate(0deg) translate(0, 0);
+    }
+    22%,
+    76% {
+      transform: rotate(-17deg) translate(-5px, 10px);
+    }
+  }
+
+  /* Y entorna el ojo de ese lado: el gesto de gusto. */
+  @keyframes ln-g-scratch-eye {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    24%,
+    74% {
+      transform: translateY(16px) rotate(8deg);
+    }
+  }
+
+  @keyframes ln-g-scratch-ear {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    30%,
+    70% {
+      transform: rotate(-18deg);
+    }
+  }
+
+  /* --- PERSIGUE SU PROPIA COLA ------------------------------------------ */
+  /*
+   * DOS ARREGLOS QUE HACEN FALTA LOS DOS, y se vieron mirando: el gesto
+   * dejaba al leon fuera del cuadro, y solo se le veian las patas.
+   *
+   * 1. El origen se mueve al CENTRO del cuerpo. `.bp-ln-lean` lo tiene en los
+   *    pies porque es lo que necesitan la respiracion y el aplastado, pero
+   *    girar 360 grados sobre los pies lanza la cabeza en un arco enorme. Un
+   *    gato que se persigue la cola gira sobre si mismo.
+   * 2. Y ademas SE ENCOGE al girar. Aun centrado, el radio hasta la punta de
+   *    la melena es de 114 unidades y el cuadro mide 172: sin encoger, sigue
+   *    saliendose. Encogerse tampoco es una trampa: es lo que hace un gato,
+   *    agacharse y dar la vuelta hecho un ovillo.
+   */
+  .bp-ln[data-gesture='chase-tail'] .bp-ln-lean {
+    transform-origin: 100px 116px;
+    animation: ln-g-chase 1.9s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='chase-tail'] .bp-ln-head-pose {
+    animation: ln-g-chase-head 1.9s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='chase-tail'] .bp-ln-tail-pose {
+    animation: ln-g-chase-tail 1.9s linear 1;
+  }
+
+  /*
+   * La vuelta entera. Con anticipacion al principio -se agacha y gira un poco
+   * al reves- y con un frenazo al final: girar y parar en seco se lee a
+   * sprite rotando, no a animal.
+   */
+  @keyframes ln-g-chase {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    /* Anticipacion: se agacha y gira un poco al reves antes de lanzarse. */
+    12% {
+      transform: rotate(-18deg) scale(0.94);
+    }
+    30% {
+      transform: rotate(80deg) scale(0.74);
+    }
+    72% {
+      transform: rotate(330deg) scale(0.74);
+    }
+    /* Y frena pasandose de largo, en vez de parar en seco. */
+    88% {
+      transform: rotate(368deg) scale(0.92);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+  /* La cabeza mira hacia donde va, adelantandose al cuerpo. */
+  @keyframes ln-g-chase-head {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    12% {
+      transform: rotate(-10deg);
+    }
+    40% {
+      transform: rotate(12deg);
+    }
+    80% {
+      transform: rotate(-6deg);
+    }
+  }
+
+  /* Y la cola huye, que es de lo que va el gesto. */
+  @keyframes ln-g-chase-tail {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    30% {
+      transform: rotate(-26deg);
+    }
+    60% {
+      transform: rotate(20deg);
+    }
+  }
+
+  /* --- SE SACUDE LA MELENA ---------------------------------------------- */
+  .bp-ln[data-gesture='shake-mane'] .bp-ln-head-pose {
+    animation: ln-g-shake 1.3s linear 1;
+  }
+  .bp-ln[data-gesture='shake-mane'] .bp-ln-mane {
+    animation: ln-g-shake-mane 1.3s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='shake-mane'] .bp-ln-ear-l,
+  .bp-ln[data-gesture='shake-mane'] .bp-ln-ear-r {
+    animation: ln-g-shake-ear 1.3s linear 1;
+  }
+
+  /*
+   * Sacudida AMORTIGUADA: 14, 11, 8, 5, 2 grados. Una oscilacion de amplitud
+   * constante es un metronomo; una que se apaga es un animal parando.
+   */
+  @keyframes ln-g-shake {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    12% {
+      transform: rotate(-14deg);
+    }
+    26% {
+      transform: rotate(11deg);
+    }
+    40% {
+      transform: rotate(-8deg);
+    }
+    54% {
+      transform: rotate(5deg);
+    }
+    70% {
+      transform: rotate(-2deg);
+    }
+  }
+
+  /* La melena se esponja al sacudirse. Es lo que la hace melena y no casco. */
+  @keyframes ln-g-shake-mane {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    20% {
+      transform: scale(1.09);
+    }
+    50% {
+      transform: scale(1.04);
+    }
+  }
+
+  /* Las orejas van RETRASADAS respecto a la cabeza: lo que se arrastra llega
+     tarde, y ese retraso es lo que da peso. */
+  @keyframes ln-g-shake-ear {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    20% {
+      transform: rotate(20deg);
+    }
+    34% {
+      transform: rotate(-15deg);
+    }
+    48% {
+      transform: rotate(10deg);
+    }
+    64% {
+      transform: rotate(-4deg);
+    }
+  }
+
+  /* --- DA UN SALTITO ---------------------------------------------------- */
+  .bp-ln[data-gesture='hop'] .bp-ln-lean {
+    animation: ln-g-hop 1.1s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='hop'] .bp-ln-legs {
+    animation: ln-g-hop-legs 1.1s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='hop'] .bp-ln-ear-l,
+  .bp-ln[data-gesture='hop'] .bp-ln-ear-r {
+    animation: ln-g-hop-ear 1.1s var(--ease-out-bp) 1;
+  }
+
+  /*
+   * Aplastar y estirar, que es lo que hace que un salto tenga peso:
+   * se agacha (aplasta), sube (estira), cae y vuelve a aplastar al aterrizar.
+   * Sin el aplastamiento del aterrizaje, el personaje flota.
+   */
+  @keyframes ln-g-hop {
+    0%,
+    100% {
+      transform: translateY(0) scale(1, 1);
+    }
+    18% {
+      transform: translateY(4px) scale(1.08, 0.9);
+    }
+    /*
+     * -12px, no -22. A 22 la melena se salia del viewBox por arriba y el salto
+     * se veia con la cabeza cortada. El viewBox se abrio 14 unidades para dar
+     * aire, y el resto lo pone la deformacion: se nota mas el aplastar y
+     * estirar que la altura, y eso no cuesta espacio.
+     */
+    38% {
+      transform: translateY(-12px) scale(0.93, 1.12);
+    }
+    58% {
+      transform: translateY(-8px) scale(0.97, 1.05);
+    }
+    76% {
+      transform: translateY(3px) scale(1.09, 0.9);
+    }
+    90% {
+      transform: translateY(0) scale(0.99, 1.02);
+    }
+  }
+
+  /* Las patas se recogen en el aire. Colgando, seria un muneco levantado. */
+  @keyframes ln-g-hop-legs {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    38%,
+    58% {
+      transform: translateY(-6px);
+    }
+    76% {
+      transform: translateY(2px);
+    }
+  }
+
+  @keyframes ln-g-hop-ear {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    38% {
+      transform: rotate(-16deg);
+    }
+    72% {
+      transform: rotate(14deg);
+    }
+  }
+
+  /* --- SE SIENTA Y MIRA ALREDEDOR --------------------------------------- */
+  .bp-ln[data-gesture='sit-look'] .bp-ln-lean {
+    animation: ln-g-sit 3s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='sit-look'] .bp-ln-head-pose {
+    animation: ln-g-sit-head 3s var(--ease-in-out-bp) 1;
+  }
+  .bp-ln[data-gesture='sit-look'] .bp-ln-tail-pose {
+    animation: ln-g-sit-tail 3s var(--ease-in-out-bp) 1;
+  }
+
+  @keyframes ln-g-sit {
+    0%,
+    100% {
+      transform: translateY(0) scale(1, 1);
+    }
+    16%,
+    76% {
+      transform: translateY(6px) scale(1.06, 0.9);
+    }
+  }
+
+  /* Mira a un lado, al otro, y vuelve al frente. Con una pausa en cada
+     extremo: un barrido continuo se lee a radar. */
+  @keyframes ln-g-sit-head {
+    0%,
+    100% {
+      transform: rotate(0deg) translateX(0);
+    }
+    22%,
+    36% {
+      transform: rotate(-9deg) translateX(-5px);
+    }
+    54%,
+    68% {
+      transform: rotate(9deg) translateX(5px);
+    }
+    84% {
+      transform: rotate(0deg) translateX(0);
+    }
+  }
+
+  @keyframes ln-g-sit-tail {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    30% {
+      transform: rotate(-9deg);
+    }
+    62% {
+      transform: rotate(7deg);
+    }
+  }
+
+  /* --- SE TAPA UN OJO Y ESPIA ------------------------------------------- */
+  .bp-ln[data-gesture='peek'] .bp-ln-arm-l-pose {
+    animation: ln-g-peek-arm 2.3s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='peek'] .bp-ln-lid-l {
+    animation: ln-g-peek-lid 2.3s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='peek'] .bp-ln-head-pose {
+    animation: ln-g-peek-head 2.3s var(--ease-out-bp) 1;
+  }
+
+  /* La pata sube a la cara, se queda, se aparta un momento -ese es el espiar-
+     y vuelve a taparse antes de bajar. */
+  /* La pata sube todo lo que da (73,104) y ahi se queda; el hueco del espiar
+     lo hace apartandose un poco, no bajando. */
+  @keyframes ln-g-peek-arm {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    16%,
+    40% {
+      transform: rotate(146deg) scale(0.98);
+    }
+    52%,
+    64% {
+      transform: rotate(126deg) scale(0.98);
+    }
+    76% {
+      transform: rotate(146deg) scale(0.98);
+    }
+    90% {
+      transform: rotate(58deg) scale(0.98);
+    }
+  }
+
+  /* El ojo se cierra cuando la pata lo tapa y se abre en el hueco: es lo que
+     convierte "taparse la cara" en "espiar". */
+  @keyframes ln-g-peek-lid {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    18%,
+    44% {
+      transform: translateY(25px);
+    }
+    54%,
+    66% {
+      transform: translateY(4px);
+    }
+    78% {
+      transform: translateY(25px);
+    }
+  }
+
+  /*
+   * LA CABEZA SE AGACHA DETRAS DE LA PATA. Es la mitad del gesto: la pata sola
+   * no llega al ojo -mide 36 y el ojo esta a 67-, asi que es la cabeza la que
+   * baja a esconderse. Y al espiar asoma un poco, que es lo que se ve.
+   */
+  @keyframes ln-g-peek-head {
+    0%,
+    100% {
+      transform: rotate(0deg) translate(0, 0);
+    }
+    20%,
+    44% {
+      transform: rotate(9deg) translate(-8px, 20px);
+    }
+    54%,
+    66% {
+      transform: rotate(4deg) translate(-4px, 12px);
+    }
+    78% {
+      transform: rotate(9deg) translate(-8px, 20px);
+    }
+  }
+
+  /* --- RUGE (visual, sin sonido) ---------------------------------------- */
+  .bp-ln[data-gesture='roar'] .bp-ln-head-pose {
+    animation: ln-g-roar-head 1.8s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='roar'] .bp-ln-muzzle {
+    animation: ln-g-roar-muzzle 1.8s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='roar'] .bp-ln-mane {
+    animation: ln-g-roar-mane 1.8s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='roar'] .bp-ln-lid-l,
+  .bp-ln[data-gesture='roar'] .bp-ln-lid-r {
+    animation: ln-g-roar-lid 1.8s var(--ease-out-bp) 1;
+  }
+  .bp-ln[data-gesture='roar'] .bp-ln-lean {
+    animation: ln-g-roar-body 1.8s var(--ease-out-bp) 1;
+  }
+
+  /* Toma aire echando la cabeza atras, y despues la lanza adelante. */
+  @keyframes ln-g-roar-head {
+    0%,
+    100% {
+      transform: rotate(0deg) translateY(0);
+    }
+    20% {
+      transform: rotate(6deg) translateY(3px);
+    }
+    38% {
+      transform: rotate(-7deg) translateY(-4px);
+    }
+    62% {
+      transform: rotate(-5deg) translateY(-3px);
+    }
+    84% {
+      transform: rotate(1deg) translateY(0);
+    }
+  }
+
+  @keyframes ln-g-roar-muzzle {
+    0%,
+    18%,
+    100% {
+      transform: scale(1, 1) translateY(0);
+    }
+    40%,
+    58% {
+      transform: scale(1.18, 1.7) translateY(7px);
+    }
+    76% {
+      transform: scale(1.05, 1.18) translateY(2px);
+    }
+  }
+
+  /*
+   * LA MELENA SE HINCHA, y es lo que hace que el rugido se lea. Sin ella el
+   * gesto es «un leon abre la boca»; con ella, un leon rugiendo. Es la unica
+   * parte del personaje lo bastante grande como para que un cambio de tamano
+   * se note a 64px.
+   */
+  @keyframes ln-g-roar-mane {
+    0%,
+    18%,
+    100% {
+      transform: scale(1);
+    }
+    36% {
+      transform: scale(1.14);
+    }
+    60% {
+      transform: scale(1.08);
+    }
+    82% {
+      transform: scale(1.02);
+    }
+  }
+
+  /* Ojos entornados: rugir con los ojos como platos sale a susto, no a fuerza. */
+  @keyframes ln-g-roar-lid {
+    0%,
+    20%,
+    100% {
+      transform: translateY(0);
+    }
+    40%,
+    62% {
+      transform: translateY(11px);
+    }
+  }
+
+  /* El cuerpo retrocede al tomar aire y empuja al rugir: accion y reaccion. */
+  @keyframes ln-g-roar-body {
+    0%,
+    100% {
+      transform: scale(1, 1) translateY(0);
+    }
+    20% {
+      transform: scale(1.03, 0.97) translateY(2px);
+    }
+    42% {
+      transform: scale(0.97, 1.05) translateY(-3px);
+    }
+    70% {
+      transform: scale(1.01, 0.99) translateY(0);
+    }
+  }
+
+  /* ========================================================================
+     MOVIMIENTO REDUCIDO
+     ========================================================================
+     Se apagan los BUCLES y LOS GESTOS; se conservan las POSTURAS. Un bucle
+     perpetuo -y un gesto que salta solo cada diez segundos- son justo lo que
+     molesta a quien pide menos movimiento. Una postura es un cambio unico y
+     corto que dice en que estado esta el bot, y quitarla dejaria al leon
+     igual escuchando que pensando.
+
+     El propio `use-pinky-gestures` ya no programa nada con movimiento
+     reducido; esto es el cinturon por encima del tirante, para que un gesto
+     disparado a mano desde el laboratorio tampoco se mueva.
+     ======================================================================== */
+  .bp-ln[data-reduced='true'] .bp-ln-breath,
+  .bp-ln[data-reduced='true'] .bp-ln-beat,
+  .bp-ln[data-reduced='true'] .bp-ln-tail-loop,
+  .bp-ln[data-reduced='true'] .bp-ln-head-loop,
+  .bp-ln[data-reduced='true'] .bp-ln-arm-l-loop,
+  .bp-ln[data-reduced='true'] .bp-ln-eyes,
+  .bp-ln[data-reduced='true'] .bp-ln-muzzle,
+  .bp-ln[data-reduced='true'] .bp-ln-mane,
+  .bp-ln[data-reduced='true'] .bp-ln-legs,
+  .bp-ln[data-reduced='true'] .bp-ln-lean,
+  .bp-ln[data-reduced='true'] .bp-ln-head-pose,
+  .bp-ln[data-reduced='true'] .bp-ln-arm-l-pose,
+  .bp-ln[data-reduced='true'] .bp-ln-tail-pose,
+  .bp-ln[data-reduced='true'] .bp-ln-ear-l,
+  .bp-ln[data-reduced='true'] .bp-ln-ear-r,
+  .bp-ln[data-reduced='true'] .bp-ln-eye-l,
+  .bp-ln[data-reduced='true'] .bp-ln-eye-r,
+  .bp-ln[data-reduced='true'] .bp-ln-lid-l,
+  .bp-ln[data-reduced='true'] .bp-ln-lid-r {
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-typing-dot,
+    .bp-ln-breath,
+    .bp-ln-beat,
+    .bp-ln-tail-loop,
+    .bp-ln-head-loop,
+    .bp-ln-arm-l-loop,
+    .bp-ln-eyes,
+    .bp-ln-muzzle,
+    .bp-ln-mane,
+    .bp-ln-legs,
+    .bp-ln-lean,
+    .bp-ln-head-pose,
+    .bp-ln-arm-l-pose,
+    .bp-ln-tail-pose,
+    .bp-ln-ear-l,
+    .bp-ln-ear-r,
+    .bp-ln-eye-l,
+    .bp-ln-eye-r,
+    .bp-ln-lid-l,
+    .bp-ln-lid-r {
+      animation: none;
+    }
+
+    /* Los puntos quedan legibles en vez de invisibles a media animacion. */
+    .bp-typing-dot {
+      opacity: 0.6;
+    }
+  }
+}
+
+/*
+ * ============================================================================
+ * AMPLITUDES DE PINKY
+ * ============================================================================
+ * Fuera de `@layer` a proposito: `@property` no participa en la cascada, y
+ * dejarla dentro de una capa solo confunde a quien lo lea.
+ *
+ * Registrar la propiedad es lo que la vuelve INTERPOLABLE. Una custom property
+ * sin registrar es texto para el navegador, y el texto no se interpola: al
+ * cambiar de estado, el meneo de la cola pasaria de 7deg a 0.5deg en un
+ * fotograma. Registrada como `<angle>`, la transicion la lleva de una a otra y
+ * la cola se va parando, que es lo que hace una cola.
+ *
+ * `inherits: true` porque el valor se declara en la raiz del SVG -donde vive
+ * `data-state`- y lo leen los grupos de dentro.
+ * ============================================================================
+ */
+
+@property --ln-breath {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 1.9px;
+}
+
+@property --ln-beat {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --ln-tail-amp {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 3.6deg;
+}
+
+@property --ln-tail-beat {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@property --ln-wave {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@property --ln-head-drift {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 4.5deg;
+}
+
+/* ==========================================================================
+ * ENTRADA DEL REPRODUCTOR DE UNA PISTA
+ *
+ * El reproductor se monta al pulsar la fila, asi que APARECE: sin transicion
+ * se leeria como un fallo de maquetado. Lo que se anima es opacidad y 4px de
+ * desplazamiento, nada mas.
+ *
+ * NO SE ANIMA LA ALTURA, ni con `height` ni con `grid-template-rows`: las dos
+ * hacen trabajar al maquetador en cada fotograma y el sistema lo prohibe. El
+ * alto cambia de golpe y esta transformacion tapa el salto.
+ *
+ * Es una animacion de una pasada sobre un elemento que acaba de existir, asi
+ * que aqui `animation` es lo correcto y no una transicion: no hay estado
+ * anterior desde el que transicionar.
+ * ======================================================================= */
+
+@keyframes bp-track-player-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bp-track-player {
+  animation: bp-track-player-in var(--dur-2, 180ms)
+    var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+/* Reducir no es apagar del todo: se conserva la opacidad, que es lo que
+   explica que algo ha aparecido, y se retira el movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes bp-track-player-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==========================================================================
+ * QUIZ: ACIERTO, ERROR Y PUNTUACION
+ *
+ * En CSS y no en Framer Motion por la misma razon que los puntos de
+ * «escribiendo» del chat: corren fuera del hilo principal. Aqui ademas
+ * coinciden con una llamada al servidor que devuelve la correccion, asi que el
+ * hilo esta ocupado justo cuando la animacion tiene que verse.
+ *
+ * Son de UNA PASADA sobre elementos que acaban de cambiar de estado, asi que
+ * `animation` es lo correcto y no una transicion: no hay estado anterior desde
+ * el que transicionar.
+ *
+ * NADA ARRANCA DESDE `scale(0)`: el minimo es 0.98. Y ninguna dura mas de
+ * 300ms, que es el techo del sistema para interfaz.
+ * ======================================================================= */
+
+/* El acierto: un pulso corto hacia fuera. No celebra de mas -se ve diez veces
+   por partida- pero confirma. */
+@keyframes bp-quiz-right {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.018);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* El error: un desplazamiento lateral minimo, no un temblor de tres ciclos.
+   Dos idas y vueltas de 3px bastan para leerse como negacion; mas es ruido. */
+@keyframes bp-quiz-wrong {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* El veredicto y su explicacion entran juntos: aparecen donde antes no habia
+   nada, y sin transicion se leerian como un salto. */
+@keyframes bp-quiz-verdict {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* La puntuacion final se ve UNA vez por partida: es el unico sitio del quiz
+   donde cabe algo mas amplio. */
+@keyframes bp-quiz-score {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.bp-quiz-right {
+  animation: bp-quiz-right var(--dur-3, 240ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+.bp-quiz-wrong {
+  animation: bp-quiz-wrong var(--dur-3, 240ms) var(--ease-out-soft, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.bp-quiz-verdict {
+  animation: bp-quiz-verdict var(--dur-2, 180ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1))
+    both;
+}
+
+.bp-quiz-score {
+  animation: bp-quiz-score var(--dur-4, 320ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1))
+    both;
+}
+
+/* Reducir no es apagar: el color y la opacidad siguen explicando el resultado,
+   se retira el movimiento. Es la misma regla que en el resto del sitio. */
+@media (prefers-reduced-motion: reduce) {
+  .bp-quiz-right,
+  .bp-quiz-wrong {
+    animation: none;
+  }
+
+  .bp-quiz-verdict,
+  .bp-quiz-score {
+    animation: bp-quiz-fade var(--dur-2, 180ms) ease both;
+  }
+
+  @keyframes bp-quiz-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==========================================================================
+   COMPARADOR DE INTEGRANTES (Fase 12B)
+   ========================================================================== */
+
+/*
+ * Entrada de una celda cuando cambia la integrante de su columna.
+ *
+ * El DESENFOQUE no es adorno. Al cambiar de selección, el texto viejo y el
+ * nuevo ocupan el mismo sitio durante unos fotogramas y el ojo los ve como
+ * dos cosas superpuestas; un desenfoque corto los funde en una sola que se
+ * transforma. Cuatro píxeles bastan y son baratos: por encima de veinte, el
+ * desenfoque se paga caro, sobre todo en Safari.
+ *
+ * Se anima con una `key` de React, no con `AnimatePresence`: es un gesto
+ * predeterminado y corre fuera del hilo principal.
+ */
+@keyframes bp-compare-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.bp-compare-in {
+  animation: bp-compare-in var(--dur-3, 240ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1))
+    both;
+}
+
+/* Reducir no es apagar: sin desplazamiento ni desenfoque, la opacidad sigue
+   diciendo que ese valor acaba de cambiar. Es la misma regla del resto del
+   sitio. */
+@media (prefers-reduced-motion: reduce) {
+  .bp-compare-in {
+    animation: bp-compare-fade var(--dur-2, 180ms) ease both;
+    /* Sin escalonado: con solo opacidad, el retardo se lee a retraso. */
+    animation-delay: 0ms !important;
+  }
+
+  @keyframes bp-compare-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==========================================================================
+   AVISO DEL MODO BLINK (Fase 12C)
+   ========================================================================== */
+
+/*
+ * Entra desde abajo, que es de donde viene. Es un aviso que aparece una vez
+ * cada mucho: no hace falta que sea discreto, hace falta que se vea.
+ *
+ * `both` para que no parpadee antes de arrancar, y salida no hay: el aviso se
+ * desmonta. Animar la salida obligaria a esperar a que termine para quitarlo,
+ * y esto es informacion, no un dialogo.
+ */
+@keyframes bp-blink-notice {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bp-blink-notice {
+  animation: bp-blink-notice var(--dur-3, 240ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1))
+    both;
+}
+
+/* Sin desplazamiento: el aviso aparece. La opacidad basta para que se lea
+   como algo que acaba de llegar. */
+@media (prefers-reduced-motion: reduce) {
+  .bp-blink-notice {
+    animation: bp-blink-fade var(--dur-2, 180ms) ease both;
+  }
+
+  @keyframes bp-blink-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==========================================================================
+   EL COLOR PROPIO DE CADA INTEGRANTE, USADO COMO TEXTO
+   ========================================================================== */
+
+/*
+ * `colorAccent` es un DATO de la base, no un token, asi que el verificador de
+ * contraste no lo ve y no puede protegerlo. Y falla: el lila de Jisoo
+ * (#c9a7ff) sobre el papel del tema claro da 1.9:1, y sobre el rosa del modo
+ * BLINK, 1.3:1. Estaba mal desde que existe el tema claro; el modo BLINK solo
+ * lo puso donde se ve.
+ *
+ * La regla del sistema es que ese color vale para un FILETE -donde solo hay
+ * que distinguirlo, no leerlo- pero no para texto tal cual. Aqui se mezcla
+ * con la tinta del tema en curso, que es lo unico que funciona en los tres a
+ * la vez: sobre negro la mezcla ACLARA el color y sobre papel lo OSCURECE,
+ * porque en los dos casos tira hacia `--color-fg`.
+ *
+ * CUANTO se mezcla lo decide el tema (`--bp-member-mix`), porque el problema
+ * es del fondo y no del color: sobre negro los cuatro colores pasan AA tal
+ * cual y no se toca ninguno; sobre papel y sobre rosa hay que bajarlos al 40%.
+ * Los numeros estan medidos y anotados en `theme.css`.
+ *
+ * En oklab y no en sRGB: mezclar en sRGB apaga el tono y saca grises sucios.
+ *
+ * El color se pasa en `--bp-member`, y quien lo escribe es el componente
+ * -viene de una fila de la base, asi que no puede ser una clase de Tailwind-.
+ */
+.bp-member-ink {
+  color: color-mix(
+    in oklab,
+    var(--bp-member, var(--color-accent)) var(--bp-member-mix, 100%),
+    var(--color-fg)
+  );
+}
+
+/* ==========================================================================
+   ENTRADA DE LA PORTADA
+   ========================================================================== */
+
+/*
+ * LA PORTADA SE ANIMA CON CSS, NO CON FRAMER MOTION, Y LA RAZON ESTA MEDIDA.
+ *
+ * Con Framer, las piezas del hero nacen en `initial={{ opacity: 0 }}` y no se
+ * pintan hasta que el paquete ha descargado, hidratado y arrancado la
+ * animacion. Lighthouse lo dijo sin rodeos: el elemento LCP era el parrafo del
+ * hero, con TTFB de 519ms y **5.104ms de Render Delay**. El texto estaba en el
+ * HTML desde el primer byte y el navegador lo tenia prohibido pintar.
+ *
+ * Con CSS, `animation-fill-mode: both` aplica el fotograma inicial en la
+ * PRIMERA pintura y la animacion corre desde ahi, sin esperar a JavaScript.
+ * El LCP pasa a ser el primer pintado mas el retardo del escalonado. Ademas
+ * corre fuera del hilo principal y deja de necesitar `use client`: el hero
+ * vuelve a ser un componente de servidor.
+ *
+ * El escalonado va en `animation-delay` en linea, y es CORTO en la pieza que
+ * marca el LCP -el parrafo, 180ms- porque cada milisegundo de retardo ahi es
+ * un milisegundo de LCP.
+ */
+@keyframes bp-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bp-hero-in {
+  animation: bp-hero-in var(--dur-5, 520ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reducir no es apagar: el desvanecido sigue explicando que la portada se
+     arma. Lo que se retira es el desplazamiento. */
+  @keyframes bp-hero-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .bp-hero-in {
+    animation-duration: var(--dur-3, 240ms);
+  }
+}
+
+/* ==========================================================================
+   TRANSICION DE PAGINA Y ENTRADA DE BLOQUES
+   ========================================================================== */
+
+/*
+ * LAS DOS ERAN FRAMER MOTION Y LAS DOS SERVIAN LA PAGINA INVISIBLE.
+ *
+ * `PageTransition` envolvia el `<main>` entero y `Reveal` cada seccion, y
+ * ambos salian del servidor con `style="opacity:0"`. Consecuencias medidas:
+ * el LCP no podia ser mejor que el tiempo de hidratacion -5.104 ms de Render
+ * Delay sobre 519 ms de TTFB- y sin JavaScript el sitio se veia en blanco.
+ *
+ * En CSS el navegador pinta con el HTML y la animacion corre sola, fuera del
+ * hilo principal y sin que Framer tenga que llegar al navegador.
+ */
+
+/* Transicion de pagina: se reinicia sola porque `template.tsx` remonta en
+   cada navegacion. Corta, y sin salida a proposito. */
+@keyframes bp-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bp-page-in {
+  animation: bp-page-in var(--dur-4, 320ms) var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+/*
+ * Entrada de bloque. El atributo lo pone `Reveal` DESPUES de hidratar y solo
+ * en lo que esta por debajo del pliegue: sin atributo -que es como sale del
+ * servidor- el bloque esta visible y quieto, que es lo que arregla el LCP y
+ * lo que mantiene el contenido sin JavaScript.
+ */
+[data-reveal='hidden'] {
+  opacity: 0;
+}
+
+[data-reveal='shown'] {
+  animation: bp-reveal-in 420ms var(--ease-out-bp, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@keyframes bp-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reducir no es apagar: se retira el desplazamiento, no el desvanecido. */
+  @keyframes bp-page-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bp-reveal-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

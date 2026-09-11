@@ -1,0 +1,19 @@
+{
+  // tsconfig raiz: solo alias del monorepo para el editor y los paquetes que
+  // compilan con resolucion "bundler" (apps/web, packages/ui).
+  // Los microservicios NestJS resuelven @blackpink/* por node_modules (symlink de pnpm
+  // hacia el dist del paquete), por eso no heredan estos paths: si lo hicieran, tsc
+  // arrastraria ficheros fuera de rootDir y romperia la ruta de salida dist/main.js.
+  "extends": "./packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@blackpink/types": ["./packages/types/src/index.ts"],
+      "@blackpink/types/*": ["./packages/types/src/*"],
+      "@blackpink/ui": ["./packages/ui/src/index.ts"],
+      "@blackpink/ui/*": ["./packages/ui/src/*"]
+    }
+  },
+  "include": [],
+  "exclude": ["node_modules", "**/dist", "**/.next", "**/.turbo"]
+}

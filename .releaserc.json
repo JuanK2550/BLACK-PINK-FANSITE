@@ -1,0 +1,54 @@
+{
+  "branches": ["main"],
+  "tagFormat": "v${version}",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "perf", "release": "patch" },
+          { "type": "refactor", "release": "patch" },
+          { "scope": "deps", "release": "patch" },
+          { "type": "docs", "release": false },
+          { "type": "test", "release": false },
+          { "type": "ci", "release": false },
+          { "type": "chore", "scope": "release", "release": false }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Novedades" },
+            { "type": "fix", "section": "Correcciones" },
+            { "type": "perf", "section": "Rendimiento" },
+            { "type": "refactor", "section": "Reorganización" },
+            { "type": "chore", "scope": "deps", "section": "Dependencias" },
+            { "type": "docs", "hidden": true },
+            { "type": "test", "hidden": true },
+            { "type": "ci", "hidden": true },
+            { "type": "chore", "hidden": true },
+            { "type": "style", "hidden": true }
+          ]
+        }
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      { "changelogFile": "CHANGELOG.md", "changelogTitle": "# Registro de cambios" }
+    ],
+    ["@semantic-release/npm", { "npmPublish": false }],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "package.json"],
+        "message": "chore(release): v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ]
+}

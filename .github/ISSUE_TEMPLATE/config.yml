@@ -1,0 +1,8 @@
+# Sin issues en blanco: las tres plantillas piden lo que hace falta para poder
+# actuar, y un issue en blanco suele ser un «no funciona» sin página ni pasos.
+#
+# Las vulnerabilidades NO van por aquí: ver SECURITY.md. GitHub muestra ese
+# fichero en el selector de issues en cuanto se activa el reporte privado
+# (Settings → Code security → Private vulnerability reporting), así que no hace
+# falta escribir aquí una URL del repositorio que podría quedarse vieja.
+blank_issues_enabled: false
