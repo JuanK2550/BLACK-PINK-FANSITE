@@ -157,9 +157,15 @@ física, se guarda la física.
 
    `REVALIDATE_SECRET` e `INTERNAL_API_KEY` deben tener **al menos 24 caracteres**.
 
-2. **Protección de `main`** (*Settings → Branches*): exige los checks
-   «Lint, typecheck, test y build» y «Playwright (escritorio y móvil) + axe». Aparecen
-   en la lista después de la primera ejecución de CI.
+2. **Protección de `main`**: ya está activa contra borrado y reescritura de la historia.
+   Si algún día se trabaja con pull requests, se pueden exigir además los checks
+   «Lint, typecheck, test y build» y «Playwright (escritorio y móvil) + axe»
+   (*Settings → Branches*).
+
+3. **Workflows de despliegue apagados hasta que haya producción.** `deploy-web`,
+   `deploy-services`, `db-backup` y la publicación de versiones están desactivados en
+   *Actions*: sin los secretos fallarían todos los días. Se encienden ahí mismo (o con
+   `gh workflow enable deploy-web.yml`) cuando existan el hosting y la base de datos.
 
 ---
 
