@@ -27,7 +27,7 @@ catalog:
   '@nestjs/core': '^11.0.0'
   '@nestjs/platform-express': '^11.0.0'
   '@nestjs/schematics': '^11.0.0'
-  '@nestjs/swagger': '^11.4.7'
+  '@nestjs/swagger': '^12.0.1'
   '@nestjs/testing': '^11.2.3'
   '@nestjs/throttler': '^6.4.0'
   'class-transformer': '^0.5.1'
