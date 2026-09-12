@@ -1,20 +1,9 @@
-# Actualizaciones semanales de dependencias.
-#
-# AGRUPADAS, no una por paquete: con once paquetes en el monorepo, una PR por
-# dependencia serían decenas a la semana y se acabarían aprobando sin leer, que
-# es peor que no actualizar. Se agrupan por familia —lo que se actualiza junto
-# y se rompe junto—, y los parches y menores van en una sola PR por familia.
-#
-# PRISMA NO SUBE DE MAYOR SOLO. CLAUDE.md lo fija en 7.10.0: el tag `latest` de
-# npm apunta a una release candidate de la 8, y Prisma 7 cambió tres cosas que
-# muerden si se olvidan. Subir de mayor es una decisión, no una PR automática.
+# Actualizaciones semanales de dependencias, agrupadas por familia.
 
 version: 2
 
 updates:
   - package-ecosystem: npm
-    # pnpm workspaces: Dependabot lee el pnpm-lock.yaml de la raíz y actualiza
-    # todos los paquetes del monorepo desde aquí.
     directory: /
     schedule:
       interval: weekly
@@ -23,7 +12,6 @@ updates:
       timezone: Europe/Madrid
     open-pull-requests-limit: 8
     commit-message:
-      # Encaja con el scope-enum de commitlint.config.mjs.
       prefix: 'chore(deps)'
     labels: [dependencias]
     ignore:
@@ -82,15 +70,13 @@ updates:
       acciones:
         patterns: ['*']
 
-  # Las imágenes base de los cinco Dockerfile. Una imagen de Node sin parchear
-  # es la vía más corta a un CVE en producción.
   - package-ecosystem: docker
     directories:
-      - /services/api-gateway
-      - /services/content-service
-      - /services/media-service
-      - /services/chatbot-service
-      - /services/speech-service
+      - /backend/api-gateway
+      - /backend/content-service
+      - /backend/media-service
+      - /backend/chatbot-service
+      - /backend/speech-service
     schedule:
       interval: weekly
       day: monday

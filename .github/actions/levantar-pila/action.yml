@@ -1,3 +1,5 @@
+# Acción reutilizable: instala, construye y levanta la pila completa para las pruebas.
+
 name: Levantar la pila completa
 description: >
   Instala dependencias, levanta Postgres, Redis y los cinco servicios con
@@ -20,13 +22,6 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    # El .env de ejemplo apunta a localhost, que es desde donde corren la
-    # migracion, el seed y la web: los servicios publican sus puertos al host.
-    #
-    # Los secretos se SUSTITUYEN en su linea, no se añaden al final: `dotenv`
-    # se queda con la PRIMERA aparicion de una clave, asi que una linea nueva
-    # al final no cambiaria nada en Node aunque si en docker compose, y los dos
-    # lados verian valores distintos.
     - name: Preparar entorno
       shell: bash
       run: |
@@ -38,8 +33,6 @@ runs:
       shell: bash
       run: pnpm docker:up
 
-    # `depends_on` con `service_healthy` ordena el arranque, pero no garantiza
-    # que el GATEWAY responda cuando termina `up -d`. Se espera a su /health.
     - name: Esperar al gateway
       shell: bash
       run: |
@@ -56,8 +49,6 @@ runs:
         pnpm --filter @blackpink/content-service db:migrate
         pnpm --filter @blackpink/content-service db:seed
 
-    # La web se construye DESPUES de sembrar: sus paginas se prerenderizan en
-    # el build, y construidas contra una base vacia saldrian vacias.
     - name: Construir la web
       shell: bash
       run: pnpm --filter @blackpink/web build

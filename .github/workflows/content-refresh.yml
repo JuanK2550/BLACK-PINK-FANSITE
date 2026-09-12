@@ -1,33 +1,9 @@
-name: Refresco de contenido
+# Cada semana: refresca la caché de la web y el índice de PINKY.
 
-# Cron semanal que hace dos cosas que, sin él, solo ocurrían al desplegar:
-#
-#   1. REVALIDA LA CACHÉ ISR de la web (`POST /api/revalidate`). Las páginas
-#      se regeneran solas cada hora, pero la caché de `fetch` y las páginas
-#      estáticas del build pueden quedarse con datos de hace días si nadie las
-#      visita; esto las tira todas de una vez.
-#   2. REGENERA EL ÍNDICE VECTORIAL DE PINKY (`POST /api/v1/admin/reindex` en
-#      chatbot-service). El índice se construía solo al arrancar el servicio:
-#      un hito nuevo en la cronología no llegaba al chat hasta el siguiente
-#      despliegue.
-#
-# Los dos endpoints están protegidos con secretos comparados en tiempo
-# constante y responden 404 sin ellos, así que desde fuera no se sabe ni que
-# existen. El de reindexado NO pasa por el gateway: no está en su lista blanca.
-#
-# El reindexado responde 202 y sigue en segundo plano; tarda minutos por la
-# pausa entre lotes que protege la cuota gratuita de Gemini. Este workflow no
-# espera a que termine: lo que comprueba es que el servicio lo ACEPTÓ.
-#
-# Secretos:
-#   SITE_URL             https://... de la web en producción
-#   REVALIDATE_SECRET    el mismo valor que tiene la web en Vercel
-#   CHATBOT_URL          https://... de chatbot-service (su URL directa)
-#   INTERNAL_API_KEY     el mismo valor que tiene chatbot-service
+name: Refresco de contenido
 
 on:
   schedule:
-    # Lunes a las 04:41 UTC, después del volcado diario de las 03:17.
     - cron: '41 4 * * 1'
   workflow_dispatch:
 
@@ -71,11 +47,7 @@ jobs:
           cat respuesta.json; echo
           case "$estado" in
             202) echo "Reindexado aceptado; sigue en segundo plano." ;;
-            # 409 = ya había uno en marcha. No es un fallo: el índice se está
-            # rehaciendo igualmente.
             409) echo "::notice::Ya había un reindexado en curso." ;;
-            # 404 aquí casi siempre es la clave equivocada: el endpoint responde
-            # 404 y no 401 para no confirmar que existe.
             404) echo "::error::404: revisa INTERNAL_API_KEY (el endpoint no confirma si existe)."; exit 1 ;;
             *) echo "::error::Respuesta inesperada: $estado"; exit 1 ;;
           esac

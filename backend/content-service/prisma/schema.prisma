@@ -1,0 +1,476 @@
+// Esquema de la base de datos del contenido.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Locale {
+  es
+  en
+  ko
+}
+
+enum AlbumType {
+  SINGLE
+  EP
+  ALBUM
+  COMPILATION
+  COLLABORATION
+}
+
+enum SoloWorkType {
+  SINGLE
+  EP
+  ALBUM
+  COLLABORATION
+  OST
+  OTHER
+}
+
+enum TimelineCategory {
+  DEBUT
+  COMEBACK
+  AWARD
+  TOUR
+  RECORD
+  SOLO
+  OTHER
+}
+
+enum TriviaCategory {
+  GROUP
+  MEMBER
+  MUSIC
+  RECORD
+  FANDOM
+  STAGE
+  OTHER
+}
+
+enum QuizDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum IdSource {
+  SCRIPT
+  MANUAL
+}
+
+model Member {
+  id String @id @default(cuid())
+
+  slug String @unique
+
+  stageName  String
+  fullName   String
+  koreanName String?
+
+  birthDate   DateTime? @db.Date
+  nationality String
+  position    String
+
+  bio String? @db.Text
+
+  imageUrl        String?
+  imageWidth      Int?
+  imageHeight     Int?
+  imageAuthor     String?
+  imageLicense    String?
+  imageLicenseUrl String?
+  imageSource     String?   @db.Text
+  imageDate       DateTime? @db.Date
+  imageFocus      String?
+  colorAccent     String?
+
+  socials Json?
+
+  displayOrder Int @default(0)
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations   MemberTranslation[]
+  soloWorks      SoloWork[]
+  timelineEvents TimelineEvent[]
+  trivia         Trivia[]
+
+  @@index([displayOrder])
+  @@index([verified])
+  @@map("members")
+}
+
+model MemberTranslation {
+  id       String @id @default(cuid())
+  memberId String
+  locale   Locale
+
+  position    String?
+  nationality String?
+  nickname    String?
+  bio         String? @db.Text
+  description String? @db.Text
+
+  imageAlt String? @db.Text
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, locale])
+  @@index([locale])
+  @@map("member_translations")
+}
+
+model Album {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  title       String
+  type        AlbumType
+  releaseDate DateTime  @db.Date
+
+  coverUrl    String?
+  coverWidth  Int?
+  coverHeight Int?
+
+  coverThumbUrl    String?
+  coverThumbWidth  Int?
+  coverThumbHeight Int?
+  coverSource      IdSource?
+  coverAlbumId     String?
+
+  label String?
+
+  description String? @db.Text
+
+  spotifyId         String?
+  youtubePlaylistId String?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tracks       Track[]
+  translations AlbumTranslation[]
+
+  @@index([releaseDate])
+  @@index([type])
+  @@index([type, releaseDate])
+  @@index([verified])
+  @@map("albums")
+}
+
+model AlbumTranslation {
+  id      String @id @default(cuid())
+  albumId String
+  locale  Locale
+
+  title       String?
+  formatLabel String?
+  description String? @db.Text
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, locale])
+  @@index([locale])
+  @@map("album_translations")
+}
+
+model Track {
+  id      String @id @default(cuid())
+  albumId String
+
+  title       String
+  trackNumber Int
+
+  durationSec Int?
+
+  isTitleTrack Boolean @default(false)
+
+  spotifyId String?
+
+  youtubeId String?
+
+  spotifyIdSource IdSource?
+
+  lyricsAvailable Boolean @default(false)
+
+  titleLocalized Json?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, trackNumber])
+  @@index([albumId])
+  @@index([isTitleTrack])
+  @@map("tracks")
+}
+
+model SoloWork {
+  id       String @id @default(cuid())
+  memberId String
+
+  slug        String       @unique
+  title       String
+  type        SoloWorkType
+  releaseDate DateTime     @db.Date
+
+  coverUrl         String?
+  coverWidth       Int?
+  coverHeight      Int?
+  coverThumbUrl    String?
+  coverThumbWidth  Int?
+  coverThumbHeight Int?
+  coverSource      IdSource?
+  coverAlbumId     String?
+
+  durationSec Int?
+
+  spotifyId String?
+
+  youtubeId String?
+
+  spotifyIdSource IdSource?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member                @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  translations SoloWorkTranslation[]
+  tracks       SoloTrack[]
+
+  @@index([memberId])
+  @@index([releaseDate])
+  @@index([type])
+  @@map("solo_works")
+}
+
+model SoloTrack {
+  id         String @id @default(cuid())
+  soloWorkId String
+
+  title       String
+  trackNumber Int
+
+  durationSec Int?
+
+  isTitleTrack Boolean @default(false)
+
+  featuring String?
+
+  spotifyId       String?
+  spotifyIdSource IdSource?
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  soloWork SoloWork @relation(fields: [soloWorkId], references: [id], onDelete: Cascade)
+
+  @@unique([soloWorkId, trackNumber])
+  @@index([soloWorkId])
+  @@map("solo_tracks")
+}
+
+model SoloWorkTranslation {
+  id         String @id @default(cuid())
+  soloWorkId String
+  locale     Locale
+
+  title       String?
+  formatLabel String?
+  description String? @db.Text
+
+  soloWork SoloWork @relation(fields: [soloWorkId], references: [id], onDelete: Cascade)
+
+  @@unique([soloWorkId, locale])
+  @@index([locale])
+  @@map("solo_work_translations")
+}
+
+model TimelineEvent {
+  id String @id @default(cuid())
+
+  date        DateTime         @db.Date
+  title       String
+  description String?          @db.Text
+  category    TimelineCategory
+
+  imageUrl String?
+
+  memberId String?
+
+  importance Int @default(3)
+
+  datePrecision String @default("day")
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member?                    @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  translations TimelineEventTranslation[]
+
+  @@index([date])
+  @@index([category])
+  @@index([category, date])
+  @@index([memberId])
+  @@index([importance])
+  @@index([verified])
+  @@map("timeline_events")
+}
+
+model TimelineEventTranslation {
+  id      String @id @default(cuid())
+  eventId String
+  locale  Locale
+
+  title       String?
+  description String? @db.Text
+
+  event TimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, locale])
+  @@index([locale])
+  @@map("timeline_event_translations")
+}
+
+model Trivia {
+  id String @id @default(cuid())
+
+  category TriviaCategory
+  content  String         @db.Text
+
+  source String @db.Text
+
+  memberId String?
+
+  verified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member       Member?             @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  translations TriviaTranslation[]
+
+  @@index([category])
+  @@index([memberId])
+  @@index([verified])
+  @@index([category, verified])
+  @@map("trivia")
+}
+
+model TriviaTranslation {
+  id       String @id @default(cuid())
+  triviaId String
+  locale   Locale
+
+  content String @db.Text
+
+  trivia Trivia @relation(fields: [triviaId], references: [id], onDelete: Cascade)
+
+  @@unique([triviaId, locale])
+  @@index([locale])
+  @@map("trivia_translations")
+}
+
+model Award {
+  id String @id @default(cuid())
+
+  name     String
+  category String
+
+  year         Int
+  organization String
+
+  work String?
+
+  won Boolean @default(false)
+
+  verified  Boolean  @default(false)
+  source    String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations AwardTranslation[]
+
+  @@unique([organization, year, category, name])
+  @@index([year])
+  @@index([organization])
+  @@index([won])
+  @@index([verified])
+  @@map("awards")
+}
+
+model AwardTranslation {
+  id      String @id @default(cuid())
+  awardId String
+  locale  Locale
+
+  name     String?
+  category String?
+
+  award Award @relation(fields: [awardId], references: [id], onDelete: Cascade)
+
+  @@unique([awardId, locale])
+  @@index([locale])
+  @@map("award_translations")
+}
+
+model QuizQuestion {
+  id String @id @default(cuid())
+
+  question String @db.Text
+
+  options Json
+
+  correctIndex Int
+
+  difficulty  QuizDifficulty @default(EASY)
+  explanation String?        @db.Text
+
+  source String? @db.Text
+
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations QuizQuestionTranslation[]
+
+  @@index([difficulty])
+  @@index([verified])
+  @@index([difficulty, verified])
+  @@map("quiz_questions")
+}
+
+model QuizQuestionTranslation {
+  id         String @id @default(cuid())
+  questionId String
+  locale     Locale
+
+  question    String  @db.Text
+  options     Json
+  explanation String? @db.Text
+
+  question_ QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, locale])
+  @@index([locale])
+  @@map("quiz_question_translations")
+}

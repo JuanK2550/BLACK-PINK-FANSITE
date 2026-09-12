@@ -1,16 +1,14 @@
-packages:
-  - 'apps/*'
-  - 'services/*'
-  - 'packages/*'
+# Paquetes del monorepo y versiones compartidas.
 
-# pnpm exige aprobar explicitamente los paquetes que ejecutan scripts de instalacion.
-# msgpackr-extract y workerd son builds nativos opcionales de herramientas de
-# desarrollo: sin compilar funcionan igual, solo algo mas lentos.
+packages:
+  - 'frontend'
+  - 'backend/*'
+  - 'shared/*'
+
 allowBuilds:
   '@parcel/watcher': true
   '@prisma/client': true
   '@prisma/engines': true
-  # Telemetria de instalacion: denegada a proposito.
   '@scarf/scarf': false
   '@swc/core': true
   '@tailwindcss/oxide': true
@@ -21,13 +19,7 @@ allowBuilds:
   unrs-resolver: true
   workerd: false
 
-# Version unica para las dependencias compartidas por varios paquetes.
-# Sin esto, un `pnpm add` en un servicio resuelve una version distinta a la
-# del resto, pnpm duplica los peers de NestJS y TypeScript empieza a decir
-# que INestApplication no es asignable a INestApplication.
 catalog:
-  # Solo la usa el script de acopio de la galeria, para reescalar y pasar a
-  # JPEG lo que Commons sirve como PNG de cinco megas.
   'sharp': '^0.34.0'
   '@nestjs/cli': '^11.0.0'
   '@nestjs/common': '^11.0.0'

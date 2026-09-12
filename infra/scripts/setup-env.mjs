@@ -1,8 +1,5 @@
 #!/usr/bin/env node
-/**
- * Crea el fichero .env de la raiz a partir de .env.example.
- * No sobreescribe nada si el .env ya existe.
- */
+// Crea el .env a partir de .env.example.
 import { copyFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

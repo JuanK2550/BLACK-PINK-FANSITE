@@ -1,57 +1,12 @@
 #!/usr/bin/env node
-/**
- * ============================================================================
- * RESOLUCION DE IDENTIFICADORES DE SPOTIFY
- * ============================================================================
- * Busca en la Spotify Web API cada pista del catalogo y cada obra en solitario,
- * y rellena `spotifyId` y `durationSec` cuando la coincidencia es CLARA.
- *
- * La regla que gobierna todo el script:
- *
- *     PREFIERO POCOS DATOS CORRECTOS A MUCHOS INVENTADOS.
- *
- * De ahi las cuatro decisiones que lo definen:
- *
- * 1. NO ESCRIBE NADA por debajo del umbral de confianza. Una coincidencia
- *    floja no se guarda "por si acaso": se deja el campo vacio, que es un
- *    estado honesto y recuperable.
- *
- * 2. LO DUDOSO NO SE DESCARTA EN SILENCIO. Las candidatas se imprimen con su
- *    puntuacion y su URL para que una persona decida. Un descarte silencioso
- *    es indistinguible de un fallo del script.
- *
- * 3. MARCA LA PROCEDENCIA. Todo lo que escribe queda con `spotifyIdSource =
- *    SCRIPT`. Lo confirmado por una persona se marca MANUAL y el script NUNCA
- *    lo pisa, ni con --force.
- *
- * 4. NO TOCA `verified`. Que Spotify tenga una cancion no valida el resto de
- *    la ficha; son dos afirmaciones distintas y este script solo puede
- *    responder por una.
- *
- * USO
- *   node infra/scripts/spotify-ids.mjs                  informe, sin escribir
- *   node infra/scripts/spotify-ids.mjs --write          escribe las claras
- *   node infra/scripts/spotify-ids.mjs --write --only=tracks
- *   node infra/scripts/spotify-ids.mjs --set <tipo> <clave> <spotifyId>
- *   node infra/scripts/spotify-ids.mjs --dump           vuelca la base al fichero
- *   node infra/scripts/spotify-ids.mjs --check          base contra volcado (CI)
- *
- * El ultimo modo es el que cierra el circulo: resuelve a mano una candidata
- * dudosa y la marca como MANUAL.
- *
- *   node infra/scripts/spotify-ids.mjs --set track born-pink#3 3Xt8OuIT2p8T1PSrQBRq3s
- *   node infra/scripts/spotify-ids.mjs --set solo rose/rose-apt 5vNRhkKd0yEAg8suGBpjeY
- * ============================================================================
- */
+// Busca los identificadores de Spotify de cada canción.
 
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { PrismaClient } from '../../services/content-service/prisma/generated/client/client.js';
+import { PrismaClient } from '../../backend/content-service/prisma/generated/client/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { diff, readDump, reportCheck, writeDump } from './lib/spotify-dump.mjs';
-
-/* -------------------------------------------------------------- entorno --- */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const ENV_FILE = path.join(ROOT, '.env');
@@ -61,20 +16,10 @@ const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const DATABASE_URL = process.env.DATABASE_URL_CONTENT;
 
-/** El artista canonico. Toda busqueda se ancla aqui. */
 const ARTIST = 'BLACKPINK';
 
-/**
- * Umbrales de decision.
- *
- * `ACCEPT` en 0.86 no es un numero redondo por casualidad: por debajo empiezan
- * a aparecer versiones en directo y remezclas con el titulo casi identico, y
- * ese es exactamente el error que este script no puede permitirse.
- */
 const ACCEPT = 0.86;
 const REVIEW = 0.55;
-
-/* ------------------------------------------------------------ argumentos --- */
 
 const argv = process.argv.slice(2);
 const WRITE = argv.includes('--write');
@@ -83,31 +28,12 @@ const SET_INDEX = argv.indexOf('--set');
 const DUMP = argv.includes('--dump');
 const CHECK = argv.includes('--check');
 
-/**
- * Volcado de este script. Un fichero por script.
- *
- * Existe porque la base se borra -`pnpm db:reset`- y el seed no sabe nada de
- * identificadores. Sin el, cada reinicio pierde 39 filas, y las MANUAL no
- * vuelven solas: al quedar el campo vacio el script deja de ver la marca y
- * vuelve a resolver por puntuacion, que es lo que esa marca existe para
- * impedir. Ver `lib/spotify-dump.mjs`.
- */
 const DUMP_NAME = 'spotify-ids';
 const DUMP_NOTE =
   'GENERADO por infra/scripts/spotify-ids.mjs --dump. No editar a mano: ' +
   'es el registro que restaura los identificadores tras un db:reset, y manda sobre la base. ' +
   'Congelado a proposito: cambiar un identificador debe ser un commit deliberado.';
 
-/* ------------------------------------------------------ texto y similitud --- */
-
-/**
- * Normaliza un titulo para comparar.
- *
- * Quita acentos, pasa a minusculas y elimina la puntuacion, pero NO toca los
- * parentesis todavia: "Whistle (Acoustic Ver.)" y "Whistle" tienen que poder
- * distinguirse, y ahi esta justo la diferencia entre acertar y guardar la
- * version equivocada.
- */
 function normalize(text) {
   return text
     .normalize('NFD')
@@ -118,19 +44,9 @@ function normalize(text) {
     .trim();
 }
 
-/** Marcas que cambian lo que una cancion ES, no como se llama. */
 const VARIANT_MARKERS =
   /\b(remix|acoustic|instrumental|live|version|ver\.|edit|remaster|sped up|slowed|karaoke|demo|reprise|mix)\b/i;
 
-/**
- * Similitud entre dos titulos, de 0 a 1.
- *
- * Se combina la distancia de edicion con una comprobacion de VARIANTE: si uno
- * de los dos titulos dice "remix" o "live" y el otro no, la puntuacion se
- * hunde aunque el texto se parezca al 95%. Sin esta regla, "DDU-DU DDU-DU" y
- * "DDU-DU DDU-DU (Remix)" salen casi identicos y el script guardaria la
- * remezcla como si fuera el original.
- */
 function similarity(a, b) {
   const na = normalize(a);
   const nb = normalize(b);
@@ -141,7 +57,6 @@ function similarity(a, b) {
 
   const base = 1 - levenshtein(na, nb) / Math.max(na.length, nb.length, 1);
 
-  // Uno es variante y el otro no: son canciones distintas.
   if (aVariant !== bVariant) return base * 0.45;
 
   return base;
@@ -166,16 +81,8 @@ function levenshtein(a, b) {
   return prev[b.length];
 }
 
-/* ------------------------------------------------------------- Spotify --- */
-
 let tokenCache = null;
 
-/**
- * Token de Client Credentials.
- *
- * Este flujo NO da acceso a datos de ningun usuario: solo al catalogo publico.
- * Es exactamente lo que hace falta aqui y nada mas.
- */
 async function getToken() {
   if (tokenCache && tokenCache.expiresAt > Date.now() + 30_000) return tokenCache.value;
 
@@ -191,7 +98,6 @@ async function getToken() {
   });
 
   if (!response.ok) {
-    // El cuerpo del error puede repetir el client_id; no se imprime.
     throw new Error(
       `Spotify rechazo las credenciales (HTTP ${response.status}). ` +
         'Revisa SPOTIFY_CLIENT_ID y SPOTIFY_CLIENT_SECRET en .env.',
@@ -206,13 +112,6 @@ async function getToken() {
   return tokenCache.value;
 }
 
-/**
- * Busca en el catalogo, reintentando cuando Spotify pide esperar.
- *
- * Spotify responde 429 con `Retry-After` en segundos. Ignorarlo y reintentar
- * en bucle es la forma mas rapida de que corten la aplicacion entera, asi que
- * se respeta el valor que envian.
- */
 async function search(query, limit = 8) {
   const token = await getToken();
   const url = new URL('https://api.spotify.com/v1/search');
@@ -242,36 +141,11 @@ async function search(query, limit = 8) {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/* ------------------------------------------------------------ evaluacion --- */
-
-/**
- * ¿Es este artista uno de los nuestros?
- *
- * OJO: esto se comparaba antes con `includes()`, y por ahi se colo un error
- * real. `normalize('ROSE')` es `rose`, y `'rosevelt sings'.includes('rose')`
- * es cierto, asi que el script guardo en la ficha del album "rosie" una
- * cancion de Rosevelt Sings y Dick Van Dyke con puntuacion 1.00. La
- * comprobacion que debia ser eliminatoria era justo la que dejaba pasar el
- * error mas grave que este script puede cometer.
- *
- * Ahora se compara el nombre COMPLETO del artista, no un trozo. Se admite el
- * nombre exacto y las formas con las que Spotify acredita colaboraciones
- * ("ROSE, Bruno Mars" llega como dos artistas separados, asi que basta con
- * que uno cualquiera sea el nuestro).
- */
 function isOurArtist(candidateArtists, expected) {
   const wanted = normalize(expected);
   return candidateArtists.some((name) => normalize(name) === wanted);
 }
 
-/**
- * Puntua una candidata contra lo que buscamos.
- *
- * El titulo pesa lo que mas, pero el ARTISTA es eliminatorio: una version de
- * otro artista con el mismo titulo puntuaria alto por texto y seria un error
- * grave. Coincidir de album sube la confianza; no coincidir no la baja, porque
- * la misma cancion aparece en recopilatorios y ediciones distintas.
- */
 function score(candidate, { title, albumTitle }) {
   const artists = candidate.artists.map((a) => a.name);
   if (!isOurArtist(artists, ARTIST)) return { value: 0, reason: 'otro artista' };
@@ -279,7 +153,6 @@ function score(candidate, { title, albumTitle }) {
   const titleScore = similarity(candidate.name, title);
   const albumScore = albumTitle ? similarity(candidate.album?.name ?? '', albumTitle) : 0;
 
-  // El album solo suma; nunca resta.
   const value = Math.min(1, titleScore + (albumScore > 0.8 ? 0.08 : 0));
 
   return {
@@ -287,8 +160,6 @@ function score(candidate, { title, albumTitle }) {
     reason: albumScore > 0.8 ? 'titulo y album' : 'solo titulo',
   };
 }
-
-/* --------------------------------------------------------------- salida --- */
 
 const C = {
   reset: '[0m',
@@ -301,19 +172,6 @@ const C = {
 
 const paint = (color, text) => `${color}${text}${C.reset}`;
 
-/* ------------------------------------------------------------- volcado --- */
-
-/**
- * Lo que hay HOY en la base, en la forma exacta del volcado.
- *
- * Las claves son las mismas que acepta `--set`: `born-pink#3` para una pista y
- * `rose-r` para una obra en solitario. Asi, la entrada que cambia en el diff se
- * llama igual que el comando que la escribio.
- *
- * `source` viaja SIEMPRE. Restaurar el identificador sin la marca dejaria las
- * tres decisiones MANUAL indistinguibles de las automaticas, y el script
- * volveria a pisarlas en la siguiente pasada.
- */
 async function collect(prisma) {
   const tracks = await prisma.track.findMany({
     where: { spotifyId: { not: null } },
@@ -323,9 +181,6 @@ async function collect(prisma) {
     where: { spotifyId: { not: null } },
     orderBy: { slug: 'asc' },
   });
-  // Las canciones de las obras en solitario (Fase 14). Si esta seccion no se
-  // recogiera aqui, `--check` veria cada entrada del volcado como «sobra» y
-  // `--dump` las borraria del fichero en la siguiente pasada.
   const soloTracks = await prisma.soloTrack.findMany({
     where: { spotifyId: { not: null } },
     include: { soloWork: { select: { slug: true } } },
@@ -380,8 +235,6 @@ async function runCheck(prisma) {
   if (!ok) process.exitCode = 1;
 }
 
-/* ----------------------------------------------------------------- main --- */
-
 async function main() {
   if (!DATABASE_URL) {
     throw new Error('Falta DATABASE_URL_CONTENT en .env.');
@@ -393,11 +246,6 @@ async function main() {
   const prisma = new PrismaClient({ adapter });
 
   try {
-    /*
-     * `--dump` y `--check` NO hablan con Spotify: solo leen la base y el
-     * fichero. Por eso van antes de exigir credenciales -CI no las tiene y
-     * tampoco las necesita-.
-     */
     if (DUMP) {
       await runDump(prisma);
       return;
@@ -427,18 +275,11 @@ async function main() {
 
     printReport(report);
 
-    /*
-     * Volcar es parte de escribir, no un paso que recordar. Si fuera opcional
-     * existiria el estado "la base tiene un identificador que el volcado no", y
-     * ese estado se descubre en el proximo db:reset, cuando ya se perdio.
-     */
     if (WRITE) await runDump(prisma);
   } finally {
     await prisma.$disconnect();
   }
 }
-
-/* ------------------------------------------------------- pistas de album --- */
 
 async function processTracks(prisma, report) {
   const tracks = await prisma.track.findMany({
@@ -452,7 +293,6 @@ async function processTracks(prisma, report) {
     const key = `${track.album.slug}#${track.trackNumber}`;
     const label = `${track.title} · ${track.album.title}`;
 
-    // Lo confirmado a mano es intocable: una persona ya decidio.
     if (track.spotifyIdSource === 'MANUAL') {
       report.skipped.push({ key, label, why: 'confirmado a mano' });
       process.stdout.write(
@@ -465,8 +305,6 @@ async function processTracks(prisma, report) {
       `track:${track.title} artist:${ARTIST} album:${track.album.title}`,
     );
 
-    // Si la busqueda acotada no da nada, se afloja quitando el album: hay
-    // canciones que en Spotify viven en un album con otro nombre.
     const pool =
       candidates.length > 0 ? candidates : await search(`track:${track.title} artist:${ARTIST}`);
 
@@ -482,13 +320,9 @@ async function processTracks(prisma, report) {
       albumTitle: track.album.title,
     });
 
-    // Ritmo deliberado: la API tolera mas, pero no hay ninguna prisa y esto
-    // evita el 429 por completo en un catalogo de este tamano.
     await sleep(120);
   }
 }
-
-/* --------------------------------------------------- obras en solitario --- */
 
 async function processSoloWorks(prisma, report) {
   const works = await prisma.soloWork.findMany({
@@ -510,28 +344,9 @@ async function processSoloWorks(prisma, report) {
       continue;
     }
 
-    /*
-     * El artista aqui es la INTEGRANTE, no el grupo. Buscar "SOLO" con
-     * artist:BLACKPINK no encuentra el single de JENNIE, porque en Spotify
-     * figura a su nombre. Se prueban las dos.
-     */
     let pool = await searchSolo(work.title, work.member.stageName);
     let asRelease = false;
 
-    /*
-     * Si no hay ninguna pista que se parezca, puede que no sea una cancion
-     * sino un lanzamiento entero. Se busca como album y se ofrecen sus pistas
-     * como candidatas: el visitante final necesita una CANCION concreta para
-     * el reproductor, y esa eleccion la tiene que hacer una persona.
-     */
-    /*
-     * Se puntua con `scoreFor`, NO con `similarity` a secas. La diferencia
-     * importa: `similarity` solo compara titulos, asi que una cancion ajena
-     * llamada igual que el lanzamiento -hay una "Rosie" de Rosevelt Sings-
-     * puntuaba 1.00 aqui y desactivaba el rescate por album. El resultado era
-     * un "sin coincidencia" donde en realidad si habia algo que ofrecer.
-     * `scoreFor` descarta al artista ajeno antes de puntuar.
-     */
     const bestSoFar = pool.length
       ? Math.max(
           ...pool.map(
@@ -571,18 +386,6 @@ async function processSoloWorks(prisma, report) {
   }
 }
 
-/**
- * Busca un LANZAMIENTO (album, EP o single album) y devuelve sus pistas.
- *
- * Existe porque parte del catalogo en solitario no son canciones sueltas: "R"
- * es el EP de debut de ROSE y "ME" el single album de JISOO. No hay ninguna
- * cancion que se llame asi, de modo que buscar una pista con ese titulo no
- * falla por un problema de puntuacion: falla porque no existe.
- *
- * Sin esto, el informe decia "sin coincidencia" y no daba con que decidir. Con
- * esto, ofrece las canciones REALES de ese lanzamiento para que una persona
- * elija cual representa la obra.
- */
 async function searchRelease(title, artistName) {
   const token = await getToken();
 
@@ -598,8 +401,6 @@ async function searchRelease(title, artistName) {
   const data = await response.json();
   const albums = data.albums?.items ?? [];
 
-  // Solo lanzamientos cuyo nombre se parezca de verdad al que buscamos: una
-  // busqueda floja devuelve recopilatorios de otra gente.
   const match = albums.find((album) => similarity(album.name, title) > 0.7);
   if (!match) return [];
 
@@ -621,8 +422,6 @@ async function searchSolo(title, stageName) {
   if (byMember.length > 0) return byMember;
   return search(`track:${title} artist:${ARTIST}`);
 }
-
-/* ------------------------------------------------------------ evaluacion --- */
 
 async function evaluate({
   prisma,
@@ -652,12 +451,6 @@ async function evaluate({
 
   const best = scored[0];
 
-  /*
-   * Candidatas sacadas de un lanzamiento: se mandan SIEMPRE a decision humana.
-   * Aqui el titulo de la obra ("R") no coincide con el de ninguna pista por
-   * definicion, asi que la puntuacion no significa nada y aceptar la mejor
-   * seria elegir al azar.
-   */
   if (asRelease) {
     report.review.push({
       key,
@@ -705,7 +498,6 @@ async function evaluate({
   }
 
   if (best.value >= REVIEW) {
-    // DUDOSA: no se escribe, pero tampoco se tira. Se enseñan las candidatas.
     report.review.push({
       key,
       label,
@@ -735,8 +527,6 @@ async function evaluate({
 function scoreFor(candidate, { title, albumTitle, soloArtist }) {
   if (soloArtist) {
     const artists = candidate.artists.map((a) => a.name);
-    // La integrante o el grupo: una obra en solitario puede venir acreditada
-    // a cualquiera de los dos segun como la publicara el sello.
     const matches = isOurArtist(artists, soloArtist) || isOurArtist(artists, ARTIST);
     if (!matches) return { value: 0, reason: 'otro artista' };
 
@@ -745,8 +535,6 @@ function scoreFor(candidate, { title, albumTitle, soloArtist }) {
 
   return score(candidate, { title, albumTitle });
 }
-
-/* -------------------------------------------------------------- escritura --- */
 
 async function writeId(prisma, kind, id, spotifyId, durationSec) {
   const data = { spotifyId, durationSec, spotifyIdSource: 'SCRIPT' };
@@ -758,14 +546,6 @@ async function writeId(prisma, kind, id, spotifyId, durationSec) {
   }
 }
 
-/* ------------------------------------------------------ confirmar a mano --- */
-
-/**
- * `--set <tipo> <clave> <spotifyId>`
- *
- * Resuelve una candidata dudosa. Queda marcada MANUAL, y a partir de ahi el
- * script no vuelve a tocarla nunca.
- */
 async function applyManual(prisma, args) {
   const [kind, key, spotifyId] = args;
 
@@ -783,9 +563,6 @@ async function applyManual(prisma, args) {
     );
   }
 
-  // Se consulta la pista para guardar la duracion REAL y, de paso, comprobar
-  // que el identificador existe: un id mal copiado se detecta aqui y no dentro
-  // de seis meses con un reproductor vacio.
   const token = await getToken();
   const response = await fetch(`https://api.spotify.com/v1/tracks/${spotifyId}?market=US`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -810,11 +587,26 @@ async function applyManual(prisma, args) {
     if (updated.count === 0) throw new Error(`No existe la pista ${key}.`);
   } else if (kind === 'solo') {
     const [, workSlug] = key.split('/');
-    const updated = await prisma.soloWork.updateMany({
+    const work = await prisma.soloWork.findUnique({
       where: { slug: workSlug },
+      include: { tracks: true },
+    });
+    if (!work) throw new Error(`No existe la obra "${workSlug}".`);
+
+    await prisma.soloWork.update({
+      where: { id: work.id },
       data: { spotifyId, durationSec, spotifyIdSource: 'MANUAL' },
     });
-    if (updated.count === 0) throw new Error(`No existe la obra "${workSlug}".`);
+
+    // Una obra de UNA sola canción con el mismo título es esa canción: el
+    // identificador vale para las dos filas. Con dos o más no se adivina.
+    const unica = work.tracks.length === 1 ? work.tracks[0] : null;
+    if (unica && unica.title.toLowerCase() === work.title.toLowerCase()) {
+      await prisma.soloTrack.update({
+        where: { id: unica.id },
+        data: { spotifyId, durationSec, spotifyIdSource: 'MANUAL' },
+      });
+    }
   } else {
     throw new Error(`Tipo desconocido "${kind}". Usa track o solo.`);
   }
@@ -824,13 +616,8 @@ async function applyManual(prisma, args) {
       `  marcado como ${paint(C.bold, 'MANUAL')}: el script no volvera a tocarlo.\n\n`,
   );
 
-  // Una decision manual es justo lo que NO se puede regenerar: si se pierde,
-  // hay que volver a tomarla. Volcarla en el acto es lo que la salva del
-  // proximo reinicio.
   await runDump(prisma);
 }
-
-/* --------------------------------------------------------------- informe --- */
 
 function fmt(seconds) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;

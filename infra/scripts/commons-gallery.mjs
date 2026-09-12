@@ -1,34 +1,4 @@
-/**
- * ============================================================================
- * ACOPIO DE IMAGENES DESDE WIKIMEDIA COMMONS
- * ============================================================================
- * Busca en Commons, filtra por licencia, descarga lo que pasa el filtro y
- * vuelca los metadatos a un JSON versionado.
- *
- *   node infra/scripts/commons-gallery.mjs            ejecucion en seco
- *   node infra/scripts/commons-gallery.mjs --write    descarga y vuelca
- *   node infra/scripts/commons-gallery.mjs --check    volcado contra disco
- *
- * NO NECESITA CLAVE. La API de Commons es publica; solo pide un `User-Agent`
- * que identifique a quien llama, y eso lo exige su politica de uso.
- *
- * SE BUSCA POR CATEGORIA, NO POR TEXTO LIBRE. Una busqueda de texto por
- * "BLACKPINK" devuelve carteles, entradas y fotos de un escenario vacio; las
- * categorias de Commons las mantienen personas y dicen QUIEN sale en la foto.
- * De ahi sale ademas el unico filtro por integrante que los datos soportan de
- * verdad: la categoria de la que vino cada archivo.
- *
- * EL FILTRO DE LICENCIA ES LO QUE HACE PUBLICABLE ESTE MATERIAL, y por eso es
- * una LISTA BLANCA de licencias conocidas, nunca una lista negra. Commons
- * aloja tambien material de uso legitimo restringido, fotos con marca de
- * agencia y logotipos con copyright: lo que no reconozca el patron se
- * descarta, y el informe dice cuantas y por que.
- *
- * SE GUARDAN LAS DIMENSIONES REALES DEL ARCHIVO SERVIDO, no las que declara la
- * API del original. Es la misma leccion que las portadas de Spotify: sin las
- * medidas de lo que de verdad se sirve, la rejilla salta al cargar.
- * ============================================================================
- */
+// Descarga las fotos de la galería desde Wikimedia Commons.
 
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -38,116 +8,36 @@ import { fileURLToPath } from 'node:url';
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..', '..');
 
-/** Carpeta publica donde acaban los archivos. */
-const DESTINO = path.join(RAIZ, 'apps', 'web', 'public', 'galeria');
-/** El volcado versionado, hermano de los de Spotify. */
+const DESTINO = path.join(RAIZ, 'frontend', 'public', 'galeria');
 const VOLCADO = path.join(
   RAIZ,
-  'services',
+  'backend',
   'content-service',
   'prisma',
   'seed-data',
   'commons-gallery.json',
 );
 
-/**
- * La politica de la API pide identificarse. Un `User-Agent` generico es la via
- * rapida a que te corten el acceso, y con razon: sin el no hay a quien avisar.
- */
 const USER_AGENT =
   'BlackpinkFansite/1.0 (sitio de fans no oficial; https://github.com/JuanK2550) node-fetch';
 
 const API = 'https://commons.wikimedia.org/w/api.php';
 
-/**
- * De donde se saca cada cosa.
- *
- * `subject` es el filtro por integrante de la pagina, y sale de AQUI y no de
- * adivinar nombres en el titulo del archivo: la categoria ya dice quien sale.
- */
 const FUENTES = [
   { subject: 'grupo', prefijo: 'Blackpink' },
-  /*
-   * OJO CON LOS NOMBRES. Commons no usa el nombre por el que se las conoce:
-   *   Jisoo  -> Category:Jisoo            («Kim Ji-soo (singer)» existe VACIA)
-   *   Lisa   -> Category:Lisa (Thai vocalist)
-   *            («Lisa Manoban» y «Lalisa Manobal» existen y estan VACIAS)
-   * Buscar por el nombre evidente devolvia cero fotos de dos integrantes.
-   */
   { subject: 'jisoo', prefijo: 'Jisoo', excluir: /\(member of tahiti\)/i },
   { subject: 'jennie', prefijo: 'Jennie Kim' },
   { subject: 'rose', prefijo: 'Rosé Park' },
   { subject: 'lisa', prefijo: 'Lisa (Thai vocalist)' },
 ];
 
-/**
- * CATEGORIAS Y TITULOS VETADOS, y no por licencia.
- *
- * Commons aloja portadas y logotipos del grupo con etiquetas de dominio
- * publico que aqui NO valen: la regla 1 del proyecto dice que este sitio no
- * aloja material con copyright, y una portada lo es aunque alguien la haya
- * subido marcada como PD-textlogo. Esta galeria es de FOTOGRAFIAS.
- *
- * El informe cuenta lo que quita por esta via: si algun dia entra algo por un
- * camino nuevo, se ve en el recuento en vez de aparecer publicado.
- */
 const CATEGORIAS_VETADAS = [/logos?$/i, /album covers/i, /discograph/i];
 
-/*
- * LOS PARENTESIS Y LOS LIMITES DE PALABRA SON LA MITAD DEL PATRON.
- *
- * Sin ellos -se perdieron en una edicion y el informe lo delato- «ep»
- * casaba dentro de «premiere» y de «September», y el veto se llevaba por
- * delante 27 fotografias legitimas etiquetandolas de portada. Un filtro de
- * seguridad que descarta de mas miente igual que uno que descarta de menos.
- */
 const TITULOS_VETADOS = /\((ep|single|album|mini album)\)|\b(cover|logo|wordmark|tracklist)\b/i;
 
-/**
- * DESCRIPCIONES QUE DELATAN ALGO QUE NO ES UNA FOTOGRAFIA PROPIA.
- *
- * Commons acepta capturas de video y de redes sociales; este sitio no las
- * publica, y no por estilo. Una captura de un video de YouTube es una obra
- * derivada de ese video: la etiqueta CC del archivo describe el recorte, no
- * los derechos del original, y la regla 1 del proyecto dice que aqui no se
- * aloja material con copyright. Un collage tampoco es una fotografia: es un
- * montaje de varias, cada una con su licencia.
- *
- * Salieron en la revision de las sesenta finalistas: tres capturas de YouTube,
- * una de Instagram y un collage.
- */
 const DESCRIPCIONES_VETADAS =
   /captured picture|screenshot|captura de pantalla|youtube\.com|youtu\.be|instagram|collage|montage/i;
 
-/**
- * LICENCIAS ACEPTADAS.
- *
- * Solo lo que permite alojar y adaptar con atribucion, o lo que ya es libre:
- * CC BY, CC BY-SA, CC0 y dominio publico. Todo lo demas se descarta, incluidas
- * las variantes NC (no comercial) y ND (sin obra derivada): reescalar una foto
- * ES una obra derivada, asi que una ND no se podria ni preparar para la web.
- *
- * Se compara contra `LicenseShortName` normalizado. Una lista blanca de
- * patrones y no una negra: una licencia que no se reconozca no entra.
- */
-/**
- * PRUEBA DE PERTENENCIA: el archivo tiene que NOMBRAR a quien dice retratar.
- *
- * Estar dentro de «Category:Jennie Kim in 2026» no garantiza que la foto sea
- * de Jennie. La ejecucion en seco lo enseño: colaba «渋谷センター街 2026年4月29日
- * の渋谷», una foto de una CALLE de Shibuya, catalogada ahi por una valla
- * publicitaria al fondo; y una nota de prensa de LG sobre telefonos.
- *
- * La regla es sencilla y se puede defender: si ni el titulo ni la descripcion
- * nombran al grupo o a la integrante, NADIE ha dicho que salga en la foto, y
- * una galeria no publica una imagen que no puede identificar. Se pierde alguna
- * foto buena -«Guests at the 2026 Met Gala 127»- y es el precio correcto:
- * equivocarse por publicar de menos se arregla anadiendo, equivocarse por
- * publicar de mas es publicar a otra persona.
- *
- * Los patrones llevan hangul y katakana porque medio Commons cataloga estas
- * fotos en coreano.
- */
 const GRUPO = /blackpink|black pink|블랙핑크|ブラックピンク/i;
 
 const NOMBRES = {
@@ -166,18 +56,8 @@ const LICENCIAS_OK = [
   { patron: /^pd[- ]/, familia: 'Dominio publico', shareAlike: false },
 ];
 
-/** Ancho al que se sirven las imagenes de la galeria. */
 const ANCHO = 1400;
 
-/**
- * Minimo por el LADO CORTO, no por el ancho.
- *
- * Con un minimo de 800 de ancho se caian 39 fotos utiles -retratos de 719x1007
- * y 775x1064, verticales perfectamente validos en una retícula de albañileria-
- * mientras que pasaban banderolas de 1200x150. El lado corto es lo que dice si
- * una imagen tiene cuerpo suficiente para una galeria; el ancho solo dice si
- * es apaisada.
- */
 const LADO_MINIMO = 400;
 
 const args = process.argv.slice(2);
@@ -188,8 +68,6 @@ const valor = (n, def) => {
 };
 
 const SECO = !tiene('write') && !tiene('check');
-
-/* ------------------------------------------------------------------ API --- */
 
 async function api(params) {
   const url = new URL(API);
@@ -203,45 +81,9 @@ async function api(params) {
   return res.json();
 }
 
-/**
- * Espera entre llamadas.
- *
- * Commons corta con «You are making too many requests» y tiene razon: es una
- * API publica sin clave que se sostiene sobre que quien la usa se comporte.
- */
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const PAUSA = 350;
 
-/**
- * Las categorias que empiezan por un prefijo.
- *
- * SE BUSCA POR PREFIJO Y NO POR SUBCATEGORIA, y esto se descubrio midiendo:
- * «Category:Lisa Manoban» y «Category:Lalisa Manobal» EXISTEN, no tienen
- * subcategorias y no contienen un solo archivo. Las fotos estan en «Lisa
- * Manoban in 2016», «... in 2017» y demas, que en Commons son categorias
- * HERMANAS y no hijas. Recorrer el arbol de subcategorias devolvia cero.
- *
- * `allcategories` solo lista categorias que tienen miembros, asi que el
- * prefijo encuentra justo las que valen, incluidas las del ano que viene sin
- * tocar este fichero.
- */
-/**
- * ============================================================================
- * COMPROBACION DE IDENTIDAD
- * ============================================================================
- * Antes de traerse una sola foto, se comprueba que cada categoria raiz sea
- * DE VERDAD del grupo, mirando sus categorias padre en Commons.
- *
- * No es celo excesivo: en esta misma API conviven «Category:Jisoo» (BLACKPINK)
- * y «Category:Jisoo (Member of Tahiti)» (otra cantante), y una busqueda por
- * nombre ya colo aqui a «Jennie Kimball», actriz de 1869. Publicar la foto de
- * otra persona bajo el nombre de una integrante no es un fallo de estilo.
- *
- * SE COMPRUEBA EN CADA EJECUCION Y ABORTA SI FALLA. Yo puedo mirarlo una vez;
- * el script tiene que mirarlo siempre, porque las categorias de Commons las
- * renombran personas y el dia que «Category:Jisoo» pase a ser otra cosa, esto
- * se para en vez de descargar.
- */
 const PADRES_VALIDOS = /members of blackpink|girl groups from south korea|yg family/i;
 
 async function verificarIdentidad(prefijo) {
@@ -271,44 +113,18 @@ async function categoriasPorPrefijo(prefijo, excluir) {
     aclimit: 200,
   });
   await espera(PAUSA);
-  return (
-    (data?.query?.allcategories ?? [])
-      .map((c) => c['*'])
-      /*
-       * EL PREFIJO SE ATA. Un prefijo suelto no distingue personas: «Jennie Kim»
-       * casaba con «Jennie Kimball», una actriz de 1869, y colo en la seleccion
-       * un cromo de tabaco de 1888 a nombre de «Jennie Kemble». Que el nombre
-       * empiece igual no significa que sea la misma persona, y una galeria que
-       * publica a otra persona bajo el filtro de una integrante no tiene un
-       * problema de estilo.
-       *
-       * Solo entran la categoria raiz y sus derivadas reconocidas: «X in 2019»,
-       * «X by year», «X at ...». Cualquier otra continuacion se descarta.
-       */
-      .filter((nombre) => {
-        if (nombre === prefijo) return true;
-        const resto = nombre.startsWith(`${prefijo} `) ? nombre.slice(prefijo.length + 1) : null;
-        return resto !== null && /^(in \d{4}|by year|at )/i.test(resto);
-      })
-      .map((nombre) => `Category:${nombre}`)
-      .filter((t) => !CATEGORIAS_VETADAS.some((v) => v.test(t)))
-      /*
-       * El veto por fuente existe porque un prefijo no distingue personas: la
-       * categoria «Jisoo» convive con «Jisoo (Member of Tahiti)», que es OTRA
-       * cantante. Publicar su foto bajo el filtro de Jisoo seria un error de
-       * identidad, no de estilo.
-       */
-      .filter((t) => !excluir || !excluir.test(t))
-  );
+  return (data?.query?.allcategories ?? [])
+    .map((c) => c['*'])
+    .filter((nombre) => {
+      if (nombre === prefijo) return true;
+      const resto = nombre.startsWith(`${prefijo} `) ? nombre.slice(prefijo.length + 1) : null;
+      return resto !== null && /^(in \d{4}|by year|at )/i.test(resto);
+    })
+    .map((nombre) => `Category:${nombre}`)
+    .filter((t) => !CATEGORIAS_VETADAS.some((v) => v.test(t)))
+    .filter((t) => !excluir || !excluir.test(t));
 }
 
-/**
- * Todos los archivos de una categoria, con sus metadatos.
- *
- * `iiurlwidth` pide a Commons una miniatura al ancho que queremos: se descarga
- * ya reescalada por ellos en vez de traer un original de 8 MB para encogerlo
- * aqui. Es menos ancho de banda para los dos.
- */
 async function archivosDeCategoria(category) {
   const salida = [];
   let seguir;
@@ -351,9 +167,6 @@ async function archivosDeCategoria(category) {
   return salida;
 }
 
-/* -------------------------------------------------------------- filtros --- */
-
-/** Quita el marcado HTML que Commons devuelve dentro de `extmetadata`. */
 function aTextoPlano(html) {
   if (!html) return null;
   const texto = String(html)
@@ -371,13 +184,6 @@ function aTextoPlano(html) {
 
 const meta = (info, clave) => aTextoPlano(info.extmetadata?.[clave]?.value);
 
-/**
- * Decide si una licencia entra.
- *
- * Devuelve la familia y si arrastra ShareAlike, o `null` si no se reconoce.
- * Que no se reconozca NO significa que sea restrictiva: significa que nadie ha
- * comprobado que no lo sea, y eso basta para dejarla fuera.
- */
 function clasificarLicencia(nombre) {
   if (!nombre) return null;
   const normal = nombre.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -387,9 +193,7 @@ function clasificarLicencia(nombre) {
   return null;
 }
 
-/** Nombre de archivo estable a partir del titulo de Commons. */
 function nombreLocal(titulo, mime) {
-  // Todo se sirve como JPEG: ver la nota de calidad en commons-download.mjs.
   const ext = 'jpg';
   const base = titulo
     .replace(/^File:/, '')
@@ -400,12 +204,9 @@ function nombreLocal(titulo, mime) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
-  // El hash desempata dos titulos que colapsen al mismo texto.
   const hash = createHash('sha256').update(titulo).digest('hex').slice(0, 6);
   return `${base}-${hash}.${ext}`;
 }
-
-/* ---------------------------------------------------------------- acopio --- */
 
 async function recolectar() {
   const aceptadas = new Map();
@@ -413,8 +214,6 @@ async function recolectar() {
   let vistos = 0;
 
   for (const fuente of FUENTES) {
-    // Identidad primero. Si esta categoria ya no es del grupo, no se descarga
-    // nada de ella: se para el acopio entero y se dice por que.
     const identidad = await verificarIdentidad(fuente.prefijo);
     if (!identidad.ok) {
       throw new Error(
@@ -448,16 +247,11 @@ async function recolectar() {
     for (const { titulo, info } of archivos) {
       vistos += 1;
 
-      /* Portadas y logotipos fuera, aunque Commons los marque como PD: la
-         regla 1 del proyecto no aloja material con copyright, y esta galeria
-         es de FOTOGRAFIAS. */
       if (TITULOS_VETADOS.test(titulo)) {
         rechazos.push({ titulo, motivo: 'no es fotografia', detalle: 'portada o logotipo' });
         continue;
       }
 
-      /* Si nadie nombra al grupo ni a la integrante, no se puede afirmar quien
-         sale: fuera. Ver la nota de NOMBRES. */
       const textoIdentificador = `${titulo} ${meta(info, 'ImageDescription') ?? ''}`;
       if (!GRUPO.test(textoIdentificador) && !NOMBRES[fuente.subject].test(textoIdentificador)) {
         rechazos.push({
@@ -497,8 +291,6 @@ async function recolectar() {
         continue;
       }
 
-      // Una misma foto puede estar en dos categorias; la primera manda y las
-      // demas solo suman su tema.
       const yaEsta = aceptadas.get(titulo);
       if (yaEsta) {
         if (!yaEsta.subjects.includes(fuente.subject)) yaEsta.subjects.push(fuente.subject);
@@ -512,16 +304,6 @@ async function recolectar() {
         titulo,
         archivo: nombreLocal(titulo, info.mime),
         subjects: [fuente.subject],
-        /*
-         * NUNCA SE AMPLIA. `iiurlwidth=1400` le pide a Commons una miniatura
-         * de ese ancho, y Commons la da AUNQUE EL ORIGINAL SEA MENOR: un
-         * archivo de 599x683 volvia como 1400x1596, que es la misma foto
-         * borrosa ocupando cuatro veces mas. Si el original no llega, se sirve
-         * el original tal cual.
-         *
-         * Es el mismo error que evitan las portadas de Spotify midiendo los
-         * bytes en vez de creerse la API.
-         */
         descargaUrl: info.width > ANCHO ? (info.thumburl ?? info.url) : info.url,
         anchoOrigen: info.width,
         altoOrigen: info.height,
@@ -545,30 +327,9 @@ async function recolectar() {
   return { aceptadas: [...aceptadas.values()], rechazos, vistos };
 }
 
-/* ------------------------------------------------------------ seleccion --- */
-
-/**
- * DE LAS QUE PASAN EL FILTRO, CUALES SE ALOJAN.
- *
- * Commons da cerca de 400 fotos publicables, y alojar 400 archivos de 250 KB
- * son 100 MB en un repositorio git para una galeria que nadie va a recorrer
- * entera. El tope no es una limitacion tecnica: es una decision editorial.
- *
- * SE REPARTE POR ANO, en vueltas. Ordenar por tamano y cortar daria doce fotos
- * del mismo photocall: la mejor camara de un solo dia gana siempre. Cogiendo
- * una de cada ano por vuelta, la galeria recorre la trayectoria del grupo, que
- * es lo unico que hace interesante una galeria de fans, y ademas es lo que da
- * sentido al filtro por era.
- *
- * DENTRO DE CADA ANO MANDA LA DESCRIPCION Y LUEGO EL TAMANO. La descripcion no
- * es un extra: de ella sale el texto alternativo, y una foto sin alt no se
- * puede publicar en un sitio que dice cumplir AA.
- */
 function seleccionar(aceptadas, porTema) {
   const porSubject = new Map();
   for (const foto of aceptadas) {
-    // Una foto que aparece en dos temas cuenta en el primero: si no, la misma
-    // imagen ocuparia dos huecos del tope.
     const tema = foto.subjects[0];
     if (!porSubject.has(tema)) porSubject.set(tema, []);
     porSubject.get(tema).push(foto);
@@ -597,27 +358,8 @@ function seleccionar(aceptadas, porTema) {
     let tomadas = 0;
     let vuelta = 0;
 
-    /*
-     * NO SE COGEN DOS FOTOS CON LA MISMA DESCRIPCION.
-     *
-     * En Commons, una sesion de fotos entra como veinte archivos con el mismo
-     * texto de pie -una nota de prensa, casi siempre-. Sin esto, la seleccion
-     * traia dos fotos casi identicas del mismo photocall de LG de 2016, con el
-     * mismo parrafo de descripcion en las dos. Una galeria con dos fotogramas
-     * del mismo segundo no enseña dos cosas: enseña una y ocupa dos huecos.
-     */
     const descripcionesUsadas = new Set();
 
-    /*
-     * UNA SOLA FOTO POR DIA Y POR TEMA.
-     *
-     * Sin esto entraban tres fotos del mismo evento de Shopee y dos del mismo
-     * concierto de Amsterdam. Y de paso resuelve un caso feo: de las dos fotos
-     * de la misma sesion de Marie Claire, una tenia la descripcion VANDALIZADA
-     * en Commons -«JennifeAlamat.AnsariKim for Marie nmzmsmudkzuemdk...»-, y de
-     * ese texto sale el alt. Quedarse con una por dia deja fuera la mala sin
-     * necesidad de detectar vandalismo, que es un problema sin solucion buena.
-     */
     const fechasUsadas = new Set();
 
     while (tomadas < porTema) {
@@ -644,11 +386,8 @@ function seleccionar(aceptadas, porTema) {
     }
   }
 
-  // Orden final por fecha: es como se lee una galeria de trayectoria.
   return elegidas.sort((a, b) => (a.fecha ?? '').localeCompare(b.fecha ?? ''));
 }
-
-/* --------------------------------------------------------------- informe --- */
 
 function informe({ aceptadas, rechazos, vistos }, elegidas, porTema) {
   const porMotivo = {};
@@ -771,8 +510,6 @@ function informe({ aceptadas, rechazos, vistos }, elegidas, porTema) {
   console.log('');
 }
 
-/* -------------------------------------------------------------- ejecucion --- */
-
 async function main() {
   console.error('Consultando Commons...');
   const resultado = await recolectar();
@@ -794,24 +531,10 @@ async function main() {
     return;
   }
 
-  // La descarga y el reescalado viven en un modulo aparte para que la
-  // ejecucion en seco no necesite `sharp` ni tocar el disco.
   const { descargar } = await import('./lib/commons-download.mjs');
   await descargar(elegidas, { destino: DESTINO, volcado: VOLCADO, ancho: ANCHO });
 }
 
-/**
- * EL VOLCADO CONTRA EL DISCO.
- *
- * Mismo papel que `pnpm check:spotify`: el JSON versionado es el registro, y
- * esto avisa si el disco y el registro han dejado de decir lo mismo. Sin esto,
- * borrar un archivo de `public/galeria` no rompe nada visible hasta que
- * alguien abre la galeria en produccion y ve un hueco.
- *
- * NO LLAMA A COMMONS. Comprobar que lo que tenemos es lo que dijimos que
- * teniamos no necesita red, y en CI eso significa que no falla porque
- * Wikimedia tenga un mal dia.
- */
 function comprobar() {
   if (!existsSync(VOLCADO)) {
     console.error('No hay volcado. Ejecuta primero --write.');

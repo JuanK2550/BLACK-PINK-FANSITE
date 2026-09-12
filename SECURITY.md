@@ -7,7 +7,7 @@ repositorio.
 Lo que más interesa:
 
 - Cualquier forma de que el **gateway** reenvíe una ruta que no está en su lista
-  blanca (`services/api-gateway/src/proxy/routes.ts`).
+  blanca (`backend/api-gateway/src/proxy/routes.ts`).
 - Cualquier forma de que **PINKY** revele datos personales, siga instrucciones
   metidas en el contenido o proponga un enlace fuera del mapa del sitio.
 - Cualquier forma de que un audio enviado a la transcripción **se guarde** en

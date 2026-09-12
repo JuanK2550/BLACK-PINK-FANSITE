@@ -1,23 +1,6 @@
-name: Desplegar web (Vercel)
+# Despliega la web en Vercel cuando CI pasa en main.
 
-# Despliega apps/web a Vercel en producción cuando se fusiona en main.
-#
-# NO SE DISPARA CON EL PUSH, SINO CON EL FINAL DE CI. Un `on: push` desplegaría
-# en paralelo a los tests, y un main en rojo llegaría a producción antes de que
-# nadie viera el rojo. Con `workflow_run` solo se despliega un commit cuyo CI
-# terminó en verde.
-#
-# Se construye EN EL RUNNER (`vercel build`) y se sube el resultado
-# (`--prebuilt`): lo que llega a producción es el mismo artefacto que se probó,
-# y no depende de que el entorno de build de Vercel coincida con el nuestro.
-#
-# Secretos necesarios (Settings → Secrets and variables → Actions):
-#   VERCEL_TOKEN        token personal de Vercel
-#   VERCEL_ORG_ID       id del equipo o cuenta  (`vercel link` → .vercel/project.json)
-#   VERCEL_PROJECT_ID   id del proyecto         (ídem)
-# Las variables de entorno de producción de la web (API_GATEWAY_URL,
-# NEXT_PUBLIC_SITE_URL, REVALIDATE_SECRET...) viven en el proyecto de Vercel:
-# `vercel pull` las trae.
+name: Desplegar web (Vercel)
 
 on:
   workflow_run:
@@ -28,7 +11,6 @@ on:
 
 concurrency:
   group: deploy-web
-  # Un despliegue a medias no se cancela: se deja terminar y el siguiente espera.
   cancel-in-progress: false
 
 permissions:
@@ -51,7 +33,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # El commit que pasó CI, no la punta de main en este instante.
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - uses: pnpm/action-setup@v4

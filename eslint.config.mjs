@@ -1,8 +1,10 @@
+// ESLint de la raíz: cada paquete tiene el suyo.
+
 import base from '@blackpink/config/eslint/base';
 
 export default [
   ...base,
   {
-    ignores: ['apps/**', 'services/**', 'packages/**'],
+    ignores: ['frontend/**', 'backend/**', 'shared/**'],
   },
 ];

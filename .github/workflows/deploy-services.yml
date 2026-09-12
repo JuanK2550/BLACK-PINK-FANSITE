@@ -1,29 +1,6 @@
-name: Desplegar servicios (GHCR + Railway/Render)
+# Despliega los servicios (GHCR + Railway o Render) cuando CI pasa en main.
 
-# Construye las imágenes Docker de los cinco servicios, las publica en GitHub
-# Container Registry y despliega en Railway o en Render.
-#
-# Igual que la web, se dispara al TERMINAR CI en verde sobre main, no con el
-# push: un main en rojo no debe llegar a producción.
-#
-# TRES FASES, EN ESTE ORDEN, y el orden importa:
-#
-#   1. IMÁGENES. Cada una con dos etiquetas: el sha del commit (inmutable, para
-#      poder volver a una versión exacta) y `latest` (la que sigue Railway).
-#   2. MIGRACIONES de content-service contra la base de producción. Los
-#      contenedores NO migran al arrancar (su CMD es `node dist/main.js`), así
-#      que desplegar código nuevo sobre un esquema viejo rompería cada consulta
-#      que toque una columna nueva. chatbot-service no se migra aquí: crea su
-#      tabla al arrancar, de forma idempotente. media y speech no tienen base.
-#   3. DESPLIEGUE. Railway si hay RAILWAY_TOKEN; Render si hay un deploy hook
-#      por servicio. Sin ninguno, las imágenes quedan publicadas y el paso lo
-#      dice en vez de fallar: publicar ya tiene valor por sí solo.
-#
-# Secretos:
-#   DATABASE_URL_CONTENT_PROD   para `prisma migrate deploy`
-#   RAILWAY_TOKEN               (opcional) token de proyecto de Railway
-#   RENDER_HOOK_CONTENT, RENDER_HOOK_MEDIA, RENDER_HOOK_CHATBOT,
-#   RENDER_HOOK_SPEECH, RENDER_HOOK_GATEWAY   (opcionales) deploy hooks de Render
+name: Desplegar servicios (GHCR + Railway/Render)
 
 on:
   workflow_run:
@@ -50,7 +27,6 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     strategy:
-      # Que falle una imagen no debe tirar la construcción de las demás.
       fail-fast: false
       matrix:
         servicio: [api-gateway, content-service, media-service, chatbot-service, speech-service]
@@ -68,17 +44,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # GHCR exige el nombre en minúsculas, y el propietario de este
-      # repositorio (JuanK2550) no lo está.
       - name: Nombre de la imagen
         id: nombre
         run: echo "imagen=${REGISTRY}/${GITHUB_REPOSITORY_OWNER,,}/blackpink-${{ matrix.servicio }}" >> "$GITHUB_OUTPUT"
 
       - uses: docker/build-push-action@v6
         with:
-          # El contexto es la RAÍZ: los Dockerfile copian packages/ del monorepo.
           context: .
-          file: services/${{ matrix.servicio }}/Dockerfile
+          file: backend/${{ matrix.servicio }}/Dockerfile
           push: true
           tags: |
             ${{ steps.nombre.outputs.imagen }}:${{ env.SHA }}
@@ -86,8 +59,6 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ env.SHA }}
-          # Caché de capas en GitHub Actions: sin ella cada despliegue
-          # reinstala las dependencias desde cero.
           cache-from: type=gha,scope=${{ matrix.servicio }}
           cache-to: type=gha,mode=max,scope=${{ matrix.servicio }}
 
@@ -119,9 +90,6 @@ jobs:
             echo "::error::Falta DATABASE_URL_CONTENT_PROD. Desplegar sin migrar dejaría código nuevo sobre un esquema viejo."
             exit 1
           fi
-          # `migrate deploy` solo aplica migraciones ya versionadas: nunca crea
-          # una nueva ni resetea nada. Es la única orden de Prisma segura
-          # contra producción.
           pnpm --filter @blackpink/content-service db:migrate
 
   desplegar:
@@ -151,8 +119,6 @@ jobs:
         if: ${{ env.RAILWAY_TOKEN != '' }}
         run: |
           npm install -g @railway/cli
-          # El servicio de Railway sigue la imagen `latest` de GHCR: redesplegar
-          # hace que la vuelva a descargar.
           railway redeploy --service "${{ matrix.servicio }}" --yes
 
       - name: Render
@@ -165,6 +131,4 @@ jobs:
             exit 0
           fi
           imagen="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/blackpink-${{ matrix.servicio }}:${SHA}"
-          # Se despliega el SHA, no `latest`: Render usa exactamente la imagen
-          # que se construyó en este mismo workflow.
           curl -fsS -X POST "${HOOK}&imgURL=$(printf %s "$imagen" | jq -sRr @uri)"

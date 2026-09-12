@@ -1,0 +1,457 @@
+{
+  "_nota": "GENERADO por infra/scripts/spotify-covers.mjs --dump. No editar a mano: es el registro que restaura las portadas tras un db:reset, y manda sobre la base. Congelado a proposito: cambiar una portada debe ser un commit deliberado.",
+  "albums": {
+    "as-if-its-your-last": {
+      "coverAlbumId": "7ikmjsvRzDRzxHN0KXSQdv",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02ac93d8b1bd84fa6b5291ba21",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ac93d8b1bd84fa6b5291ba21",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "blackpink-in-your-area": {
+      "coverAlbumId": "4cpZazoKuj3jD6x2GrSX2w",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e025e07cea6a3c231c7d45785cb",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2735e07cea6a3c231c7d45785cb",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "blackpink-japanese-mini": {
+      "coverAlbumId": "6vl7a0PooHBuDRLrtNeUL0",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0255ef3902e9215876105bb1e2",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27355ef3902e9215876105bb1e2",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "born-pink": {
+      "coverAlbumId": "7jaSNQUBJbvfbZHLNFrV7P",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e024aeaaeeb0755f1d8a8b51738",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2734aeaaeeb0755f1d8a8b51738",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "deadline": {
+      "coverAlbumId": "2SrWldMz9dfCB7kAGQNbcC",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e028db56c674b13b3a4c6a4dbb8",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2738db56c674b13b3a4c6a4dbb8",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "kill-this-love": {
+      "coverAlbumId": "3PNxZ3BELbUXJ1XLktXiHz",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02e20e5c366b497518353497b0",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273e20e5c366b497518353497b0",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "kiss-and-make-up": {
+      "coverAlbumId": "0obMz8EHnr3dg6NCUK4xWp",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02ae395b47b186c2bc8c458e0f",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ae395b47b186c2bc8c458e0f",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "sour-candy": {
+      "coverAlbumId": "05c49JgPmL4Uz2ZeqRx5SP",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e026040effba89b9b00a6f6743a",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2736040effba89b9b00a6f6743a",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "square-one": {
+      "coverAlbumId": "0FOOodYRlj7gzh7q7IjmNZ",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02ff4ec21d7817138cabcc19bc",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ff4ec21d7817138cabcc19bc",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "square-two": {
+      "coverAlbumId": "2Fna4Tb7fme5aHsNMJtVtp",
+      "coverHeight": 442,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0218a4a215052e9f396864bd73",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27318a4a215052e9f396864bd73",
+      "coverWidth": 442,
+      "source": "SCRIPT"
+    },
+    "square-up": {
+      "coverAlbumId": "0wOiWrujRbxlKEGWRQpKYc",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02bfd46639322b597331d9ecef",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273bfd46639322b597331d9ecef",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "the-album": {
+      "coverAlbumId": "71O60S5gIJSIAhdnrDIh3N",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e027dd8f95320e8ef08aa121dfe",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2737dd8f95320e8ef08aa121dfe",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "the-girls": {
+      "coverAlbumId": "01K5Mr0IkO7GQrvoUEsWfS",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02a2ef2c1c668b6fdb1f346dd1",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273a2ef2c1c668b6fdb1f346dd1",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    }
+  },
+  "soloWorks": {
+    "jennie-black": {
+      "coverAlbumId": "6A5g9sz5nChdBMdcATcCjB",
+      "coverHeight": 600,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e028993cee2c10adefcac0a3654",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2738993cee2c10adefcac0a3654",
+      "coverWidth": 600,
+      "source": "MANUAL"
+    },
+    "jennie-dracula": {
+      "coverAlbumId": "6KFq3hJB6JnNvDbEHRvPoK",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02c7c031ce9d06b131f8563676",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273c7c031ce9d06b131f8563676",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-fallen-angel": {
+      "coverAlbumId": "2k3ICqEXZR7jmZESOqXxWx",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02236bc23de8631dcf60b68d2a",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273236bc23de8631dcf60b68d2a",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-gg-be": {
+      "coverAlbumId": "61nJoBqpC5qaF0g0Np0Ucw",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02e3fdb668eeac5d4f1be31fc0",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273e3fdb668eeac5d4f1be31fc0",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "jennie-mantra": {
+      "coverAlbumId": "3e5tDT1kfaAGx10yOjIDgW",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0282372892b14fe93311f713df",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27382372892b14fe93311f713df",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-one-of-the-girls": {
+      "coverAlbumId": "4T8wBxIvoSRVfoFZzuwOXR",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02fab8b9788d94224614c49185",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273fab8b9788d94224614c49185",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-ruby": {
+      "coverAlbumId": "1vWMw6pu3err6qqZzI3RhH",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02dcf27dec5e479b2e39c4c993",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273dcf27dec5e479b2e39c4c993",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-ruby-complete": {
+      "coverAlbumId": "4LOrSSPct7B6yCzW1IltRd",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0294162a9a8dd6b387b2330d69",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27394162a9a8dd6b387b2330d69",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-slow-motion": {
+      "coverAlbumId": "4OZBMZ4hR5fLjRWpj3bTAT",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e021797bb35bce4fc4b3f204ef6",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2731797bb35bce4fc4b3f204ef6",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-solo": {
+      "coverAlbumId": "7qAJpYeABXN9ZV5wOOX59k",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0262e6288a5887b95176cca29e",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27362e6288a5887b95176cca29e",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-special": {
+      "coverAlbumId": "74thqvuyVQfosFffvKx2uo",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02bb0a530fc901e88d1c7a9f4d",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273bb0a530fc901e88d1c7a9f4d",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "jennie-spot": {
+      "coverAlbumId": "3K3C9JjwCGQAzj3Bu7BUaI",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e021b8ae147aceb9fc130391287",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2731b8ae147aceb9fc130391287",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jennie-you-and-me": {
+      "coverAlbumId": "1Vzh3fTdh0R0evafCcpNpL",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e028cd1023ed6ec97598937d55c",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2738cd1023ed6ec97598937d55c",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jisoo-amortage": {
+      "coverAlbumId": "1hmW4opQGq4hIYTbEWsyqW",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02ea76f03ff30a6cb758809982",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ea76f03ff30a6cb758809982",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jisoo-click": {
+      "coverAlbumId": "6wj16ihEX2pPqKzbtCZ0N3",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0231cc6756a13caaf2ea4a3b82",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27331cc6756a13caaf2ea4a3b82",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jisoo-eyes-closed": {
+      "coverAlbumId": "3LOalJiwqPsviLuoNboNfc",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e021bc666f3fa4156c40c6f90d2",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2731bc666f3fa4156c40c6f90d2",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "jisoo-me": {
+      "coverAlbumId": "4QuczuzDZNzCDli5Gz6DQ0",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02f35b8a6c03cc633f734bd8ac",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273f35b8a6c03cc633f734bd8ac",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-alter-ego": {
+      "coverAlbumId": "5eoWRkeplmcCL97afSMJVm",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0295ce3d848f4e452489d4a12c",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27395ce3d848f4e452489d4a12c",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-bad-angel": {
+      "coverAlbumId": "4RyojhEO0VsnNacY6C3te7",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e020ab7d7830f4e643b6c21296c",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2730ab7d7830f4e643b6c21296c",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-goals": {
+      "coverAlbumId": "32V31xJ7RTgNQB3qyMevei",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0260b3e4ddf88b2b8b750eac54",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27360b3e4ddf88b2b8b750eac54",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-lalisa": {
+      "coverAlbumId": "66OYt73mqan1hWa78BhfPd",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02330f11fb125bb80b760f9e19",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273330f11fb125bb80b760f9e19",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-priceless": {
+      "coverAlbumId": "0JfWflwFS8yOSELbH7bDbQ",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e022c9214c857ff01deccc34592",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2732c9214c857ff01deccc34592",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-rockstar": {
+      "coverAlbumId": "7wIIhHPyaxAHRvdNQQO2G9",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0283b619e9b866341866fb13e3",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27383b619e9b866341866fb13e3",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-sawadika": {
+      "coverAlbumId": "5WG9kRKPpHgnZ5pKku509O",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0273ae1df692b540f56d14617e",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27373ae1df692b540f56d14617e",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-sg": {
+      "coverAlbumId": "2TGtXG18s21Q1jnY2TC39M",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0254d075797911e02360beb3e7",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27354d075797911e02360beb3e7",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "lisa-shoong": {
+      "coverAlbumId": "6uMu4poce5OdMd1HYglZux",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0246313223adf2b6d726388328",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27346313223adf2b6d726388328",
+      "coverWidth": 640,
+      "source": "MANUAL"
+    },
+    "rose-apt": {
+      "coverAlbumId": "2IYQwwgxgOIn7t3iF6ufFD",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0246085aa1855bd888abc51a5a",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27346085aa1855bd888abc51a5a",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "rose-messy": {
+      "coverAlbumId": "0k428U1kVhDaxhqBP7PbGr",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e0227303a68d325216fe413f62c",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b27327303a68d325216fe413f62c",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "rose-on-my-mind": {
+      "coverAlbumId": "128pqckLyL3mr3SJwpUZun",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02ec955e8f93996f0973d95e53",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ec955e8f93996f0973d95e53",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "rose-r": {
+      "coverAlbumId": "0rBtYa6AUvlhoTTrPbYUmi",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e02b763483dd8c2987c35d70da5",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b273b763483dd8c2987c35d70da5",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "rose-rosie": {
+      "coverAlbumId": "7kFyd5oyJdVX2pIi6P4iHE",
+      "coverHeight": 640,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e027be65ce6672ed7e5aac6e966",
+      "coverThumbWidth": 300,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2737be65ce6672ed7e5aac6e966",
+      "coverWidth": 640,
+      "source": "SCRIPT"
+    },
+    "rose-without-you": {
+      "coverAlbumId": "4EitCfNTOlnqtRrmBBuwGQ",
+      "coverHeight": 480,
+      "coverThumbHeight": 300,
+      "coverThumbUrl": "https://i.scdn.co/image/ab67616d00001e024687bc7a0bda65c282c13afa",
+      "coverThumbWidth": 213,
+      "coverUrl": "https://i.scdn.co/image/ab67616d0000b2734687bc7a0bda65c282c13afa",
+      "coverWidth": 341,
+      "source": "MANUAL"
+    }
+  }
+}

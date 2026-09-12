@@ -1,8 +1,4 @@
-# Stack local completo: Postgres + Redis + los 5 microservicios.
-#   Requisito previo:  pnpm setup   (crea el .env de la raiz)
-#   Arranque:          pnpm docker:up
-#
-# El frontend NO esta aqui: se ejecuta con `pnpm dev:web` y se despliega en Vercel.
+# Pila local completa en Docker: Postgres, Redis y los 5 servicios.
 
 name: blackpink-fansite
 
@@ -14,7 +10,6 @@ x-service-defaults: &service-defaults
     - bp-net
 
 services:
-  # ---------------------------------------------------------------- datos ---
   postgres:
     image: pgvector/pgvector:pg16
     container_name: bp-postgres
@@ -53,13 +48,12 @@ services:
     networks:
       - bp-net
 
-  # -------------------------------------------------------- microservicios ---
   content-service:
     <<: *service-defaults
     container_name: bp-content-service
     build:
       context: ..
-      dockerfile: services/content-service/Dockerfile
+      dockerfile: backend/content-service/Dockerfile
     environment:
       DATABASE_URL_CONTENT: postgresql://${POSTGRES_USER:-blackpink}:${POSTGRES_PASSWORD:-blackpink_dev_password}@postgres:5432/${POSTGRES_DB:-blackpink}?schema=content
       REDIS_URL: redis://redis:6379
@@ -71,15 +65,12 @@ services:
       redis:
         condition: service_healthy
 
-  # media-service NO tiene base de datos: no es dueno del contenido, solo de la
-  # curaduria. Todo lo demas se lo pide a content-service por HTTP, y por eso
-  # espera a que este sano antes de arrancar.
   media-service:
     <<: *service-defaults
     container_name: bp-media-service
     build:
       context: ..
-      dockerfile: services/media-service/Dockerfile
+      dockerfile: backend/media-service/Dockerfile
     environment:
       CONTENT_SERVICE_URL: http://content-service:4001
       UPSTREAM_TIMEOUT_MS: ${UPSTREAM_TIMEOUT_MS:-4000}
@@ -97,7 +88,7 @@ services:
     container_name: bp-chatbot-service
     build:
       context: ..
-      dockerfile: services/chatbot-service/Dockerfile
+      dockerfile: backend/chatbot-service/Dockerfile
     environment:
       DATABASE_URL_CHAT: postgresql://${POSTGRES_USER:-blackpink}:${POSTGRES_PASSWORD:-blackpink_dev_password}@postgres:5432/${POSTGRES_DB:-blackpink}?schema=chat
       REDIS_URL: redis://redis:6379
@@ -115,7 +106,7 @@ services:
     container_name: bp-speech-service
     build:
       context: ..
-      dockerfile: services/speech-service/Dockerfile
+      dockerfile: backend/speech-service/Dockerfile
     ports:
       - '4004:4004'
 
@@ -124,15 +115,13 @@ services:
     container_name: bp-api-gateway
     build:
       context: ..
-      dockerfile: services/api-gateway/Dockerfile
+      dockerfile: backend/api-gateway/Dockerfile
     environment:
       REDIS_URL: redis://redis:6379
       CONTENT_SERVICE_URL: http://content-service:4001
       MEDIA_SERVICE_URL: http://media-service:4002
       CHATBOT_SERVICE_URL: http://chatbot-service:4003
       SPEECH_SERVICE_URL: http://speech-service:4004
-      # Exime del limite por IP a las llamadas del renderizado en servidor, que
-      # llegan todas desde la misma IP. Sin valor no hay exencion.
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-}
     ports:
       - '4000:4000'

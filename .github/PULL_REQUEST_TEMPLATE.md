@@ -1,6 +1,6 @@
 <!--
   El título del PR es el mensaje del commit que quedará en main: Conventional
-  Commits con un scope de commitlint.config.mjs. Ejemplos:
+  Commits con un scope de los permitidos en package.json ("commitlint"). Ejemplos:
     feat(web): comparador de integrantes
     fix(content): la nacionalidad no se traducía
   De él sale la versión (semantic-release): `feat` sube la menor, `fix` el
@@ -22,15 +22,15 @@
 
 ## Reglas del proyecto
 
-<!-- Las invariantes de CLAUDE.md. Si no aplica, táchala o bórrala. -->
+<!-- Las reglas del README. Si alguna no aplica, táchala o bórrala. -->
 
 - [ ] No se aloja ni se sirve audio o vídeo con copyright; lo único que suena es el embed oficial de Spotify
-- [ ] Toda cadena visible está en `apps/web/messages/{es,en,ko}.json`, en los tres idiomas
+- [ ] Toda cadena visible está en `frontend/messages/{es,en,ko}.json`, en los tres idiomas
 - [ ] El aviso de sitio no oficial sigue visible en todas las páginas
 - [ ] Los datos nuevos llevan `source` y `verified`; lo que no está contrastado va con `verified: false`
 - [ ] Las imágenes nuevas tienen licencia libre y su atribución llega a `/creditos`
 - [ ] Las animaciones nuevas respetan `prefers-reduced-motion`
-- [ ] `apps/web` no envía `includeUnverified=true` en ninguna llamada
+- [ ] `frontend` no envía `includeUnverified=true` en ninguna llamada
 
 ## Capturas
 
