@@ -26,6 +26,10 @@ export default defineConfig({
         'src/components/quiz/quiz-game.tsx',
         'src/components/members/member-compare.tsx',
         'src/components/gallery/gallery-grid.tsx',
+        'src/components/gallery/lightbox.tsx',
+        'src/components/quiz/quiz-bar.tsx',
+        'src/components/quiz/quiz-result.tsx',
+        'src/components/members/member-compare-rows.tsx',
         'src/components/group/debut-counter.tsx',
       ],
       thresholds: {
