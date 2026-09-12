@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # Imagen Docker del gateway.
 
-FROM node:22-alpine AS builder
+FROM node:26-alpine AS builder
 RUN corepack enable && apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm turbo run build --filter=@blackpink/api-gateway...
 RUN pnpm deploy --filter=@blackpink/api-gateway --prod --legacy /prod
 
-FROM node:22-alpine AS runner
+FROM node:26-alpine AS runner
 ENV NODE_ENV=production
 WORKDIR /app
 
