@@ -40,7 +40,7 @@
     "@nestjs/cli": "catalog:",
     "@nestjs/schematics": "catalog:",
     "@nestjs/testing": "catalog:",
-    "@swc/core": "^1.16.1",
+    "@swc/core": "^1.16.2",
     "@types/node": "^24.0.0",
     "@types/supertest": "^7.2.1",
     "eslint": "^9.17.0",
@@ -48,7 +48,7 @@
     "rimraf": "^6.0.1",
     "supertest": "catalog:",
     "typescript": "^5.7.0",
-    "unplugin-swc": "^1.5.11",
+    "unplugin-swc": "^1.6.0",
     "vitest": "^2.1.8 || ^3.0.0"
   }
 }
