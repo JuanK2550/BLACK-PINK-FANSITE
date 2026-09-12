@@ -77,4 +77,7 @@ jobs:
         run: pnpm check:gallery
 
       - name: Build
-        run: pnpm build
+        # Todo menos la web: `next build` prerenderiza pidiendo datos al gateway,
+        # que aqui no esta levantado. La web se construye en el workflow E2E,
+        # con la pila entera en marcha.
+        run: pnpm exec turbo run build --filter=!@blackpink/web

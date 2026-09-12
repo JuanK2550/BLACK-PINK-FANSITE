@@ -51,7 +51,9 @@ runs:
 
     - name: Construir la web
       shell: bash
-      run: pnpm --filter @blackpink/web build
+      # Con las dependencias: sin compilar shared/types y shared/ui antes,
+      # la web no encuentra @blackpink/types y el build falla.
+      run: pnpm exec turbo run build --filter=@blackpink/web...
 
     - name: Arrancar la web
       shell: bash
