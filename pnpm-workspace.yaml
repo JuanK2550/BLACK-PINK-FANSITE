@@ -22,7 +22,7 @@ allowBuilds:
 catalog:
   'sharp': '^0.34.0'
   '@nestjs/cli': '^11.0.0'
-  '@nestjs/common': '^11.0.0'
+  '@nestjs/common': '^12.0.1'
   '@nestjs/config': '^4.0.0'
   '@nestjs/core': '^11.0.0'
   '@nestjs/platform-express': '^11.0.0'
