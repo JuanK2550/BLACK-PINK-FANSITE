@@ -6,11 +6,11 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
       day: monday
       time: '06:00'
       timezone: Europe/Madrid
-    open-pull-requests-limit: 8
+    open-pull-requests-limit: 4
     commit-message:
       prefix: 'chore(deps)'
     labels: [dependencias]
@@ -59,7 +59,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
       day: monday
       time: '06:00'
       timezone: Europe/Madrid
@@ -78,7 +78,7 @@ updates:
       - /backend/chatbot-service
       - /backend/speech-service
     schedule:
-      interval: weekly
+      interval: monthly
       day: monday
       time: '06:00'
       timezone: Europe/Madrid
