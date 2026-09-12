@@ -1,22 +1,5 @@
 #!/usr/bin/env node
-/**
- * ============================================================================
- * COMPROBACION DE LOS DOS VOLCADOS
- * ============================================================================
- * Lanza `--check` en los dos scripts y falla si cualquiera de los dos falla.
- *
- * Existe por un detalle que importa en un pull request: encadenarlos con `&&`
- * haria que, al fallar el primero, el segundo NI SIQUIERA SE EJECUTE. Quien
- * abre el pull request veria la mitad de la deriva, arreglaria esa mitad, y
- * volveria a fallar por la otra. Aqui corren siempre los dos y se informa de
- * todo de una vez.
- *
- * Tampoco depende de que el shell entienda `&&`, que en Windows no siempre es
- * el mismo.
- *
- *   pnpm check:spotify
- * ============================================================================
- */
+// Comprueba que la base coincide con los volcados de Spotify.
 
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';

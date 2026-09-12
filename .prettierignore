@@ -19,7 +19,7 @@ infra/backups/
 # Volcado GENERADO por infra/scripts/commons-gallery.mjs con serializacion
 # canonica propia. Si Prettier lo reformatea, la siguiente pasada del script lo
 # devuelve a su forma y format:check falla en cada regeneracion.
-services/content-service/prisma/seed-data/commons-gallery.json
+backend/content-service/prisma/seed-data/commons-gallery.json
 
 # Artefactos de los tests.
 test-results/

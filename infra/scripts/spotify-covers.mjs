@@ -1,76 +1,12 @@
 #!/usr/bin/env node
-/**
- * ============================================================================
- * RESOLUCION DE PORTADAS DE SPOTIFY
- * ============================================================================
- * Hermano de `spotify-ids.mjs`. Rellena `coverUrl`, `coverWidth`,
- * `coverHeight`, `coverSource` y `coverAlbumId` de cada album y de cada obra
- * en solitario.
- *
- * Comparte con su hermano las cuatro decisiones de fondo -no escribe lo
- * dudoso, no descarta en silencio, marca la procedencia y no toca `verified`-
- * pero se separa de el en la MAS IMPORTANTE:
- *
- *     AQUI NO SE DECIDE POR PUNTUACION. Se decide por IDENTIDAD.
- *
- * La diferencia no es un matiz. `spotify-ids.mjs` busca por texto porque no
- * tiene otra cosa: parte de un titulo y tiene que encontrar una cancion. Aqui
- * el catalogo YA TIENE los identificadores de sus pistas, y un identificador
- * no se parece a un album: pertenece a uno. Asi que la portada no se busca,
- * se DEDUCE:
- *
- *     pista con spotifyId  ->  su album en Spotify  ->  la portada de ese album
- *
- * Una portada obtenida asi no puede ser la de otro disco, porque no ha habido
- * ninguna comparacion de texto de la que equivocarse. Ese es el camino
- * IDENTIDAD, y es el que resuelve 7 de los 9 albumes y las 8 obras en
- * solitario.
- *
- * Que un camino sea exacto no lo hace suficiente, y por eso hay COMPROBACIONES
- * (ver `verifyAlbum`). Un identificador correcto puede llevar a un album que
- * no es el que queremos: la misma cancion vive tambien en recopilatorios,
- * ediciones de aniversario y bandas sonoras, y la portada de un recopilatorio
- * es una portada real de un album equivocado. Ese es el error que este script
- * tiene que evitar, y ninguna puntuacion de texto lo detecta.
- *
- * Los albumes sin pistas identificadas no tienen camino de identidad. Para
- * ellos se busca por texto y el resultado va SIEMPRE a decision humana, por
- * bueno que parezca: una busqueda de albumes japoneses devuelve ediciones
- * distintas con portadas distintas y el script no puede saber cual es la del
- * catalogo.
- *
- * LA IMAGEN NO SE DESCARGA. Se guarda la URL de la CDN de Spotify. Alojarla
- * seria servir una portada con copyright, que es justo lo que prohibe la
- * regla 1 del proyecto.
- *
- * USO
- *   node infra/scripts/spotify-covers.mjs                 informe, sin escribir
- *   node infra/scripts/spotify-covers.mjs --write         escribe las claras
- *   node infra/scripts/spotify-covers.mjs --write --only=albums
- *   node infra/scripts/spotify-covers.mjs --only=solo
- *   node infra/scripts/spotify-covers.mjs --set <tipo> <slug> <albumId>
- *   node infra/scripts/spotify-covers.mjs --dump          vuelca la base al fichero
- *   node infra/scripts/spotify-covers.mjs --check         base contra volcado (CI)
- *
- *   node infra/scripts/spotify-covers.mjs --set album blackpink-in-your-area 3ARVeCPhkTOEyR5nODzCbc
- *   node infra/scripts/spotify-covers.mjs --set solo rose-r 6uPfMcqRcpMHXOtCiLtwZ2
- *
- * EL VOLCADO ES EL REGISTRO, no una copia de cortesia. Ver
- * `lib/spotify-dump.mjs`: la base se borra con `db:reset` y el seed no sabe
- * nada de portadas, asi que sin el fichero cada reinicio pierde 15 portadas.
- * `--write` y `--set` lo regeneran solos, para que no exista el estado
- * "escrito en la base pero sin volcar".
- * ============================================================================
- */
+// Busca las portadas de los discos en Spotify.
 
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { PrismaClient } from '../../services/content-service/prisma/generated/client/client.js';
+import { PrismaClient } from '../../backend/content-service/prisma/generated/client/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { diff, readDump, reportCheck, writeDump } from './lib/spotify-dump.mjs';
-
-/* -------------------------------------------------------------- entorno --- */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const ENV_FILE = path.join(ROOT, '.env');
@@ -82,41 +18,11 @@ const DATABASE_URL = process.env.DATABASE_URL_CONTENT;
 
 const ARTIST = 'BLACKPINK';
 
-/**
- * Tamano de portada que se guarda.
- *
- * Spotify publica tres ya hechos (640, 300, 64) y aqui se toma el de 640: es
- * el unico que aguanta una pantalla retina en la ficha del album. NO se
- * reescala nada; elegir entre los suyos es lo contrario de modificarlos.
- */
 const PREFERRED_EDGE = 640;
 
-/**
- * Tamano de MINIATURA.
- *
- * El mismo archivo en pequeno, para los huecos de 56 y 96 px: la fila del
- * mega-menu, el listado de discografia y las obras en solitario de una ficha.
- *
- * Hace falta guardarlo aparte porque las portadas van `unoptimized` y sin
- * optimizador NO HAY srcset: `sizes` es inerte y el navegador se traga el
- * archivo de 640 px que le demos. Medido, por miniatura: 17,8 KB contra 6,1.
- *
- * Y sigue sin ser una modificacion: Spotify publica 640, 300 y 64; aqui se
- * elige una de las suyas.
- */
 const THUMB_EDGE = 300;
 
-/**
- * Tipos de album de Spotify que NO valen como fuente de portada.
- *
- * Este es el filtro que impide el error caracteristico de este script. Una
- * pista de "DDU-DU DDU-DU" pertenece de verdad a `SQUARE UP`, pero tambien a
- * cualquier recopilatorio que la incluya; si la API devuelve el recopilatorio,
- * el identificador es correcto y la portada es la equivocada.
- */
 const BAD_ALBUM_GROUPS = new Set(['compilation', 'appears_on']);
-
-/* ------------------------------------------------------------ argumentos --- */
 
 const argv = process.argv.slice(2);
 const WRITE = argv.includes('--write');
@@ -125,14 +31,11 @@ const SET_INDEX = argv.indexOf('--set');
 const DUMP = argv.includes('--dump');
 const CHECK = argv.includes('--check');
 
-/** Nombre del volcado de este script. Un fichero por script. */
 const DUMP_NAME = 'spotify-covers';
 const DUMP_NOTE =
   'GENERADO por infra/scripts/spotify-covers.mjs --dump. No editar a mano: ' +
   'es el registro que restaura las portadas tras un db:reset, y manda sobre la base. ' +
   'Congelado a proposito: cambiar una portada debe ser un commit deliberado.';
-
-/* ------------------------------------------------------ texto y similitud --- */
 
 function normalize(text) {
   return text
@@ -163,15 +66,6 @@ function levenshtein(a, b) {
   return prev[b.length];
 }
 
-/**
- * Similitud de titulos, de 0 a 1.
- *
- * OJO CON LO QUE ES Y LO QUE NO ES. Aqui esto NO decide nada: se imprime en el
- * informe para que una persona vea de un vistazo si el album al que llego la
- * identidad se llama como el que esperaba. Un 0.55 con identidad limpia se
- * escribe igual -"SQUARE UP" y "SQUARE UP (Japan Edition)" no son el mismo
- * texto y si son el mismo disco-, y un 1.00 sin identidad no se escribe.
- */
 function similarity(a, b) {
   const na = normalize(a);
   const nb = normalize(b);
@@ -183,8 +77,6 @@ function isOurArtist(names, expected) {
   const wanted = normalize(expected);
   return names.some((name) => normalize(name) === wanted);
 }
-
-/* ------------------------------------------------------------- Spotify --- */
 
 let tokenCache = null;
 
@@ -202,7 +94,6 @@ async function getToken() {
   });
 
   if (!response.ok) {
-    // El cuerpo del error puede repetir el client_id; no se imprime.
     throw new Error(
       `Spotify rechazo las credenciales (HTTP ${response.status}). ` +
         'Revisa SPOTIFY_CLIENT_ID y SPOTIFY_CLIENT_SECRET en .env.',
@@ -216,7 +107,6 @@ async function getToken() {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** GET contra la API, respetando el `Retry-After` de un 429. */
 async function api(pathAndQuery) {
   const token = await getToken();
 
@@ -241,19 +131,6 @@ async function api(pathAndQuery) {
   throw new Error('Spotify sigue limitando las peticiones tras varios reintentos.');
 }
 
-/**
- * Las pistas de un album, UNA A UNA.
- *
- * Parece un despilfarro y no lo es: `/tracks?ids=` admite 50 de golpe, pero
- * **devuelve 403 con estas credenciales**. Spotify restringio ese endpoint
- * para las aplicaciones en modo desarrollo, mientras que `/tracks/{id}` a
- * secas sigue abierto. Comprobado contra la API real: el mismo token que da
- * 200 en `/tracks/5zww...` da 403 en `/tracks?ids=5zww...`.
- *
- * Asi que el bucle no es ingenuidad: es el unico camino que funciona. El coste
- * son 31 peticiones en vez de 1, que con el ritmo de abajo son cuatro
- * segundos y ningun 429.
- */
 async function getTracks(ids) {
   const out = new Map();
 
@@ -268,14 +145,6 @@ async function getTracks(ids) {
 
 const getAlbum = (id) => api(`/albums/${id}?market=US`);
 
-/* ------------------------------------------------------------ portadas --- */
-
-/**
- * Elige una de las imagenes que publica Spotify. No se reescala ninguna.
- *
- * Se prefiere la de 640 y, si no esta, la mayor disponible: es preferible
- * bajar de mas y que el navegador la encoja a servir una borrosa.
- */
 function pickImage(images) {
   if (!Array.isArray(images) || images.length === 0) return null;
 
@@ -285,38 +154,16 @@ function pickImage(images) {
   return [...images].sort((a, b) => (b.width ?? 0) - (a.width ?? 0))[0] ?? null;
 }
 
-/**
- * Lee el ancho y el alto REALES de la imagen, de sus bytes.
- *
- * EXISTE PORQUE LA API MIENTE, y esta comprobado: para `SQUARE TWO` Spotify
- * declara 640x640 en `images[0].width` y sirve un archivo de 442x442. No es
- * un caso inventado, es el que aparecio al mirar las portadas ya cargadas en
- * el navegador.
- *
- * Guardar el numero declarado seria guardar un dato falso, y aqui ese dato
- * tiene una consecuencia: `coverWidth`/`coverHeight` son lo unico con lo que
- * el navegador reserva el hueco, porque la imagen no pasa por el optimizador.
- * Mientras las portadas sean cuadradas el hueco sale bien por casualidad —una
- * proporcion 1:1 es 1:1 se mida como se mida—, pero la primera portada que no
- * lo sea daria un salto de maquetado imposible de explicar.
- *
- * La imagen NO se guarda: se lee la cabecera del buffer y se descarta. Se
- * entiende JPEG y PNG, que es lo que sirve i.scdn.co; si llega otra cosa se
- * devuelve null y manda lo que declare la API, que es mejor que nada.
- */
 async function probeImageSize(url) {
   try {
     const response = await fetch(url);
     if (!response.ok) return null;
     const bytes = Buffer.from(await response.arrayBuffer());
 
-    // PNG: el bloque IHDR va siempre en la misma posicion.
     if (bytes.length > 24 && bytes.readUInt32BE(0) === 0x89504e47) {
       return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
     }
 
-    // JPEG: hay que recorrer los segmentos hasta un marcador SOF, que es el
-    // unico que lleva las medidas. Se saltan los demas por su longitud.
     if (bytes.length > 4 && bytes[0] === 0xff && bytes[1] === 0xd8) {
       let offset = 2;
       while (offset + 9 < bytes.length) {
@@ -325,7 +172,6 @@ async function probeImageSize(url) {
           continue;
         }
         const marker = bytes[offset + 1];
-        // SOF0..SOF15, excluyendo DHT (c4), JPG (c8) y DAC (cc), que no lo son.
         if (
           marker >= 0xc0 &&
           marker <= 0xcf &&
@@ -341,19 +187,10 @@ async function probeImageSize(url) {
 
     return null;
   } catch {
-    // Una portada sin medir no justifica tumbar la pasada entera.
     return null;
   }
 }
 
-/**
- * La variante pequena, elegida entre las que publica Spotify.
- *
- * Se busca la mas cercana a 300 px POR ENCIMA de un minimo util: la de 64 px
- * sirve para un avatar, no para un hueco de 96 en una pantalla retina. Si solo
- * hubiera una imagen, se devuelve null y el frontend usa la grande: mejor
- * pesada que borrosa.
- */
 function pickThumb(images, full) {
   if (!Array.isArray(images) || images.length === 0) return null;
 
@@ -364,32 +201,6 @@ function pickThumb(images, full) {
   return candidates[0] ?? null;
 }
 
-/* --------------------------------------------------------- verificacion --- */
-
-/**
- * Es este album de Spotify el disco que tenemos en el catalogo?
- *
- * Aqui esta el encargo: comprobar cada portada SIN FIARSE DE LA PUNTUACION.
- * Son cuatro comprobaciones y ninguna es de texto salvo la ultima, que ademas
- * no puede vetar nada por si sola.
- *
- * 1. ARTISTA (eliminatoria). El album tiene que estar acreditado a BLACKPINK o
- *    a la integrante. Una version de otro artista es otro disco.
- *
- * 2. TIPO DE ALBUM (eliminatoria). Se rechazan `compilation` y `appears_on`.
- *    Es el filtro que de verdad importa: son el unico caso en que la cadena de
- *    identidad es correcta y la portada, aun asi, equivocada.
- *
- * 3. ANO (avisa, no veta). Spotify publica una fecha de lanzamiento; si
- *    difiere de la nuestra en mas de un ano, algo no cuadra. Un ano exacto de
- *    diferencia NO se penaliza: el proyecto fecha en KST y Spotify no, asi que
- *    un lanzamiento de fin de ano cae legitimamente en el otro lado.
- *
- * 4. TITULO (informativo). Se imprime para que una persona lo lea. No decide.
- *
- * Devuelve `ok` y las notas, para que el informe pueda explicar POR QUE algo
- * se acepto o se mando a revision.
- */
 function verifyAlbum(album, { title, year, expectedArtist }) {
   const notes = [];
   const artists = (album.artists ?? []).map((a) => a.name);
@@ -425,8 +236,6 @@ function verifyAlbum(album, { title, year, expectedArtist }) {
   return { ok: true, fatal: null, notes, titleScore };
 }
 
-/* --------------------------------------------------------------- salida --- */
-
 const C = {
   reset: '[0m',
   dim: '[2m',
@@ -438,21 +247,6 @@ const C = {
 
 const paint = (color, text) => `${color}${text}${C.reset}`;
 
-/* ------------------------------------------------------------- volcado --- */
-
-/**
- * Lo que hay HOY en la base, en la forma exacta del volcado.
- *
- * Las claves son las mismas que acepta `--set` (`born-pink`, `rose-r`), y eso
- * no es casualidad: si el informe te dice que corrijas algo con
- * `--set album born-pink ...`, la entrada que vas a ver cambiar en el diff se
- * llama igual. Una clave distinta obligaria a traducir mentalmente entre las
- * dos cosas cada vez.
- *
- * `source` viaja SIEMPRE, porque restaurar el valor sin la marca dejaria las
- * decisiones MANUAL indistinguibles de las automaticas y el script volveria a
- * pisarlas.
- */
 async function collect(prisma) {
   const albums = await prisma.album.findMany({
     where: { coverUrl: { not: null } },
@@ -509,8 +303,6 @@ async function runCheck(prisma) {
   if (!ok) process.exitCode = 1;
 }
 
-/* ----------------------------------------------------------------- main --- */
-
 async function main() {
   if (!DATABASE_URL) throw new Error('Falta DATABASE_URL_CONTENT en .env.');
 
@@ -520,11 +312,6 @@ async function main() {
   const prisma = new PrismaClient({ adapter });
 
   try {
-    /*
-     * `--dump` y `--check` NO hablan con Spotify: solo leen la base y el
-     * fichero. Por eso van antes de exigir credenciales -CI no las tiene y
-     * tampoco las necesita- y por eso `--check` es barato de ejecutar.
-     */
     if (DUMP) {
       await runDump(prisma);
       return;
@@ -554,20 +341,11 @@ async function main() {
 
     printReport(report);
 
-    /*
-     * Volcar es parte de escribir, no un paso aparte que recordar. Si fuera
-     * opcional existiria el estado "la base tiene una portada que el volcado
-     * no", y ese estado se descubre en el proximo db:reset, cuando ya se
-     * perdio. Con `--only` se vuelca igual: el volcado se construye leyendo la
-     * base entera, no solo lo que toco esta pasada.
-     */
     if (WRITE) await runDump(prisma);
   } finally {
     await prisma.$disconnect();
   }
 }
-
-/* --------------------------------------------------------------- albumes --- */
 
 async function processAlbums(prisma, report) {
   const albums = await prisma.album.findMany({
@@ -591,12 +369,6 @@ async function processAlbums(prisma, report) {
     const trackIds = album.tracks.map((t) => t.spotifyId).filter(Boolean);
 
     if (trackIds.length === 0) {
-      /*
-       * Sin pistas identificadas no hay camino de identidad. Se busca por
-       * texto y va SIEMPRE a decision humana: los lanzamientos japoneses
-       * tienen varias ediciones con portadas distintas y elegir por parecido
-       * de titulo seria exactamente lo que este script no hace.
-       */
       await offerBySearch({ report, album, year, kind: 'album' });
       await sleep(120);
       continue;
@@ -635,17 +407,6 @@ async function processAlbums(prisma, report) {
   }
 }
 
-/**
- * En que album de Spotify coinciden las pistas de este disco?
- *
- * Se piden todas las pistas y se agrupa por el album al que pertenecen. El
- * ganador es el album que reune mas pistas.
- *
- * Se exige MAYORIA ABSOLUTA, y no es celo: si las pistas de un disco se
- * reparten entre dos albumes de Spotify, la mas votada puede ser un
- * recopilatorio que resulta contener mas canciones nuestras que el original.
- * Sin mayoria, el script no elige: manda a revision.
- */
 async function albumFromTracks(trackIds) {
   const tracks = await getTracks(trackIds);
   const votes = new Map();
@@ -667,8 +428,6 @@ async function albumFromTracks(trackIds) {
 
   return { albumId: bestId, agreement: `${bestCount}/${total}` };
 }
-
-/* --------------------------------------------------- obras en solitario --- */
 
 async function processSoloWorks(prisma, report) {
   const works = await prisma.soloWork.findMany({
@@ -701,12 +460,6 @@ async function processSoloWorks(prisma, report) {
       continue;
     }
 
-    /*
-     * Una obra en solitario apunta a UNA pista, asi que su album es el de esa
-     * pista. Vale igual para las que son un lanzamiento entero -"R" de ROSE,
-     * "ME" de JISOO-: el id que hay guardado es el de una cancion DENTRO de
-     * ese lanzamiento, de modo que su album es justo el que buscamos.
-     */
     const track = await api(`/tracks/${work.spotifyId}?market=US`);
     const albumId = track?.album?.id;
 
@@ -740,15 +493,6 @@ async function processSoloWorks(prisma, report) {
   }
 }
 
-/* ------------------------------------------------- resolver y verificar --- */
-
-/**
- * Del album de Spotify a la portada, pasando por las comprobaciones.
- *
- * Que la identidad sea exacta no exime de comprobar: lo que la identidad
- * garantiza es que la pista PERTENECE a ese album, no que ese album sea el
- * disco de nuestro catalogo.
- */
 async function resolveFromAlbumId({
   prisma,
   report,
@@ -783,8 +527,6 @@ async function resolveFromAlbumId({
   }
 
   if (!check.ok) {
-    // La identidad llevo a un album que no pasa las comprobaciones. No se
-    // escribe, y se dice exactamente por que.
     report.review.push({
       key,
       label,
@@ -796,7 +538,6 @@ async function resolveFromAlbumId({
     return;
   }
 
-  // Las medidas se miden, no se creen. Ver `probeImageSize`.
   const real = await probeImageSize(image.url);
   const width = real?.width ?? image.width;
   const height = real?.height ?? image.height;
@@ -807,7 +548,6 @@ async function resolveFromAlbumId({
     );
   }
 
-  // La miniatura se mide igual que la grande: la API miente sobre las dos.
   const thumb = pickThumb(album.images, image);
   const thumbReal = thumb ? await probeImageSize(thumb.url) : null;
   const thumbWidth = thumbReal?.width ?? thumb?.width ?? null;
@@ -863,27 +603,7 @@ async function resolveFromAlbumId({
   }
 }
 
-/**
- * Camino de respaldo para lo que no tiene identidad: buscar por texto.
- *
- * TODO lo que sale de aqui va a decision humana, aunque el titulo coincida al
- * 100%. No es prudencia excesiva: es que sin identidad no hay nada que
- * distinga la edicion coreana de la japonesa, ni el original de la reedicion,
- * y las dos son albumes reales con portadas distintas.
- */
 async function offerBySearch({ report, album, year, kind }) {
-  /*
-   * Se busca DOS VECES, y la segunda existe por un caso real.
-   *
-   * El titulo del catalogo puede llevar un parentesis descriptivo que en
-   * Spotify no existe: "BLACKPINK (Japanese Mini Album)" alli se llama
-   * "BLACKPINK (Japanese Version)". Con el parentesis, `album:` no encuentra
-   * nada y el disco acababa en "sin candidatas" teniendo una evidente. Sin el,
-   * aparece la primera.
-   *
-   * Que la busqueda sea mas amplia no relaja nada: siga el camino que siga,
-   * todo lo que sale de aqui va a decision humana igual.
-   */
   const bare = album.title.replace(/\s*\([^)]*\)\s*/g, ' ').trim();
   const queries = [`album:${album.title} artist:${ARTIST}`];
   if (bare && bare !== album.title) queries.push(`album:${bare} artist:${ARTIST}`);
@@ -954,8 +674,6 @@ function describeAlbum(album, image) {
   };
 }
 
-/* -------------------------------------------------------------- escritura --- */
-
 async function writeCover(prisma, kind, id, data) {
   if (kind === 'album') {
     await prisma.album.update({ where: { id }, data });
@@ -964,15 +682,6 @@ async function writeCover(prisma, kind, id, data) {
   }
 }
 
-/* ------------------------------------------------------ confirmar a mano --- */
-
-/**
- * `--set <album|solo> <slug> <albumId>`
- *
- * Se pasa el id del ALBUM de Spotify, no la URL de la portada: la portada es
- * una consecuencia del album, y pedir la URL a mano invitaria a pegar una
- * imagen de cualquier sitio.
- */
 async function applyManual(prisma, args) {
   const [kind, key, albumId] = args;
 
@@ -1030,13 +739,8 @@ async function applyManual(prisma, args) {
       `  marcado como ${paint(C.bold, 'MANUAL')}: el script no volvera a tocarlo.\n\n`,
   );
 
-  // Una decision manual es justo lo que NO se puede regenerar: si se pierde,
-  // hay que volver a tomarla. Volcarla en el acto es lo que la salva del
-  // proximo reinicio.
   await runDump(prisma);
 }
-
-/* --------------------------------------------------------------- informe --- */
 
 function printReport({ matched, review, missed, skipped }) {
   const line = '─'.repeat(72);
@@ -1055,12 +759,6 @@ function printReport({ matched, review, missed, skipped }) {
     );
   }
 
-  /*
-   * Las resueltas se imprimen ENTERAS, con su URL y el album del que salieron.
-   * En su hermano bastaba con la puntuacion; aqui no: una portada equivocada
-   * no se detecta leyendo un numero, se detecta MIRANDOLA. El informe tiene
-   * que dar el enlace para poder hacerlo.
-   */
   if (matched.length > 0) {
     process.stdout.write(`\n${line}\nRESUELTAS (${matched.length})\n${line}\n`);
     process.stdout.write(

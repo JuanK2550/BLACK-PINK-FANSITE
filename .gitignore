@@ -28,7 +28,7 @@ coverage/
 infra/backups/
 
 # Media subida por el usuario (se sirve desde CDN, no desde el repo)
-apps/web/public/uploads/
+frontend/public/uploads/
 
 # Sistema y editores
 .DS_Store

@@ -9,8 +9,6 @@
     "REDIS_URL",
     "INTERNAL_API_KEY",
     "LOG_LEVEL",
-    "ANTHROPIC_API_KEY",
-    "EMBEDDINGS_API_KEY",
     "ASR_API_KEY"
   ],
   "tasks": {

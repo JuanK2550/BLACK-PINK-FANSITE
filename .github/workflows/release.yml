@@ -1,28 +1,6 @@
-name: Versión
+# Versión automática con semantic-release a partir de los commits.
 
-# Versionado automático con semantic-release, a partir de los commits.
-#
-# POR QUÉ SEMANTIC-RELEASE Y NO CHANGESETS: los commits de este repositorio ya
-# son Conventional Commits y commitlint los valida en cada `git commit`, así que
-# la versión se puede DEDUCIR de ellos sin pedirle nada a nadie:
-#
-#   fix(...)               → parche    0.1.0 → 0.1.1
-#   feat(...)              → menor     0.1.0 → 0.2.0
-#   BREAKING CHANGE: ...   → mayor     0.1.0 → 1.0.0
-#   docs, test, ci, chore  → sin versión
-#
-# Changesets pediría un fichero a mano en cada pull request para versionar
-# once paquetes privados que no se publican en npm. Lo que tiene sentido
-# versionar aquí es el SITIO: una versión, un CHANGELOG.md y una Release de
-# GitHub con sus notas. No se publica nada en npm (`npmPublish: false`).
-#
-# Como deploy-web y deploy-services, corre al TERMINAR CI en verde sobre main.
-# El commit que genera lleva `[skip ci]` para no disparar otra vuelta.
-#
-# Configuración: .releaserc.json. Los plugins van como dependencias de
-# desarrollo de la raíz y NO con `pnpm dlx`: probado, semantic-release busca
-# sus plugins desde el directorio del repositorio y no desde la carpeta
-# temporal de dlx, y fallaba con «Cannot find module».
+name: Versión
 
 on:
   workflow_run:
@@ -49,8 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Historial completo: semantic-release necesita las etiquetas y los
-          # commits desde la última versión para decidir la siguiente.
           fetch-depth: 0
           persist-credentials: false
 
@@ -67,6 +43,5 @@ jobs:
       - name: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Los hooks de husky no deben correr en el commit de versión.
           HUSKY: '0'
         run: pnpm exec semantic-release

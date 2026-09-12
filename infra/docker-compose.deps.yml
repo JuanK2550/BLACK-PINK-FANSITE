@@ -1,8 +1,4 @@
-# Solo las dependencias de datos (Postgres + Redis).
-# Pensado para el dia a dia: los servicios se ejecutan en local con `pnpm dev`
-# y hablan con estos dos contenedores.
-#
-#   pnpm docker:up:deps
+# Solo Postgres y Redis, para desarrollar los servicios en local.
 
 name: blackpink-fansite-deps
 

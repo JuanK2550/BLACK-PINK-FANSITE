@@ -1,26 +1,8 @@
+// Pruebas del cambio de idioma.
+
 import { expect, test, type Page } from '@playwright/test';
 import { esperarHidratacion, expectAvisoNoOficial } from './ayudas';
 
-/**
- * ============================================================================
- * CAMBIO DE IDIOMA
- * ============================================================================
- * Tres promesas del sitio que solo se ven de extremo a extremo:
- *
- *   1. Cambiar de idioma CONSERVA LA PAGINA: desde la ficha de BORN PINK en
- *      español se llega a la ficha de BORN PINK en inglés, no a la portada.
- *   2. `<html lang>` cambia con el idioma. Es lo que decide la voz del lector
- *      de pantalla y la fuente del hangul (`:lang(ko)`).
- *   3. La eleccion se RECUERDA en la cookie `NEXT_LOCALE`, pero una URL con
- *      idioma manda sobre ella: un enlace compartido no se traduce solo.
- * ============================================================================
- */
-
-/**
- * Abre el selector de idioma donde este. En escritorio va en la cabecera; en
- * movil vive DENTRO del menu hamburguesa, y buscarlo en la cabecera esperaba
- * un minuto a un boton que a ese ancho no existe.
- */
 async function abrirSelector(page: Page, isMobile: boolean) {
   if (isMobile) await page.getByRole('button', { name: 'Abrir el menú' }).click();
   await page
@@ -62,8 +44,6 @@ test.describe('idioma', () => {
   });
 
   test('una URL con idioma manda sobre la cookie', async ({ page, context, baseURL }) => {
-    // Quien comparte /en/quiz espera que se abra en ingles, aunque quien lo
-    // recibe tenga guardado el coreano.
     await context.addCookies([{ name: 'NEXT_LOCALE', value: 'ko', url: baseURL! }]);
     await page.goto('/en/quiz');
     await expect(page).toHaveURL(/\/en\/quiz$/);
@@ -71,7 +51,6 @@ test.describe('idioma', () => {
   });
 
   test('la raiz redirige a un idioma con prefijo', async ({ page }) => {
-    // `localePrefix: 'always'`: tambien el español lleva prefijo.
     await page.goto('/');
     await expect(page).toHaveURL(/\/(es|en|ko)$/);
   });

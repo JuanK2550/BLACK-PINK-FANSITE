@@ -1,28 +1,4 @@
-/**
- * ============================================================================
- * DISCOGRAFIA COMPLETA DESDE SPOTIFY  ·  descubrimiento, sin escribir nada
- * ============================================================================
- *   node infra/scripts/spotify-discography.mjs            informe en consola
- *   node infra/scripts/spotify-discography.mjs --json f   ademas, informe en JSON
- *
- * Lista TODO lo que el grupo y cada integrante han publicado en Spotify, disco
- * a disco y cancion a cancion, y lo compara con el catalogo del sitio. No
- * escribe en la base ni en el seed: lo que entra en el catalogo lo decide una
- * persona, con su `source`, porque CLAUDE.md manda que un dato sin contrastar
- * vaya con `verified: false` antes que inventado.
- *
- * LA IDENTIDAD DEL ARTISTA SE SACA DEL CATALOGO, NO DE UNA BUSQUEDA. Buscar
- * «LISA» en Spotify devuelve a varias artistas que se llaman asi. En cambio,
- * una cancion que ya esta en el catalogo -con su `spotifyId` contrastado- lleva
- * dentro el identificador exacto de quien la canta. Es el mismo criterio que
- * `spotify-covers.mjs`: identidad, no parecido.
- *
- * SPOTIFY NO ARBITRA NI FECHAS NI TIPOS (ver CLAUDE.md, «Fechas»): da la fecha
- * digital y su frontera entre single y EP es laxa. Aqui se usan sus LISTAS DE
- * CANCIONES, sus duraciones y sus identificadores, que es en lo que si es la
- * fuente; la fecha y el tipo se contrastan despues contra la fuente escrita.
- * ============================================================================
- */
+// Lista lo publicado en Spotify y lo compara con el catálogo (no escribe).
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -42,8 +18,6 @@ function cargarEnv() {
 const ENV = cargarEnv();
 const CONTENT = process.env.CONTENT_URL ?? 'http://localhost:4001/api/v1';
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-
-/* --------------------------------------------------------------- spotify --- */
 
 let token = null;
 
@@ -70,7 +44,6 @@ async function api(ruta) {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (res.status === 429) {
-      // Respeta lo que pide Spotify, con un techo.
       await espera(Math.min(Number(res.headers.get('retry-after') ?? 2), 10) * 1000);
       continue;
     }
@@ -80,8 +53,6 @@ async function api(ruta) {
   }
   throw new Error(`Spotify sigue limitando en ${ruta}`);
 }
-
-/* -------------------------------------------------------------- catalogo --- */
 
 async function catalogo() {
   const albums = (await fetch(`${CONTENT}/albums?locale=es&limit=100`).then((r) => r.json())).data;
@@ -98,23 +69,14 @@ async function catalogo() {
   return { albums: detalle, miembros };
 }
 
-/**
- * El identificador de artista, sacado de una cancion ya contrastada.
- *
- * Para una integrante se toma el PRIMER artista de su obra en solitario: en
- * una colaboracion como APT. el primero es quien la firma.
- */
 async function artistaDesde(trackId) {
   const t = await api(`/tracks/${trackId}?market=US`);
   return { id: t.artists[0].id, nombre: t.artists[0].name };
 }
 
-/**
- * `limit=10` Y NO 50: comprobado contra la API real, Spotify responde
- * «400 Invalid limit» por encima de 10 en este endpoint. Se pagina.
- */
 async function discosDe(artistaId) {
   const discos = [];
+  // Spotify responde 400 con limit > 10 en este endpoint. Tampoco ve las apariciones como invitada (appears_on).
   let url = `/artists/${artistaId}/albums?include_groups=album,single&market=US&limit=10`;
   while (url) {
     const pagina = await api(url);
@@ -153,12 +115,9 @@ async function detalleDisco(id) {
   };
 }
 
-/* ----------------------------------------------------------------- main --- */
-
 async function main() {
   const cat = await catalogo();
 
-  // Una cancion contrastada por artista: de ahi sale su identidad.
   const semillas = {
     blackpink: cat.albums.find((a) => a.slug === 'born-pink')?.tracks?.[0]?.spotifyId,
     jisoo: cat.miembros.jisoo.soloWorks.find((w) => w.spotifyId)?.spotifyId,
