@@ -1,0 +1,15 @@
+# Los ficheros de texto se guardan siempre con finales de línea LF, aunque en
+# Windows se trabaje con CRLF: los servidores y los contenedores son Linux, y
+# un script guardado con CRLF no llega a ejecutarse allí.
+* text=auto eol=lf
+
+# Binarios: git no debe tocarlos.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.dump binary
