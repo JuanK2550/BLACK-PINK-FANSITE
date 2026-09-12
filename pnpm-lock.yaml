@@ -239,7 +239,7 @@ importers:
         version: 5.9.3
       unplugin-swc:
         specifier: ^1.5.11
-        version: 1.5.11(@swc/core@1.16.1)(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3))
+        version: 1.5.11(@swc/core@1.16.1)(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3))
       vitest:
         specifier: ^2.1.8 || ^3.0.0
         version: 3.2.7(@types/node@24.13.3)(jiti@2.7.0)(jsdom@30.0.1(@noble/hashes@1.8.0))(lightningcss@1.33.0)(supports-color@8.1.1)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0)
@@ -729,8 +729,8 @@ importers:
         specifier: ^5.1.0
         version: 5.2.0(eslint@9.39.5(jiti@2.7.0)(supports-color@8.1.1))
       globals:
-        specifier: ^15.14.0
-        version: 15.15.0
+        specifier: ^17.12.0
+        version: 17.12.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
@@ -4425,8 +4425,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@15.15.0:
-    resolution: {integrity: sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg==}
+  globals@17.12.0:
+    resolution: {integrity: sha512-cezEd/DTyyht9cvSSURyygXPfy04GtWO/5e6ZPvH7fCtjKz9PYOmuawphw1Ctd1f6C+5JypXfGD7ahNMXvevBA==}
     engines: {node: '>=18'}
 
   gopd@1.2.0:
@@ -10326,7 +10326,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@15.15.0: {}
+  globals@17.12.0: {}
 
   gopd@1.2.0: {}
 
@@ -12292,6 +12292,23 @@ snapshots:
 
   unpipe@1.0.0: {}
 
+  unplugin-swc@1.5.11(@swc/core@1.16.1)(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)):
+    dependencies:
+      '@rollup/pluginutils': 5.4.0(rollup@4.63.0)
+      '@swc/core': 1.16.1
+      load-tsconfig: 0.2.5
+      unplugin: 3.3.0(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3))
+    transitivePeerDependencies:
+      - '@farmfe/core'
+      - '@rspack/core'
+      - bun-types-no-globals
+      - esbuild
+      - rolldown
+      - rollup
+      - unloader
+      - vite
+      - webpack
+
   unplugin-swc@1.5.11(@swc/core@1.16.1)(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.63.0)
@@ -12308,6 +12325,18 @@ snapshots:
       - unloader
       - vite
       - webpack
+
+  unplugin@3.3.0(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)):
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      picomatch: 4.0.7
+      webpack-virtual-modules: 0.6.2
+    optionalDependencies:
+      esbuild: 0.28.2
+      rolldown: 1.2.7
+      rollup: 4.63.0
+      vite: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0)
+      webpack: 5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)
 
   unplugin@3.3.0(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.0)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.0)(tsx@4.23.12)(yaml@2.9.0))(webpack@5.106.2(@swc/core@1.16.1)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
