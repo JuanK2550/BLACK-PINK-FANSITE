@@ -18,6 +18,8 @@ for (const [, prefix, port] of INTERNAL) {
   process.env[`${prefix}_URL`] = `http://127.0.0.1:${port}`;
 }
 process.env.API_GATEWAY_PORT = process.env.PORT || '10000';
+// Los internos solo dentro de la máquina: Render adivina el puerto público y no debe ver otro que el del gateway.
+process.env.LISTEN_HOST = '127.0.0.1';
 
 if (process.env.MIGRATE_ON_START !== 'false') {
   const migrate = spawnSync(

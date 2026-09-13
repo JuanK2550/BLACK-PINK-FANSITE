@@ -26,7 +26,7 @@ async function bootstrap(): Promise<void> {
   });
 
   app.enableShutdownHooks();
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port, process.env.LISTEN_HOST || '0.0.0.0');
 
   Logger.log(`escuchando en http://localhost:${port}/health`, SERVICE_NAME);
 }
