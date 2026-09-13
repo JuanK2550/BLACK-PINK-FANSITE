@@ -140,16 +140,18 @@ física, se guarda la física.
 
 **Todo el proceso, paso a paso y en orden, está en [DEPLOY.md](./DEPLOY.md).** En resumen:
 
+Todo con planes gratuitos y sin tarjeta:
+
 | Pieza | Dónde |
 | --- | --- |
 | Web | Vercel (`frontend/vercel.json`) |
-| 5 servicios | Railway (`backend/*/railway.json`) · plan B: Render (`infra/render.yaml`) |
+| 5 servicios, juntos en un solo servicio | Render Free (`infra/todo-en-uno/`, `infra/render.yaml`) |
 | Base de datos | Neon (PostgreSQL con pgvector) |
 | Caché | Upstash (Redis) |
-| Errores y disponibilidad | Sentry y UptimeRobot |
+| Disponibilidad y errores | UptimeRobot y Sentry |
 
-Vercel y Railway despliegan solos cuando CI termina en verde en `main`; content-service
-aplica sus migraciones antes de arrancar.
+Vercel y Render despliegan solos cuando CI termina en verde en `main`; las migraciones se
+aplican al arrancar la API.
 
 ### Configuración en GitHub
 

@@ -1,147 +1,46 @@
-# Plan B de despliegue: los 5 servicios en Render como Blueprint. Ver DEPLOY.md, «Plan B: Render».
-
-envVarGroups:
-  - name: blackpink-comun
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: LOG_LEVEL
-        value: info
-      - key: INTERNAL_API_KEY
-        generateValue: true
+# Los 5 servicios en un único servicio web GRATUITO de Render. Ver DEPLOY.md, paso 7.
 
 services:
-  # Única puerta pública: la web y el navegador solo hablan con él.
   - type: web
-    name: api-gateway
+    name: blackpink-api
     runtime: docker
-    plan: starter
+    plan: free
     region: virginia
-    dockerfilePath: backend/api-gateway/Dockerfile
+    dockerfilePath: infra/todo-en-uno/Dockerfile
     dockerContext: .
     healthCheckPath: /health
     autoDeployTrigger: checksPass
     buildFilter:
       paths:
-        - backend/api-gateway/**
-        - shared/**
+        - backend/**
+        - shared/service-core/**
+        - shared/types/**
+        - shared/config/**
+        - infra/todo-en-uno/**
         - package.json
         - pnpm-lock.yaml
         - pnpm-workspace.yaml
         - turbo.json
     envVars:
-      - fromGroup: blackpink-comun
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
       - key: TRUST_PROXY
         value: '1'
-      - key: REDIS_URL
-        sync: false
-      - key: ALLOWED_ORIGINS
-        sync: false
-      - key: CONTENT_SERVICE_URL
-        sync: false
-      - key: MEDIA_SERVICE_URL
-        sync: false
-      - key: CHATBOT_SERVICE_URL
-        sync: false
-      - key: SPEECH_SERVICE_URL
-        sync: false
-
-  # Los cuatro siguientes son privados: sin dirección pública, solo los alcanza el gateway.
-  - type: pserv
-    name: content-service
-    runtime: docker
-    plan: starter
-    region: virginia
-    dockerfilePath: backend/content-service/Dockerfile
-    dockerContext: .
-    preDeployCommand: node node_modules/prisma/build/index.js migrate deploy
-    autoDeployTrigger: checksPass
-    buildFilter:
-      paths:
-        - backend/content-service/**
-        - shared/**
-        - package.json
-        - pnpm-lock.yaml
-        - pnpm-workspace.yaml
-        - turbo.json
-    envVars:
-      - fromGroup: blackpink-comun
+      - key: INTERNAL_API_KEY
+        generateValue: true
       - key: DATABASE_URL_CONTENT
         sync: false
       - key: DIRECT_URL_CONTENT
         sync: false
-      - key: REDIS_URL
-        sync: false
-
-  - type: pserv
-    name: media-service
-    runtime: docker
-    plan: starter
-    region: virginia
-    dockerfilePath: backend/media-service/Dockerfile
-    dockerContext: .
-    autoDeployTrigger: checksPass
-    buildFilter:
-      paths:
-        - backend/media-service/**
-        - shared/**
-        - package.json
-        - pnpm-lock.yaml
-        - pnpm-workspace.yaml
-        - turbo.json
-    envVars:
-      - fromGroup: blackpink-comun
-      - key: CONTENT_SERVICE_URL
-        sync: false
-      - key: REDIS_URL
-        sync: false
-
-  - type: pserv
-    name: chatbot-service
-    runtime: docker
-    plan: starter
-    region: virginia
-    dockerfilePath: backend/chatbot-service/Dockerfile
-    dockerContext: .
-    autoDeployTrigger: checksPass
-    buildFilter:
-      paths:
-        - backend/chatbot-service/**
-        - shared/**
-        - package.json
-        - pnpm-lock.yaml
-        - pnpm-workspace.yaml
-        - turbo.json
-    envVars:
-      - fromGroup: blackpink-comun
-      - key: TRUST_PROXY
-        value: '1'
       - key: DATABASE_URL_CHAT
         sync: false
-      - key: CONTENT_SERVICE_URL
+      - key: REDIS_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
         sync: false
       - key: GOOGLE_AI_API_KEY
         sync: false
-
-  - type: pserv
-    name: speech-service
-    runtime: docker
-    plan: starter
-    region: virginia
-    dockerfilePath: backend/speech-service/Dockerfile
-    dockerContext: .
-    autoDeployTrigger: checksPass
-    buildFilter:
-      paths:
-        - backend/speech-service/**
-        - shared/**
-        - package.json
-        - pnpm-lock.yaml
-        - pnpm-workspace.yaml
-        - turbo.json
-    envVars:
-      - fromGroup: blackpink-comun
-      - key: TRUST_PROXY
-        value: '1'
       - key: GROQ_API_KEY
         sync: false
