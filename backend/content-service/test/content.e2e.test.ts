@@ -58,7 +58,9 @@ const albumRow = {
 
 function prismaDouble() {
   return {
+    schema: 'content',
     $transaction: (operations: Promise<unknown>[]) => Promise.all(operations),
+    $queryRawUnsafe: vi.fn().mockResolvedValue([{ id: 'coincidencia' }]),
     isReachable: vi.fn().mockResolvedValue(true),
     member: {
       findMany: vi.fn().mockResolvedValue([memberRow]),
@@ -211,6 +213,23 @@ describe('content-service (e2e)', () => {
 
     expect(prismaSpy.soloTrack.findMany.mock.calls.at(-1)?.[0]?.where).toMatchObject({
       soloWork: { verified: true, member: { verified: true } },
+    });
+  });
+
+  it('la busqueda no distingue tildes y el termino viaja como parametro, nunca pegado al SQL', async () => {
+    prismaSpy.$queryRawUnsafe.mockClear();
+    await request(server).get('/api/v1/search?q=ROS%C3%89%27%3B--').expect(200);
+
+    expect(prismaSpy.$queryRawUnsafe).toHaveBeenCalledTimes(6);
+    for (const [sql, pattern] of prismaSpy.$queryRawUnsafe.mock.calls) {
+      expect(pattern).toBe("%rose';--%");
+      expect(sql).not.toContain('rose');
+      expect(sql).toContain('"content".');
+    }
+
+    expect(prismaSpy.member.findMany.mock.calls.at(-1)?.[0]?.where).toMatchObject({
+      verified: true,
+      id: { in: ['coincidencia'] },
     });
   });
 

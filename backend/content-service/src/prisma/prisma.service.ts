@@ -10,6 +10,8 @@ import { parseConnection } from './connection';
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
 
+  readonly schema: string;
+
   constructor(config: ConfigService) {
     const { connectionString, schema } = parseConnection(
       config.get<string>('DATABASE_URL_CONTENT'),
@@ -17,6 +19,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
     // PrismaPg no lee el ?schema= de la URL: hay que pasarlo aparte.
     super({ adapter: new PrismaPg({ connectionString }, { schema }) });
+
+    // Las consultas en SQL a mano no pasan por el adaptador y nombran el esquema ellas mismas.
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(schema)) {
+      throw new Error(`Esquema de base de datos no válido: ${schema}`);
+    }
+    this.schema = schema;
   }
 
   async onModuleInit(): Promise<void> {

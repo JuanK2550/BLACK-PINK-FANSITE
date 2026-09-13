@@ -1,10 +1,21 @@
-// Variantes del término buscado: tal cual y sin tildes, para que «Rosé» encuentre «ROSE».
+// Término de búsqueda sin tildes ni mayúsculas, y la misma normalización para las columnas en SQL.
 
-export function searchVariants(query: string): string[] {
-  const term = query.trim();
-  const plain = term
+const FOLD_FROM = 'ÁÀÄÂÉÈËÊÍÌÏÎÓÒÖÔÚÙÜÛÑÇáàäâéèëêíìïîóòöôúùüûñç';
+const FOLD_TO = 'AAAAEEEEIIIIOOOOUUUUNCaaaaeeeeiiiioooouuuunc';
+
+export function foldSearchTerm(query: string): string {
+  return query
+    .trim()
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
-    .normalize('NFC');
-  return plain === term ? [term] : [term, plain];
+    .normalize('NFC')
+    .toLowerCase();
+}
+
+export function likePattern(query: string): string {
+  return `%${foldSearchTerm(query).replace(/[\\%_]/g, (char) => `\\${char}`)}%`;
+}
+
+export function foldColumn(column: string): string {
+  return `lower(translate(coalesce(${column}, ''), '${FOLD_FROM}', '${FOLD_TO}'))`;
 }

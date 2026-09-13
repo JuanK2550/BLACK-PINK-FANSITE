@@ -1,13 +1,11 @@
-// Búsqueda en integrantes, discos, canciones y cronología.
+// Búsqueda en integrantes, discos, canciones y cronología, sin distinguir tildes ni mayúsculas.
 
 import { Injectable } from '@nestjs/common';
 import type { Locale } from '@blackpink/types';
 import { firstText, pickTranslation, toIsoDate } from '../common/localize';
 import { PrismaService } from '../prisma/prisma.service';
 import type { SearchHitDto, SearchResultDto } from './search.dto';
-import { searchVariants } from './search-terms';
-
-const insensitive = (value: string) => ({ contains: value, mode: 'insensitive' as const });
+import { foldColumn, likePattern } from './search-terms';
 
 @Injectable()
 export class SearchService {
@@ -19,35 +17,60 @@ export class SearchService {
     limit: number,
     includeUnverified: boolean,
   ): Promise<SearchResultDto> {
-    const variants = searchVariants(q);
-    const term = variants[0] ?? '';
+    const term = q.trim();
+    const pattern = likePattern(term);
+    const table = (name: string) => `"${this.prisma.schema}"."${name}"`;
+    const matches = (...columns: string[]) =>
+      columns.map((column) => `${foldColumn(column)} LIKE $1`).join(' OR ');
+
+    // Prisma solo compara con mayúsculas y minúsculas: la comparación sin tildes va en SQL y
+    // devuelve ids; los filtros, el orden y las relaciones siguen en Prisma.
+    const [memberIds, albumIds, trackIds, timelineIds, soloWorkIds, soloTrackIds] =
+      await Promise.all([
+        this.ids(
+          `SELECT m."id" FROM ${table('members')} m
+           LEFT JOIN ${table('member_translations')} t ON t."memberId" = m."id"
+           WHERE ${matches('m."stageName"', 'm."fullName"', 'm."koreanName"', 't."nickname"')}`,
+          pattern,
+        ),
+        this.ids(
+          `SELECT a."id" FROM ${table('albums')} a
+           LEFT JOIN ${table('album_translations')} t ON t."albumId" = a."id"
+           WHERE ${matches('a."title"', 't."title"')}`,
+          pattern,
+        ),
+        this.ids(
+          `SELECT "id" FROM ${table('tracks')}
+           WHERE ${matches('"title"', `"titleLocalized"->>'ko'`, `"titleLocalized"->>'en'`)}`,
+          pattern,
+        ),
+        this.ids(
+          `SELECT e."id" FROM ${table('timeline_events')} e
+           LEFT JOIN ${table('timeline_event_translations')} t ON t."eventId" = e."id"
+           WHERE ${matches('e."title"', 't."title"')}`,
+          pattern,
+        ),
+        this.ids(
+          `SELECT w."id" FROM ${table('solo_works')} w
+           LEFT JOIN ${table('solo_work_translations')} t ON t."soloWorkId" = w."id"
+           WHERE ${matches('w."title"', 't."title"')}`,
+          pattern,
+        ),
+        this.ids(`SELECT "id" FROM ${table('solo_tracks')} WHERE ${matches('"title"')}`, pattern),
+      ]);
 
     const visible = includeUnverified ? {} : { verified: true };
 
     const [members, albums, tracks, timeline, soloWorks, soloTracks] = await Promise.all([
       this.prisma.member.findMany({
-        where: {
-          ...visible,
-          OR: variants.flatMap((value) => [
-            { stageName: insensitive(value) },
-            { fullName: insensitive(value) },
-            { koreanName: insensitive(value) },
-            { translations: { some: { nickname: insensitive(value) } } },
-          ]),
-        },
+        where: { ...visible, id: { in: memberIds } },
         take: limit,
         orderBy: { displayOrder: 'asc' },
         include: { translations: true },
       }),
 
       this.prisma.album.findMany({
-        where: {
-          ...visible,
-          OR: variants.flatMap((value) => [
-            { title: insensitive(value) },
-            { translations: { some: { title: insensitive(value) } } },
-          ]),
-        },
+        where: { ...visible, id: { in: albumIds } },
         take: limit,
         orderBy: { releaseDate: 'desc' },
         include: { translations: true },
@@ -57,11 +80,7 @@ export class SearchService {
         where: {
           ...visible,
           ...(includeUnverified ? {} : { album: { verified: true } }),
-          OR: variants.flatMap((value) => [
-            { title: insensitive(value) },
-            { titleLocalized: { path: ['ko'], string_contains: value } },
-            { titleLocalized: { path: ['en'], string_contains: value } },
-          ]),
+          id: { in: trackIds },
         },
         take: limit,
         orderBy: [{ isTitleTrack: 'desc' }, { trackNumber: 'asc' }],
@@ -69,13 +88,7 @@ export class SearchService {
       }),
 
       this.prisma.timelineEvent.findMany({
-        where: {
-          ...visible,
-          OR: variants.flatMap((value) => [
-            { title: insensitive(value) },
-            { translations: { some: { title: insensitive(value) } } },
-          ]),
-        },
+        where: { ...visible, id: { in: timelineIds } },
         take: limit,
         orderBy: { date: 'desc' },
         include: { translations: true },
@@ -85,10 +98,7 @@ export class SearchService {
         where: {
           ...visible,
           ...(includeUnverified ? {} : { member: { verified: true } }),
-          OR: variants.flatMap((value) => [
-            { title: insensitive(value) },
-            { translations: { some: { title: insensitive(value) } } },
-          ]),
+          id: { in: soloWorkIds },
         },
         take: limit,
         orderBy: { releaseDate: 'desc' },
@@ -104,7 +114,7 @@ export class SearchService {
           ...(includeUnverified
             ? {}
             : { soloWork: { verified: true, member: { verified: true } } }),
-          OR: variants.map((value) => ({ title: insensitive(value) })),
+          id: { in: soloTrackIds },
         },
         take: limit,
         orderBy: [{ isTitleTrack: 'desc' }, { trackNumber: 'asc' }],
@@ -191,5 +201,10 @@ export class SearchService {
       tracks: allTracks,
       timeline: timelineHits,
     };
+  }
+
+  private async ids(sql: string, pattern: string): Promise<string[]> {
+    const rows = await this.prisma.$queryRawUnsafe<{ id: string }[]>(sql, pattern);
+    return rows.map((row) => row.id);
   }
 }
