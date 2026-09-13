@@ -307,6 +307,8 @@ export function SiteHeader({
         members={members}
         albums={albums}
         localePrefix={localePrefix}
+        membersHref={`${localePrefix}${labels.membersHref}`}
+        albumsHref={`${localePrefix}${labels.albumsHref}`}
         locale={locale}
         onLocaleChange={onLocaleChange}
         labels={{
@@ -316,6 +318,8 @@ export function SiteHeader({
           language: labels.language,
           toLight: labels.toLight,
           toDark: labels.toDark,
+          allMembers: labels.allMembers,
+          allAlbums: labels.allAlbums,
         }}
       />
 

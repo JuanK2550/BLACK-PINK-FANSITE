@@ -8,6 +8,7 @@ import { cn } from '../cn';
 import { LanguageSwitcher, ThemeToggle } from '../controls/controls';
 import { ChevronDownIcon, CloseIcon, SearchIcon } from '../icons';
 import { MediaFrame } from '../media/media-frame';
+import { PanelFooterLink } from './mega-menu';
 import type { AlbumSummary, MemberSummary, NavItem } from './nav-types';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
@@ -19,6 +20,8 @@ export interface MobileMenuLabels {
   language: string;
   toLight: string;
   toDark: string;
+  allMembers: string;
+  allAlbums: string;
 }
 
 export interface MobileMenuProps {
@@ -31,6 +34,8 @@ export interface MobileMenuProps {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
   localePrefix?: string;
+  membersHref: string;
+  albumsHref: string;
   labels: MobileMenuLabels;
 }
 
@@ -44,6 +49,8 @@ export function MobileMenu({
   locale,
   onLocaleChange,
   localePrefix = '',
+  membersHref,
+  albumsHref,
   labels,
 }: MobileMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -167,50 +174,64 @@ export function MobileMenu({
                       {expanded === item.key ? (
                         <div id={`mobile-panel-${item.key}`} className="pb-5">
                           {item.panel === 'members' ? (
-                            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                              {members.map((member) => (
-                                <li key={member.slug}>
-                                  <a
-                                    href={`${localePrefix}${member.href}`}
-                                    className="group/card block"
-                                  >
-                                    {member.photo ?? (
-                                      <MediaFrame
-                                        ratio="portrait"
-                                        glyph={member.glyph}
-                                        label={member.name}
-                                        zoom
-                                      />
-                                    )}
-                                    <span className="font-display text-fg mt-2 block text-sm font-bold">
-                                      {member.name}
-                                    </span>
-                                    <span className="text-fg-subtle block text-xs">
-                                      {member.role}
-                                    </span>
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <ul>
-                              {albums.map((album) => (
-                                <li key={album.slug}>
-                                  <a
-                                    href={`${localePrefix}${album.href}`}
-                                    className="text-fg-muted hover:text-fg ease-out-soft flex items-center justify-between gap-4 py-2 text-sm transition-colors duration-[var(--dur-2)]"
-                                  >
-                                    <span className="truncate">{album.title}</span>
-                                    <time
-                                      className="text-fg-subtle shrink-0 text-xs"
-                                      dateTime={String(album.year)}
+                            <>
+                              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                {members.map((member) => (
+                                  <li key={member.slug}>
+                                    <a
+                                      href={`${localePrefix}${member.href}`}
+                                      className="group/card block"
                                     >
-                                      {album.year}
-                                    </time>
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
+                                      {member.photo ?? (
+                                        <MediaFrame
+                                          ratio="portrait"
+                                          glyph={member.glyph}
+                                          label={member.name}
+                                          zoom
+                                        />
+                                      )}
+                                      <span className="font-display text-fg mt-2 block text-sm font-bold">
+                                        {member.name}
+                                      </span>
+                                      <span className="text-fg-subtle block text-xs">
+                                        {member.role}
+                                      </span>
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                              <PanelFooterLink
+                                href={membersHref}
+                                label={labels.allMembers}
+                                onNavigate={onClose}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <ul>
+                                {albums.map((album) => (
+                                  <li key={album.slug}>
+                                    <a
+                                      href={`${localePrefix}${album.href}`}
+                                      className="text-fg-muted hover:text-fg ease-out-soft flex items-center justify-between gap-4 py-2 text-sm transition-colors duration-[var(--dur-2)]"
+                                    >
+                                      <span className="truncate">{album.title}</span>
+                                      <time
+                                        className="text-fg-subtle shrink-0 text-xs"
+                                        dateTime={String(album.year)}
+                                      >
+                                        {album.year}
+                                      </time>
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                              <PanelFooterLink
+                                href={albumsHref}
+                                label={labels.allAlbums}
+                                onNavigate={onClose}
+                              />
+                            </>
                           )}
                         </div>
                       ) : null}

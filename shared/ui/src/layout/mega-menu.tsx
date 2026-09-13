@@ -137,7 +137,7 @@ export function AlbumsPanel({
   );
 }
 
-function PanelFooterLink({
+export function PanelFooterLink({
   href,
   label,
   onNavigate,
