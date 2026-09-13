@@ -23,6 +23,8 @@ interface Position {
 
 const DEFAULT_POSITION: Position = { x: 0.92, y: 0.88 };
 
+const FINE_POINTER = '(hover: hover) and (pointer: fine)';
+
 export function ChatWidget() {
   const t = useTranslations('Chat');
   const reduced = useReducedMotion() ?? false;
@@ -34,8 +36,17 @@ export function ChatWidget() {
   const [unread, setUnread] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [waving, setWaving] = useState(false);
+  const [canDrag, setCanDrag] = useState(false);
 
   const bubbleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const query = window.matchMedia(FINE_POINTER);
+    const update = () => setCanDrag(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   const returnFocus = useRef(false);
   const bubbleButtonRef = useCallback((node: HTMLButtonElement | null) => {
@@ -123,7 +134,7 @@ export function ChatWidget() {
       {!open ? (
         <motion.div
           ref={bubbleRef}
-          drag
+          drag={canDrag}
           dragConstraints={{ left: 0, top: 0, right: 0, bottom: 0 }}
           dragElastic={0.12}
           dragMomentum={false}
@@ -139,8 +150,13 @@ export function ChatWidget() {
 
             setTimeout(() => setDragging(false), 0);
           }}
-          style={{ left, top }}
-          className="fixed z-[75] touch-none"
+          // En pantallas táctiles, fija a la esquina: un % de la altura cambia al mostrarse la barra del navegador.
+          style={canDrag ? { left, top } : undefined}
+          className={
+            canDrag
+              ? 'fixed z-[75] touch-none'
+              : 'fixed bottom-[calc(env(safe-area-inset-bottom)_+_1rem)] right-4 z-[75]'
+          }
         >
           <div className="relative">
             <AnimatePresence>
@@ -150,7 +166,7 @@ export function ChatWidget() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
-                  className="bg-overlay border-line absolute bottom-[5.5rem] right-0 w-60 rounded-md border p-3 shadow-[var(--shadow-lift-1)]"
+                  className="bg-overlay border-line absolute bottom-[calc(100%_+_0.5rem)] right-0 w-60 rounded-md border p-3 shadow-[var(--shadow-lift-1)]"
                   role="status"
                 >
                   <p className="text-fg text-pretty text-xs leading-relaxed">{t('proactive')}</p>
@@ -205,9 +221,12 @@ export function ChatWidget() {
                 setOpen(true);
               }}
               aria-label={t('open')}
-              className="bg-overlay border-line focus-visible:outline-focus ease-out-bp relative grid h-[5.25rem] w-[5.25rem] cursor-grab place-items-center rounded-full border shadow-[var(--shadow-lift-1)] transition-transform duration-[var(--dur-2)] focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.97] active:cursor-grabbing"
+              className={`bg-overlay border-line focus-visible:outline-focus ease-out-bp relative grid h-16 w-16 place-items-center rounded-full border shadow-[var(--shadow-lift-1)] transition-transform duration-[var(--dur-2)] focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.97] md:h-[5.25rem] md:w-[5.25rem] ${canDrag ? 'cursor-grab active:cursor-grabbing' : ''}`}
             >
-              <PinkyStage state={bubbleState} className="h-[4.6rem] w-[4rem]" />
+              <PinkyStage
+                state={bubbleState}
+                className="h-[3.5rem] w-[3rem] md:h-[4.6rem] md:w-[4rem]"
+              />
 
               {unread ? (
                 <span
