@@ -4,13 +4,14 @@ import 'reflect-metadata';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { configureService } from '@blackpink/service-core';
+import { configureService, initSentry } from '@blackpink/service-core';
 import { AppModule } from './app.module';
 
 const SERVICE_NAME = 'media-service';
 const DEFAULT_PORT = 4002;
 
 async function bootstrap(): Promise<void> {
+  initSentry(SERVICE_NAME);
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const config = app.get(ConfigService);
   const port = Number(config.get<string>('MEDIA_SERVICE_PORT') ?? DEFAULT_PORT);

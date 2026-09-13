@@ -23,7 +23,8 @@
     "clean": "rimraf dist .turbo"
   },
   "dependencies": {
-    "@blackpink/types": "workspace:*"
+    "@blackpink/types": "workspace:*",
+    "@sentry/node": "catalog:"
   },
   "peerDependencies": {
     "@nestjs/common": "catalog:",

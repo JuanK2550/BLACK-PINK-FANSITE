@@ -6,7 +6,13 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AllExceptionsFilter, ResponseEnvelopeInterceptor } from '@blackpink/service-core';
+import {
+  AllExceptionsFilter,
+  ResponseEnvelopeInterceptor,
+  applyTrustProxy,
+  initSentry,
+  useStructuredLogger,
+} from '@blackpink/service-core';
 import compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
@@ -16,7 +22,10 @@ const SERVICE_NAME = 'api-gateway';
 const DEFAULT_PORT = 4000;
 
 async function bootstrap(): Promise<void> {
+  initSentry(SERVICE_NAME);
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true });
+  useStructuredLogger(app);
+  applyTrustProxy(app);
   const config = app.get(ConfigService);
   const port = Number(config.get<string>('API_GATEWAY_PORT') ?? DEFAULT_PORT);
 

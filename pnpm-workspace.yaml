@@ -10,6 +10,7 @@ allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
   '@scarf/scarf': false
+  '@sentry/cli': true
   '@swc/core': true
   '@tailwindcss/oxide': true
   esbuild: true
@@ -21,6 +22,8 @@ allowBuilds:
 
 catalog:
   'sharp': '^0.34.0'
+  '@sentry/nextjs': '^10.74.0'
+  '@sentry/node': '^10.74.0'
   '@nestjs/cli': '^11.0.0'
   '@nestjs/common': '^11.0.0'
   '@nestjs/config': '^4.0.0'

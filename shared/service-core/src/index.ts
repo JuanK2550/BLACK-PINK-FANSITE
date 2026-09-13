@@ -26,5 +26,8 @@ export type { CacheModuleOptions } from './cache/cache.tokens';
 export { buildLoggerConfig } from './logging/logger';
 export type { LoggerOptions } from './logging/logger';
 
-export { configureService } from './bootstrap';
+export { configureService, useStructuredLogger } from './bootstrap';
 export type { ServiceSetupOptions } from './bootstrap';
+
+export { applyTrustProxy, parseTrustProxy } from './http/trust-proxy';
+export { captureServerError, initSentry } from './observability/sentry';

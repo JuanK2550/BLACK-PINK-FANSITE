@@ -20,6 +20,7 @@ COPY --from=builder --chown=nestjs:nodejs /prod/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /prod/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /prod/package.json ./package.json
 COPY --from=builder --chown=nestjs:nodejs /prod/prisma ./prisma
+COPY --from=builder --chown=nestjs:nodejs /app/backend/content-service/prisma.config.ts ./prisma.config.ts
 
 USER nestjs
 EXPOSE 4001

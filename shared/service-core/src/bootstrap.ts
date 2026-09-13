@@ -2,8 +2,10 @@
 
 import { INestApplication, Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import { AllExceptionsFilter } from './envelope/exception.filter';
 import { ResponseEnvelopeInterceptor } from './envelope/response.interceptor';
+import { applyTrustProxy } from './http/trust-proxy';
 
 export interface ServiceSetupOptions {
   service: string;
@@ -13,7 +15,18 @@ export interface ServiceSetupOptions {
   allowedOrigins?: string[];
 }
 
+export function useStructuredLogger(app: INestApplication): void {
+  try {
+    app.useLogger(app.get(PinoLogger));
+  } catch {
+    // Sin LoggerModule (algunos tests) se queda el logger de Nest.
+  }
+}
+
 export function configureService(app: INestApplication, options: ServiceSetupOptions): void {
+  useStructuredLogger(app);
+  applyTrustProxy(app);
+
   const logger = new Logger('bootstrap');
 
   app.setGlobalPrefix('api', { exclude: ['health', 'health/*path', 'docs'] });

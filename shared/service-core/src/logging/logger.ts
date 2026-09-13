@@ -30,7 +30,7 @@ export function buildLoggerConfig({ service, level, pretty = false }: LoggerOpti
           'req.headers.authorization',
           'req.headers.cookie',
           'req.headers["x-api-key"]',
-          'req.headers["x-internal-api-key"]',
+          'req.headers["x-internal-key"]',
           'res.headers["set-cookie"]',
         ],
         censor: '[Redacted]',
@@ -68,7 +68,8 @@ export function buildLoggerConfig({ service, level, pretty = false }: LoggerOpti
               options: { colorize: true, translateTime: 'HH:MM:ss', singleLine: true },
             },
           }
-        : {}),
+        : // Nivel en texto ("error", no 50): es lo que filtran Railway y Render.
+          { formatters: { level: (label: string) => ({ level: label }) } }),
     },
   };
 }

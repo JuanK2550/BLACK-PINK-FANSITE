@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import type { ApiEnvelope, ApiError, ApiErrorCode } from '@blackpink/types';
 import type { Request, Response } from 'express';
+import { captureServerError } from '../observability/sentry';
 
 const GENERIC_MESSAGE = 'Se ha producido un error al procesar la peticion.';
 
@@ -49,6 +50,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         `${request.method} ${request.url} -> ${status}`,
         exception instanceof Error ? exception.stack : String(exception),
       );
+      // 502-504 son caídas de otro servicio: las avisa el monitor, no son un fallo de código.
+      if (status === HttpStatus.INTERNAL_SERVER_ERROR) captureServerError(exception, status);
     } else {
       this.logger.warn(`${request.method} ${request.url} -> ${status}: ${error.message}`);
     }
