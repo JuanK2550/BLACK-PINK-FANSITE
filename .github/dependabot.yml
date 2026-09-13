@@ -1,4 +1,4 @@
-# Actualizaciones semanales de dependencias, agrupadas por familia.
+# Actualizaciones mensuales de dependencias, agrupadas por familia; las versiones mayores se deciden a mano.
 
 version: 2
 
@@ -15,9 +15,7 @@ updates:
       prefix: 'chore(deps)'
     labels: [dependencias]
     ignore:
-      - dependency-name: 'prisma'
-        update-types: ['version-update:semver-major']
-      - dependency-name: '@prisma/*'
+      - dependency-name: '*'
         update-types: ['version-update:semver-major']
     groups:
       nestjs:
@@ -66,6 +64,9 @@ updates:
     commit-message:
       prefix: 'ci'
     labels: [dependencias, ci]
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
       acciones:
         patterns: ['*']
@@ -85,6 +86,9 @@ updates:
     commit-message:
       prefix: 'chore(deps)'
     labels: [dependencias, docker]
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
       imagenes-base:
         patterns: ['*']
