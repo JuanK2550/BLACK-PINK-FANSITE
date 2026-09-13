@@ -61,7 +61,7 @@ jobs:
             --output "blackpink-${FECHA}.dump.gpg" "blackpink-${FECHA}.dump"
           shred -u "blackpink-${FECHA}.dump"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: blackpink-${{ env.FECHA }}
           path: blackpink-${{ env.FECHA }}.dump.gpg
