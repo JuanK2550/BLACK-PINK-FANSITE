@@ -2,7 +2,7 @@
 
 import { day, SOURCES, type Translated } from './common';
 
-const MEMBER_SOURCE = `${SOURCES.official} El color de acento es una asignacion de presentacion de este sitio, no un color oficial del grupo.`;
+const MEMBER_SOURCE = `${SOURCES.official} El color de acento es una asignación de presentación de este sitio, no un color oficial del grupo.`;
 
 export interface MemberImageSeed {
   url: string;
@@ -137,7 +137,7 @@ export const MEMBERS: MemberSeed[] = [
   },
   {
     slug: 'rose',
-    stageName: 'ROSE',
+    stageName: 'ROSÉ',
     fullName: 'Roseanne Park',
     koreanName: '박채영',
     birthDate: day('1997-02-11'),
@@ -158,12 +158,12 @@ export const MEMBERS: MemberSeed[] = [
       source:
         'https://commons.wikimedia.org/wiki/File:20190106_(NEWSEN)_%EB%B8%94%EB%9E%99%ED%95%91%ED%81%AC(BLACKPINK)... ' +
         '(Golden Disc Awards 2019) (3) — original 1059x1291, reescalado a 960px de ancho. ' +
-        'El titulo del archivo nombra al grupo, pero esta toma es individual: en el encuadre solo aparece Rose.',
+        'El título del archivo nombra al grupo, pero esta toma es individual: en el encuadre solo aparece Rosé.',
       date: day('2019-01-05'),
       focus: '50% 32%',
       alt: {
-        es: 'Rose en la alfombra roja de los Golden Disc Awards 2019, con blusa blanca de cuello alto bajo un vestido negro con bordado floral, ante un photocall rosa.',
-        en: 'Rose on the red carpet at the 2019 Golden Disc Awards, in a white high-necked blouse under a black dress with floral embroidery, against a pink backdrop.',
+        es: 'Rosé en la alfombra roja de los Golden Disc Awards 2019, con blusa blanca de cuello alto bajo un vestido negro con bordado floral, ante un photocall rosa.',
+        en: 'Rosé on the red carpet at the 2019 Golden Disc Awards, in a white high-necked blouse under a black dress with floral embroidery, against a pink backdrop.',
         ko: '2019년 골든디스크어워즈 레드카펫에서 분홍색 포토월 앞에 선 로제. 하이넥 흰 블라우스 위에 꽃 자수가 놓인 검은 드레스를 입고 있다.',
       },
     },
@@ -172,8 +172,8 @@ export const MEMBERS: MemberSeed[] = [
       nationality: { es: 'Nueva Zelanda', en: 'New Zealand', ko: '뉴질랜드' },
       nickname: { es: 'La voz principal', en: 'The lead voice', ko: '메인 보컬' },
       bio: {
-        es: 'Rose nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur para formarse como artista. Es la vocalista principal del grupo y embajadora global de Saint Laurent. Su nombre artístico viene de su nombre en inglés, Roseanne.',
-        en: 'Rose was born in New Zealand and raised in Australia before moving to South Korea to train as an artist. She is the group main vocalist and a global ambassador for Saint Laurent. Her stage name comes from her English name, Roseanne.',
+        es: 'Rosé nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur para formarse como artista. Es la vocalista principal del grupo y embajadora global de Saint Laurent. Su nombre artístico viene de su nombre en inglés, Roseanne.',
+        en: 'Rosé was born in New Zealand and raised in Australia before moving to South Korea to train as an artist. She is the group main vocalist and a global ambassador for Saint Laurent. Her stage name comes from her English name, Roseanne.',
         ko: '로제는 뉴질랜드에서 태어나 호주에서 자란 뒤 한국으로 건너와 연습생 생활을 했습니다. 그룹의 메인 보컬이며 생로랑의 글로벌 앰배서더입니다. 활동명은 영어 이름 Roseanne에서 왔습니다.',
       },
       description: {

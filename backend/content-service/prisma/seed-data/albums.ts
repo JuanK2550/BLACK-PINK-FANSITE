@@ -122,10 +122,10 @@ export const ALBUMS: AlbumSeed[] = [
     verified: true,
     source:
       'Wikipedia, Blackpink (EP) - https://en.wikipedia.org/wiki/Blackpink_(EP). ' +
-      'Publicado digitalmente el 29-08-2017 y fisicamente el 30-08-2017 por YGEX; ' +
+      'Publicado digitalmente el 29-08-2017 y físicamente el 30-08-2017 por YGEX; ' +
       'el proyecto registra la fecha fisica. Consultado 2026-08-30. ' +
-      'Lista de canciones: la de la edicion DIGITAL en Spotify (consultado 2026-09-11); ' +
-      'la edicion fisica japonesa puede traer versiones que no estan en la digital.',
+      'Lista de canciones: la de la edición DIGITAL en Spotify (consultado 2026-09-11); ' +
+      'la edición física japonesa puede traer versiones que no están en la digital.',
     translations: {
       formatLabel: { es: 'Mini álbum japonés', en: 'Japanese mini album', ko: '일본 미니 앨범' },
       description: {
@@ -181,10 +181,10 @@ export const ALBUMS: AlbumSeed[] = [
     verified: true,
     source:
       'Wikipedia, Blackpink in Your Area - https://en.wikipedia.org/wiki/Blackpink_in_Your_Area. ' +
-      'Album recopilatorio publicado digitalmente el 23-11-2018 y fisicamente en Japon ' +
+      'Álbum recopilatorio publicado digitalmente el 23-11-2018 y físicamente en Japón ' +
       'el 05-12-2018 por YGEX; el proyecto registra la fecha fisica. Consultado 2026-08-30. ' +
-      'Lista de canciones: la de la edicion DIGITAL en Spotify (consultado 2026-09-11); ' +
-      'la edicion fisica japonesa puede traer versiones que no estan en la digital.',
+      'Lista de canciones: la de la edición DIGITAL en Spotify (consultado 2026-09-11); ' +
+      'la edición física japonesa puede traer versiones que no están en la digital.',
     translations: {
       formatLabel: {
         es: 'Recopilatorio japonés',
@@ -192,7 +192,7 @@ export const ALBUMS: AlbumSeed[] = [
         ko: '일본 컴필레이션 앨범',
       },
       description: {
-        es: 'Recopilatorio japonés: reune las canciones publicadas hasta 2018.',
+        es: 'Recopilatorio japonés: reúne las canciones publicadas hasta 2018.',
         en: 'Japanese compilation: it gathers the songs released up to 2018.',
         ko: '2018년까지 발표한 곡을 모은 일본 컴필레이션 앨범.',
       },

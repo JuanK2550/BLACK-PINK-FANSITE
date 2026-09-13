@@ -55,8 +55,8 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
     translations: {
       formatLabel: { es: 'Álbum sencillo', en: 'Single album', ko: '싱글 앨범' },
       description: {
-        es: 'Debut en solitario de Rose. Incluye On The Ground y Gone.',
-        en: 'Rose solo debut. It includes On The Ground and Gone.',
+        es: 'Debut en solitario de Rosé. Incluye On The Ground y Gone.',
+        en: 'Rosé solo debut. It includes On The Ground and Gone.',
         ko: '로제의 솔로 데뷔작. On The Ground와 Gone이 수록되어 있습니다.',
       },
     },
@@ -161,8 +161,8 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
     translations: {
       formatLabel: { es: 'Colaboración', en: 'Collaboration', ko: '컬래버레이션' },
       description: {
-        es: 'Colaboración de Rose con Bruno Mars.',
-        en: 'Rose collaboration with Bruno Mars.',
+        es: 'Colaboración de Rosé con Bruno Mars.',
+        en: 'Rosé collaboration with Bruno Mars.',
         ko: '로제와 브루노 마스의 컬래버레이션.',
       },
     },
@@ -188,8 +188,8 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
     translations: {
       formatLabel: { es: 'Álbum de estudio', en: 'Studio album', ko: '정규 앨범' },
       description: {
-        es: 'Primer álbum en solitario de Rose.',
-        en: 'Rose first solo album.',
+        es: 'Primer álbum en solitario de Rosé.',
+        en: 'Rosé first solo album.',
         ko: '로제의 첫 솔로 정규 앨범.',
       },
     },

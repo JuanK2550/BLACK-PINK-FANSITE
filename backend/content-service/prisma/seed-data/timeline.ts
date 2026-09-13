@@ -263,7 +263,7 @@ export const TIMELINE: TimelineSeed[] = [
     datePrecision: 'month',
     verified: true,
     source:
-      'TenAsia, "BLACKPINK Becomes First Kpop Girl Group to Win MTV VMA", 2020-08-31 — http://en.tenasia.com/archives/106836. La victoria (Song of Summer) figura ademas en Wikipedia, List of awards and nominations received by Blackpink — https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Blackpink. Consultado 2026-08-29. Se guarda el mes: la fuente fecha la noticia, no la gala.',
+      'TenAsia, "BLACKPINK Becomes First Kpop Girl Group to Win MTV VMA", 2020-08-31 — http://en.tenasia.com/archives/106836. La victoria (Song of Summer) figura además en Wikipedia, List of awards and nominations received by Blackpink — https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Blackpink. Consultado 2026-08-29. Se guarda el mes: la fuente fecha la noticia, no la gala.',
     title: {
       es: 'Primer MTV Vídeo Music Award del grupo',
       en: 'The group first MTV Video Music Award',
@@ -337,10 +337,10 @@ export const TIMELINE: TimelineSeed[] = [
     memberSlug: 'rose',
     verified: true,
     source: SOURCES.discography,
-    title: { es: 'Rose publica R', en: 'Rose releases R', ko: '로제, R 발표' },
+    title: { es: 'Rosé publica R', en: 'Rosé releases R', ko: '로제, R 발표' },
     description: {
-      es: 'Debut en solitario de Rose, con On The Ground y Gone.',
-      en: 'Rose solo debut, with On The Ground and Gone.',
+      es: 'Debut en solitario de Rosé, con On The Ground y Gone.',
+      en: 'Rosé solo debut, with On The Ground and Gone.',
       ko: 'On The Ground와 Gone이 수록된 로제의 솔로 데뷔작.',
     },
   },
@@ -499,7 +499,7 @@ export const TIMELINE: TimelineSeed[] = [
     datePrecision: 'month',
     verified: true,
     source:
-      'Gulf News, "Blackpink becomes the first girl group in 24 years to win Best Group at the VMAs", 2023-09-13 — https://gulfnews.com/entertainment/blackpink-becomes-the-first-girl-group-in-24-years-to-win-best-group-at-the-vmas-1.1694609053080. La victoria figura ademas en Wikipedia, List of awards and nominations received by Blackpink. Consultado 2026-08-29. Nota: el titular dice "Best Group"; la categoria oficial de la gala de 2023 es "Group of the Year", que es como se guarda en premios. Se guarda el mes: la fuente fecha la noticia, no la gala.',
+      'Gulf News, "Blackpink becomes the first girl group in 24 years to win Best Group at the VMAs", 2023-09-13 — https://gulfnews.com/entertainment/blackpink-becomes-the-first-girl-group-in-24-years-to-win-best-group-at-the-vmas-1.1694609053080. La victoria figura además en Wikipedia, List of awards and nominations received by Blackpink. Consultado 2026-08-29. Nota: el titular dice "Best Group"; la categoría oficial de la gala de 2023 es "Group of the Year", que es como se guarda en premios. Se guarda el mes: la fuente fecha la noticia, no la gala.',
     title: {
       es: 'Group of the Year en los MTV Vídeo Music Awards',
       en: 'Group of the Year at the MTV Video Music Awards',
@@ -597,13 +597,13 @@ export const TIMELINE: TimelineSeed[] = [
     source:
       'Wikipedia, APT. (song) — https://en.wikipedia.org/wiki/APT._(song). Consultado 2026-08-29. Nota: la Wikipedia en español indica 17 de octubre; se adopta el 18 por consenso de fuentes en inglés.',
     title: {
-      es: 'Rose publica APT. con Bruno Mars',
-      en: 'Rose releases APT. with Bruno Mars',
+      es: 'Rosé publica APT. con Bruno Mars',
+      en: 'Rosé releases APT. with Bruno Mars',
       ko: '로제, 브루노 마스와 APT. 발표',
     },
     description: {
-      es: 'Colaboración internacional de Rose con Bruno Mars.',
-      en: 'International collaboration by Rose with Bruno Mars.',
+      es: 'Colaboración internacional de Rosé con Bruno Mars.',
+      en: 'International collaboration by Rosé with Bruno Mars.',
       ko: '로제와 브루노 마스의 국제 컬래버레이션.',
     },
   },
@@ -617,8 +617,8 @@ export const TIMELINE: TimelineSeed[] = [
     source:
       'Wikipedia, Rosie (Rosé album) — https://en.wikipedia.org/wiki/Rosie_(Ros%C3%A9_album). Consultado 2026-08-29.',
     title: {
-      es: 'Rose publica rosie',
-      en: 'Rose releases rosie',
+      es: 'Rosé publica rosie',
+      en: 'Rosé releases rosie',
       ko: '로제, rosie 발표',
     },
     description: {
@@ -716,13 +716,13 @@ export const TIMELINE: TimelineSeed[] = [
     source:
       'Wikipedia, Rosé discography — https://en.wikipedia.org/wiki/Ros%C3%A9_discography. Fecha: ficha oficial en Spotify. Consultado 2026-09-11.',
     title: {
-      es: 'Rose canta Messy para la película F1',
-      en: 'Rose sings Messy for the film F1',
+      es: 'Rosé canta Messy para la película F1',
+      en: 'Rosé sings Messy for the film F1',
       ko: '로제, 영화 F1 OST Messy 발표',
     },
     description: {
-      es: 'Canción de Rose para la banda sonora de la película F1.',
-      en: 'Rose song for the soundtrack of the film F1.',
+      es: 'Canción de Rosé para la banda sonora de la película F1.',
+      en: 'Rosé song for the soundtrack of the film F1.',
       ko: '영화 F1 사운드트랙에 수록된 로제의 곡.',
     },
   },

@@ -56,8 +56,8 @@ export const QUIZ: QuizSeed[] = [
       ko: ['3명', '4명', '5명', '6명'],
     },
     explanation: {
-      es: 'Jisoo, Jennie, Rose y Lisa.',
-      en: 'Jisoo, Jennie, Rose and Lisa.',
+      es: 'Jisoo, Jennie, Rosé y Lisa.',
+      en: 'Jisoo, Jennie, Rosé and Lisa.',
       ko: '지수, 제니, 로제, 리사입니다.',
     },
   },
@@ -114,8 +114,8 @@ export const QUIZ: QuizSeed[] = [
       ko: '가장 나이가 많은 멤버는 누구인가요?',
     },
     options: {
-      es: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
-      en: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
+      es: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
+      en: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
       ko: ['지수', '제니', '로제', '리사'],
     },
     explanation: {
@@ -135,8 +135,8 @@ export const QUIZ: QuizSeed[] = [
       ko: '가장 어린 멤버는 누구인가요?',
     },
     options: {
-      es: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
-      en: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
+      es: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
+      en: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
       ko: ['지수', '제니', '로제', '리사'],
     },
     explanation: {
@@ -156,7 +156,7 @@ export const QUIZ: QuizSeed[] = [
       ko: '리사는 어느 나라 출신인가요?',
     },
     options: {
-      es: ['Japon', 'Tailandia', 'Corea del Sur', 'China'],
+      es: ['Japón', 'Tailandia', 'Corea del Sur', 'China'],
       en: ['Japan', 'Thailand', 'South Korea', 'China'],
       ko: ['일본', '태국', '한국', '중국'],
     },
@@ -172,8 +172,8 @@ export const QUIZ: QuizSeed[] = [
     verified: true,
     source: SOURCES.official,
     question: {
-      es: '¿Dónde nació Rose?',
-      en: 'Where was Rose born?',
+      es: '¿Dónde nació Rosé?',
+      en: 'Where was Rosé born?',
       ko: '로제는 어디에서 태어났나요?',
     },
     options: {
@@ -198,8 +198,8 @@ export const QUIZ: QuizSeed[] = [
       ko: '가장 먼저 솔로 음원을 발표한 멤버는 누구인가요?',
     },
     options: {
-      es: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
-      en: ['Jisoo', 'Jennie', 'Rose', 'Lisa'],
+      es: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
+      en: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
       ko: ['지수', '제니', '로제', '리사'],
     },
     explanation: {
@@ -544,16 +544,16 @@ export const QUIZ: QuizSeed[] = [
     },
     options: {
       es: [
-        'Rose, Jennie, Jisoo, Lisa',
-        'Jennie, Rose, Lisa, Jisoo',
-        'Jennie, Lisa, Rose, Jisoo',
-        'Jisoo, Jennie, Rose, Lisa',
+        'Rosé, Jennie, Jisoo, Lisa',
+        'Jennie, Rosé, Lisa, Jisoo',
+        'Jennie, Lisa, Rosé, Jisoo',
+        'Jisoo, Jennie, Rosé, Lisa',
       ],
       en: [
-        'Rose, Jennie, Jisoo, Lisa',
-        'Jennie, Rose, Lisa, Jisoo',
-        'Jennie, Lisa, Rose, Jisoo',
-        'Jisoo, Jennie, Rose, Lisa',
+        'Rosé, Jennie, Jisoo, Lisa',
+        'Jennie, Rosé, Lisa, Jisoo',
+        'Jennie, Lisa, Rosé, Jisoo',
+        'Jisoo, Jennie, Rosé, Lisa',
       ],
       ko: [
         '로제, 제니, 지수, 리사',
@@ -563,8 +563,8 @@ export const QUIZ: QuizSeed[] = [
       ],
     },
     explanation: {
-      es: 'Jennie en 2018, Rose en marzo de 2021, Lisa en septiembre de 2021 y Jisoo en 2023.',
-      en: 'Jennie in 2018, Rose in March 2021, Lisa in September 2021 and Jisoo in 2023.',
+      es: 'Jennie en 2018, Rosé en marzo de 2021, Lisa en septiembre de 2021 y Jisoo en 2023.',
+      en: 'Jennie in 2018, Rosé in March 2021, Lisa in September 2021 and Jisoo in 2023.',
       ko: '제니 2018년, 로제 2021년 3월, 리사 2021년 9월, 지수 2023년입니다.',
     },
   },
@@ -689,8 +689,8 @@ export const QUIZ: QuizSeed[] = [
       ko: '2026년 싱글 CLICK을 발표한 멤버는?',
     },
     options: {
-      es: ['Lisa', 'Jisoo', 'Rose', 'Jennie'],
-      en: ['Lisa', 'Jisoo', 'Rose', 'Jennie'],
+      es: ['Lisa', 'Jisoo', 'Rosé', 'Jennie'],
+      en: ['Lisa', 'Jisoo', 'Rosé', 'Jennie'],
       ko: ['리사', '지수', '로제', '제니'],
     },
     explanation: {

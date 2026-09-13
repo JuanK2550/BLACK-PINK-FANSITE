@@ -16,13 +16,13 @@ export const SOURCES = {
   press:
     'Cobertura de prensa musical internacional (Billboard, Rolling Stone, NME) en la fecha del hecho.',
   festival: 'Carteles y comunicados oficiales del festival correspondiente.',
-  netflix: 'Ficha publica del titulo en Netflix.',
+  netflix: 'Ficha pública del título en Netflix.',
   pending:
-    'Conocimiento publico ampliamente difundido. PENDIENTE de contrastar contra fuente primaria antes de publicarlo.',
+    'Conocimiento público ampliamente difundido. PENDIENTE de contrastar contra fuente primaria antes de publicarlo.',
   pendingDate:
     'El hecho esta documentado, pero la fecha exacta esta PENDIENTE de contrastar. Se guarda con la precision realmente conocida.',
   siteChoice:
-    'Decision de presentacion de este sitio de fans. No es informacion oficial del grupo.',
+    'Decisión de presentación de este sitio de fans. No es información oficial del grupo.',
 } as const;
 
 export function day(iso: `${number}-${number}-${number}`): Date {

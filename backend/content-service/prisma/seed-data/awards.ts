@@ -119,7 +119,7 @@ const build = (rows: Row[], won: boolean): AwardSeed[] =>
     work,
     won,
     verified: true,
-    source: won ? FUENTE : `${FUENTE} Nominacion: no gano.`,
+    source: won ? FUENTE : `${FUENTE} Nominación: no ganó.`,
     translations: { category: CATEGORIES[category] },
   }));
 

@@ -26,8 +26,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.official,
     content: {
-      es: 'El grupo lo forman cuatro integrantes: Jisoo, Jennie, Rose y Lisa.',
-      en: 'The group has four members: Jisoo, Jennie, Rose and Lisa.',
+      es: 'El grupo lo forman cuatro integrantes: Jisoo, Jennie, Rosé y Lisa.',
+      en: 'The group has four members: Jisoo, Jennie, Rosé and Lisa.',
       ko: '그룹은 지수, 제니, 로제, 리사 네 명으로 이루어져 있습니다.',
     },
   },
@@ -119,8 +119,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.official,
     content: {
-      es: 'Rose nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur.',
-      en: 'Rose was born in New Zealand and raised in Australia before moving to South Korea.',
+      es: 'Rosé nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur.',
+      en: 'Rosé was born in New Zealand and raised in Australia before moving to South Korea.',
       ko: '로제는 뉴질랜드에서 태어나 호주에서 자란 뒤 한국으로 이주했습니다.',
     },
   },
@@ -130,8 +130,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.official,
     content: {
-      es: 'El nombre artístico de Rose viene de su nombre en inglés, Roseanne.',
-      en: 'Rose stage name comes from her English name, Roseanne.',
+      es: 'El nombre artístico de Rosé viene de su nombre en inglés, Roseanne.',
+      en: 'Rosé stage name comes from her English name, Roseanne.',
       ko: '로제의 활동명은 영어 이름 Roseanne에서 왔습니다.',
     },
   },
@@ -196,8 +196,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.press,
     content: {
-      es: 'Rose es embajadora global de Saint Laurent.',
-      en: 'Rose is a global ambassador for Saint Laurent.',
+      es: 'Rosé es embajadora global de Saint Laurent.',
+      en: 'Rosé is a global ambassador for Saint Laurent.',
       ko: '로제는 생로랑의 글로벌 앰배서더입니다.',
     },
   },
@@ -240,8 +240,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: false,
     source: SOURCES.pending,
     content: {
-      es: 'Rose superó una audición de YG Entertainment celebrada en Australia. Año exacto pendiente de contrastar.',
-      en: 'Rose passed a YG Entertainment audition held in Australia. Exact year pending verification.',
+      es: 'Rosé superó una audición de YG Entertainment celebrada en Australia. Año exacto pendiente de contrastar.',
+      en: 'Rosé passed a YG Entertainment audition held in Australia. Exact year pending verification.',
       ko: '로제는 호주에서 열린 YG 엔터테인먼트 오디션에 합격했습니다. 정확한 연도는 확인 대기 중.',
     },
   },
@@ -345,8 +345,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.discography,
     content: {
-      es: 'El álbum sencillo R, de Rose, incluye On The Ground y Gone.',
-      en: 'Rose single album R includes On The Ground and Gone.',
+      es: 'El álbum sencillo R, de Rosé, incluye On The Ground y Gone.',
+      en: 'Rosé single album R includes On The Ground and Gone.',
       ko: '로제의 싱글 앨범 R에는 On The Ground와 Gone이 수록되어 있습니다.',
     },
   },
@@ -399,8 +399,8 @@ export const TRIVIA: TriviaSeed[] = [
     source:
       'Wikipedia, APT. (song) — https://en.wikipedia.org/wiki/APT._(song). Consultado 2026-08-29. Nota: la Wikipedia en español indica 17 de octubre; se adopta el 18 por consenso de fuentes en inglés.',
     content: {
-      es: 'Rose publicó APT., una colaboración con Bruno Mars, el 18 de octubre de 2024.',
-      en: 'Rose released APT., a collaboration with Bruno Mars, on 18 October 2024.',
+      es: 'Rosé publicó APT., una colaboración con Bruno Mars, el 18 de octubre de 2024.',
+      en: 'Rosé released APT., a collaboration with Bruno Mars, on 18 October 2024.',
       ko: '로제가 2024년 10월 18일 브루노 마스와의 협업 곡 APT.를 발표했습니다.',
     },
   },
@@ -562,8 +562,8 @@ export const TRIVIA: TriviaSeed[] = [
     verified: true,
     source: SOURCES.discography,
     content: {
-      es: 'Las cuatro integrantes completaron su debut en solitario entre 2018 y 2023, en este orden: Jennie, Rose, Lisa y Jisoo.',
-      en: 'All four members completed their solo debut between 2018 and 2023, in this order: Jennie, Rose, Lisa and Jisoo.',
+      es: 'Las cuatro integrantes completaron su debut en solitario entre 2018 y 2023, en este orden: Jennie, Rosé, Lisa y Jisoo.',
+      en: 'All four members completed their solo debut between 2018 and 2023, in this order: Jennie, Rosé, Lisa and Jisoo.',
       ko: '멤버 4인은 2018년부터 2023년까지 제니, 로제, 리사, 지수 순으로 솔로 데뷔를 마쳤습니다.',
     },
   },
@@ -621,8 +621,8 @@ export const TRIVIA: TriviaSeed[] = [
     source:
       'Wikipedia, Rosé discography — https://en.wikipedia.org/wiki/Ros%C3%A9_discography. Consultado 2026-09-11.',
     content: {
-      es: 'Rose grabó Messy para la banda sonora de la película F1, estrenada en 2025.',
-      en: 'Rose recorded Messy for the soundtrack of the film F1, released in 2025.',
+      es: 'Rosé grabó Messy para la banda sonora de la película F1, estrenada en 2025.',
+      en: 'Rosé recorded Messy for the soundtrack of the film F1, released in 2025.',
       ko: '로제는 2025년 개봉한 영화 F1의 사운드트랙에 Messy를 녹음했습니다.',
     },
   },
