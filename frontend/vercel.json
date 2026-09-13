@@ -3,6 +3,5 @@
   "framework": "nextjs",
   "installCommand": "npx --yes pnpm@11.24.0 install --frozen-lockfile",
   "buildCommand": "cd .. && node_modules/.bin/turbo run build --filter=@blackpink/web...",
-  "ignoreCommand": "npx --yes turbo-ignore@2 @blackpink/web --fallback=HEAD^1",
   "regions": ["iad1"]
 }
