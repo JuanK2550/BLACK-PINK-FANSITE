@@ -139,7 +139,7 @@ describe('chatbot-service (e2e)', () => {
   it('GET /api/v1/chat/suggestions responde en el idioma pedido', async () => {
     const es = await request(server).get('/api/v1/chat/suggestions?locale=es').expect(200);
     expect(es.body.data.suggestions).toHaveLength(5);
-    expect(es.body.data.suggestions[0]).toContain('debuto');
+    expect(es.body.data.suggestions[0]).toContain('debutó');
 
     const ko = await request(server).get('/api/v1/chat/suggestions?locale=ko').expect(200);
     expect(ko.body.data.suggestions[0]).toContain('데뷔');

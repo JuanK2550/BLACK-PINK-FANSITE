@@ -173,17 +173,17 @@ export class ChatService {
   suggestions(locale: Locale): string[] {
     const all: Record<Locale, string[]> = {
       es: [
-        '¿Cuando debuto BLACKPINK?',
-        '¿Que canciones tiene BORN PINK?',
-        '¿Que premios han ganado?',
-        'Cuentame algo de Rose',
-        '¿Donde veo la cronologia?',
+        '¿Cuándo debutó BLACKPINK?',
+        '¿Qué canciones tiene BORN PINK?',
+        '¿Qué premios han ganado?',
+        'Cuéntame algo de Rosé',
+        '¿Dónde veo la cronología?',
       ],
       en: [
         'When did BLACKPINK debut?',
         'What songs are on BORN PINK?',
         'Which awards have they won?',
-        'Tell me something about Rose',
+        'Tell me something about Rosé',
         'Where can I see the timeline?',
       ],
       ko: [

@@ -166,7 +166,7 @@ describe('ChatService', () => {
   it('las sugerencias vienen en los tres idiomas y no gastan cuota', () => {
     const service = new ChatService(providerYielding([]), retrievalWith([]), store, safety);
 
-    expect(service.suggestions('es')[0]).toContain('debuto');
+    expect(service.suggestions('es')[0]).toContain('debutó');
     expect(service.suggestions('en')[0]).toContain('debut');
     expect(service.suggestions('ko')[0]).toContain('데뷔');
   });
