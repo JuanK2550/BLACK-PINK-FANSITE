@@ -32,7 +32,11 @@ export class ChatProxyController {
     try {
       const upstream = await fetch(`${this.baseUrl}/api/v1/chat`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          // Sin la IP del visitante, el límite por IP del chatbot sería uno solo para todo el sitio.
+          ...(req.ip ? { 'x-forwarded-for': req.ip } : {}),
+        },
         body: JSON.stringify(body),
         signal: controller.signal,
       });

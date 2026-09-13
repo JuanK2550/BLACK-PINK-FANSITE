@@ -55,6 +55,7 @@ export class SpeechProxyController {
         method: 'POST',
         headers: {
           'content-type': contentType,
+          ...(req.ip ? { 'x-forwarded-for': req.ip } : {}),
           ...(req.headers['content-length']
             ? { 'content-length': String(req.headers['content-length']) }
             : {}),
