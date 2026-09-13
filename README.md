@@ -69,7 +69,7 @@ su archivo en la raíz y por su nombre exacto.
 | `.env` | Tus claves. **Nunca se sube** · `.env.example` es la plantilla vacía |
 | `.husky/` | Revisiones automáticas antes de cada commit |
 | `.github/` | CI, despliegues, plantillas y la configuración de Lighthouse |
-| `README.md` · `SECURITY.md` · `LICENSE` | Esta guía, cómo reportar fallos de seguridad y la licencia |
+| `README.md` · `DEPLOY.md` · `SECURITY.md` · `LICENSE` | Esta guía, cómo publicar el sitio paso a paso, cómo reportar fallos de seguridad y la licencia |
 
 ---
 
@@ -138,22 +138,29 @@ física, se guarda la física.
 
 ## Publicar el sitio
 
-- **Web:** Vercel. **Servicios:** Railway o Render. **Base de datos:** PostgreSQL con pgvector.
-- Los despliegues salen solos de `.github/workflows/` cuando CI pasa en verde en `main`.
+**Todo el proceso, paso a paso y en orden, está en [DEPLOY.md](./DEPLOY.md).** En resumen:
+
+| Pieza | Dónde |
+| --- | --- |
+| Web | Vercel (`frontend/vercel.json`) |
+| 5 servicios | Railway (`backend/*/railway.json`) · plan B: Render (`infra/render.yaml`) |
+| Base de datos | Neon (PostgreSQL con pgvector) |
+| Caché | Upstash (Redis) |
+| Errores y disponibilidad | Sentry y UptimeRobot |
+
+Vercel y Railway despliegan solos cuando CI termina en verde en `main`; content-service
+aplica sus migraciones antes de arrancar.
 
 ### Configuración en GitHub
 
-1. **Secretos** (*Settings → Secrets and variables → Actions*):
+1. **Secretos** (*Settings → Secrets and variables → Actions*), todos opcionales:
 
    | Secreto | Lo usa |
    | --- | --- |
-   | `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` | Despliegue de la web |
-   | `DATABASE_URL_CONTENT_PROD` | Migraciones al desplegar |
-   | `RAILWAY_TOKEN` *o* `RENDER_HOOK_CONTENT`, `_MEDIA`, `_CHATBOT`, `_SPEECH`, `_GATEWAY` | Despliegue de los servicios |
+   | `SITE_URL`, `REVALIDATE_SECRET` | Refresco semanal de las páginas |
    | `DATABASE_URL_PROD`, `BACKUP_PASSPHRASE` | Copia de seguridad diaria |
-   | `SITE_URL`, `REVALIDATE_SECRET`, `CHATBOT_URL`, `INTERNAL_API_KEY` | Refresco semanal |
-   | `GOOGLE_AI_API_KEY` | Pruebas del chat real (opcional) |
-   | `LHCI_GITHUB_APP_TOKEN` | Lighthouse en los pull requests (opcional) |
+   | `GOOGLE_AI_API_KEY` | Pruebas del chat real |
+   | `LHCI_GITHUB_APP_TOKEN` | Lighthouse en los pull requests |
 
    `REVALIDATE_SECRET` e `INTERNAL_API_KEY` deben tener **al menos 24 caracteres**.
 
@@ -162,10 +169,8 @@ física, se guarda la física.
    «Lint, typecheck, test y build» y «Playwright (escritorio y móvil) + axe»
    (*Settings → Branches*).
 
-3. **Workflows de despliegue apagados hasta que haya producción.** `deploy-web`,
-   `deploy-services`, `db-backup` y la publicación de versiones están desactivados en
-   *Actions*: sin los secretos fallarían todos los días. Se encienden ahí mismo (o con
-   `gh workflow enable deploy-web.yml`) cuando existan el hosting y la base de datos.
+3. **`db-backup` y la publicación de versiones están apagados** en *Actions* hasta que haya
+   producción: sin sus secretos fallarían todos los días. Se encienden ahí mismo.
 
 ---
 
@@ -177,6 +182,9 @@ física, se guarda la física.
 - **Voz:** al dictar, el audio va a Groq para transcribirlo. Este proyecto no lo guarda en
   ningún sitio (ni disco, ni base de datos, ni logs). Escuchar las respuestas lo hace el
   propio navegador y no envía nada.
+- **Estadísticas:** en producción, Vercel Web Analytics y Speed Insights, sin cookies.
+- **Errores:** si se configura Sentry, solo le llegan errores, sin cuerpos de petición,
+  cookies, IP ni grabación de sesiones.
 
 ---
 
