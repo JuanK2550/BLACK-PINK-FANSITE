@@ -5,6 +5,9 @@ import type { Locale } from '@blackpink/types';
 import { firstText, pickTranslation, toIsoDate } from '../common/localize';
 import { PrismaService } from '../prisma/prisma.service';
 import type { SearchHitDto, SearchResultDto } from './search.dto';
+import { searchVariants } from './search-terms';
+
+const insensitive = (value: string) => ({ contains: value, mode: 'insensitive' as const });
 
 @Injectable()
 export class SearchService {
@@ -16,8 +19,8 @@ export class SearchService {
     limit: number,
     includeUnverified: boolean,
   ): Promise<SearchResultDto> {
-    const term = q.trim();
-    const contains = { contains: term, mode: 'insensitive' as const };
+    const variants = searchVariants(q);
+    const term = variants[0] ?? '';
 
     const visible = includeUnverified ? {} : { verified: true };
 
@@ -25,12 +28,12 @@ export class SearchService {
       this.prisma.member.findMany({
         where: {
           ...visible,
-          OR: [
-            { stageName: contains },
-            { fullName: contains },
-            { koreanName: contains },
-            { translations: { some: { nickname: contains } } },
-          ],
+          OR: variants.flatMap((value) => [
+            { stageName: insensitive(value) },
+            { fullName: insensitive(value) },
+            { koreanName: insensitive(value) },
+            { translations: { some: { nickname: insensitive(value) } } },
+          ]),
         },
         take: limit,
         orderBy: { displayOrder: 'asc' },
@@ -40,7 +43,10 @@ export class SearchService {
       this.prisma.album.findMany({
         where: {
           ...visible,
-          OR: [{ title: contains }, { translations: { some: { title: contains } } }],
+          OR: variants.flatMap((value) => [
+            { title: insensitive(value) },
+            { translations: { some: { title: insensitive(value) } } },
+          ]),
         },
         take: limit,
         orderBy: { releaseDate: 'desc' },
@@ -51,11 +57,11 @@ export class SearchService {
         where: {
           ...visible,
           ...(includeUnverified ? {} : { album: { verified: true } }),
-          OR: [
-            { title: contains },
-            { titleLocalized: { path: ['ko'], string_contains: term } },
-            { titleLocalized: { path: ['en'], string_contains: term } },
-          ],
+          OR: variants.flatMap((value) => [
+            { title: insensitive(value) },
+            { titleLocalized: { path: ['ko'], string_contains: value } },
+            { titleLocalized: { path: ['en'], string_contains: value } },
+          ]),
         },
         take: limit,
         orderBy: [{ isTitleTrack: 'desc' }, { trackNumber: 'asc' }],
@@ -65,7 +71,10 @@ export class SearchService {
       this.prisma.timelineEvent.findMany({
         where: {
           ...visible,
-          OR: [{ title: contains }, { translations: { some: { title: contains } } }],
+          OR: variants.flatMap((value) => [
+            { title: insensitive(value) },
+            { translations: { some: { title: insensitive(value) } } },
+          ]),
         },
         take: limit,
         orderBy: { date: 'desc' },
@@ -76,7 +85,10 @@ export class SearchService {
         where: {
           ...visible,
           ...(includeUnverified ? {} : { member: { verified: true } }),
-          OR: [{ title: contains }, { translations: { some: { title: contains } } }],
+          OR: variants.flatMap((value) => [
+            { title: insensitive(value) },
+            { translations: { some: { title: insensitive(value) } } },
+          ]),
         },
         take: limit,
         orderBy: { releaseDate: 'desc' },
@@ -92,7 +104,7 @@ export class SearchService {
           ...(includeUnverified
             ? {}
             : { soloWork: { verified: true, member: { verified: true } } }),
-          title: contains,
+          OR: variants.map((value) => ({ title: insensitive(value) })),
         },
         take: limit,
         orderBy: [{ isTitleTrack: 'desc' }, { trackNumber: 'asc' }],
