@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { AmbientBackground, KonamiEasterEgg } from '@blackpink/ui';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { QueryProvider } from '../../components/layout/query-provider';
 import { ChatWidget } from '../../components/chat/chat-widget';
 import { SiteChrome } from '../../components/layout/site-chrome';
@@ -46,12 +48,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Footer' });
+  const isPreview = process.env.VERCEL_ENV === 'preview';
+  const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
 
   return {
     metadataBase: new URL(SITE_URL),
     title: { default: 'BLACKPINK Fansite', template: '%s | BLACKPINK Fansite' },
     description: t('tagline'),
-    robots: { index: true, follow: true },
+    robots: { index: !isPreview, follow: !isPreview },
+    ...(googleVerification ? { verification: { google: googleVerification } } : {}),
     alternates: {
       canonical: `${SITE_URL}/${locale}`,
       languages: {
@@ -170,6 +175,13 @@ export default async function LocaleLayout({
             <HydrationMark />
           </QueryProvider>
         </NextIntlClientProvider>
+
+        {process.env.VERCEL === '1' ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

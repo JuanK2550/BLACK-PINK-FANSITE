@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Container, StateMessage } from '@blackpink/ui';
+import { reportError } from '../../lib/report-error';
 
 export default function RouteError({
   error,
@@ -17,6 +18,7 @@ export default function RouteError({
 
   useEffect(() => {
     console.error('Error de ruta:', error);
+    reportError(error);
   }, [error]);
 
   return (

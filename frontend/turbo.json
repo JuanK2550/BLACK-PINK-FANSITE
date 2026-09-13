@@ -1,0 +1,16 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "env": ["API_GATEWAY_URL", "GOOGLE_SITE_VERIFICATION", "VERCEL", "VERCEL_ENV"],
+      "passThroughEnv": [
+        "REVALIDATE_SECRET",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "VERCEL_URL"
+      ]
+    }
+  }
+}

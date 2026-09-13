@@ -9,10 +9,20 @@ import {
   type MemberDetail,
 } from '@blackpink/types';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(
-  /\/+$/,
-  '',
-);
+function resolveSiteUrl(): string {
+  const vercelHost =
+    process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+      : process.env.NEXT_PUBLIC_VERCEL_URL;
+
+  const url =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000');
+
+  return url.replace(/\/+$/, '');
+}
+
+export const SITE_URL = resolveSiteUrl();
 
 const SITE_NAME = 'BLACKPINK Fansite';
 
@@ -110,6 +120,19 @@ export function albumJsonLd(album: AlbumDetail, path: string, locale: Locale) {
       position: track.trackNumber,
       ...(track.durationSec ? { duration: `PT${track.durationSec}S` } : {}),
     })),
+  };
+}
+
+export function websiteJsonLd(locale: Locale, description: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    alternateName: 'BLACKPINK Fan Site',
+    url: `${SITE_URL}/${locale}`,
+    inLanguage: locale,
+    description,
+    about: { '@type': 'MusicGroup', name: 'BLACKPINK' },
   };
 }
 

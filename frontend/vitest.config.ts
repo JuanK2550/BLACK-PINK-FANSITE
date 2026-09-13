@@ -22,6 +22,8 @@ export default defineConfig({
         'src/lib/debut.ts',
         'src/lib/gallery.ts',
         'src/lib/display-fit.ts',
+        'src/lib/security-headers.ts',
+        'src/lib/sentry.ts',
         'src/components/chat/rich-text.ts',
         'src/components/quiz/quiz-game.tsx',
         'src/components/members/member-compare.tsx',

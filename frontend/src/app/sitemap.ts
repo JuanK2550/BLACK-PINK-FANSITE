@@ -19,6 +19,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/cronologia', priority: 0.7, changeFrequency: 'weekly' },
     { path: '/curiosidades', priority: 0.6, changeFrequency: 'weekly' },
     { path: '/premios', priority: 0.5, changeFrequency: 'monthly' },
+    { path: '/galeria', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/playlists', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/quiz', priority: 0.5, changeFrequency: 'monthly' },
     { path: '/creditos', priority: 0.3, changeFrequency: 'monthly' },
   ];
 
