@@ -63,22 +63,24 @@ export const TRIVIA: TriviaSeed[] = [
   },
   {
     category: 'GROUP',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'Según el grupo, el nombre contradice la idea de que el rosa es lo más bonito. Declaración pendiente de contrastar.',
-      en: 'According to the group, the name pushes back on the idea that pink is the prettiest thing. Statement pending verification.',
-      ko: '그룹에 따르면 이름에는 분홍이 가장 예쁘다는 통념을 뒤집는 의미가 있다고 합니다. 발언 출처는 확인 대기 중.',
+      es: 'Según YG Entertainment, el nombre quiere decir que «lo bonito no lo es todo»: un equipo que reúne belleza y también mucho talento.',
+      en: 'According to YG Entertainment, the name means “pretty isn’t everything”: a team with beauty and great talent too.',
+      ko: 'YG 엔터테인먼트에 따르면 그룹 이름에는 ‘예쁜 것이 전부가 아니다’라는 뜻이 담겨 있으며, 아름다움과 뛰어난 실력을 함께 갖춘 팀을 상징합니다.',
     },
   },
   {
     category: 'GROUP',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'Fue el primer grupo femenino que YG Entertainment presentó tras varios años sin debutar ninguno. Intervalo exacto pendiente de contrastar.',
-      en: 'It was the first girl group YG Entertainment introduced after several years without debuting one. Exact gap pending verification.',
-      ko: 'YG 엔터테인먼트가 수년 만에 선보인 걸그룹입니다. 정확한 공백 기간은 확인 대기 중.',
+      es: 'Fue el primer grupo femenino que YG Entertainment presentó en siete años.',
+      en: 'It was the first girl group YG Entertainment debuted in seven years.',
+      ko: 'YG 엔터테인먼트가 7년 만에 선보인 걸그룹입니다.',
     },
   },
 
@@ -94,12 +96,13 @@ export const TRIVIA: TriviaSeed[] = [
   },
   {
     category: 'FANDOM',
-    verified: false,
-    source: SOURCES.pendingDate,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'El nombre del fandom se anunció pocos meses después del debut. Fecha exacta pendiente de contrastar.',
-      en: 'The fandom name was announced a few months after the debut. Exact date pending verification.',
-      ko: '팬덤 이름은 데뷔 몇 달 뒤에 발표되었습니다. 정확한 날짜는 확인 대기 중.',
+      es: 'El nombre del fandom, BLINK, se anunció el 17 de enero de 2017, cinco meses después del debut.',
+      en: 'The fandom name, BLINK, was announced on 17 January 2017, five months after the debut.',
+      ko: '팬덤 이름 BLINK는 데뷔 5개월 뒤인 2017년 1월 17일에 발표되었습니다.',
     },
   },
   {
@@ -215,56 +218,61 @@ export const TRIVIA: TriviaSeed[] = [
   {
     category: 'MEMBER',
     memberSlug: 'lisa',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Consultado 2026-09-13.',
     content: {
-      es: 'Lisa cambio su nombre de pila antes de debutar. Detalles pendientes de contrastar.',
-      en: 'Lisa changed her given name before debuting. Details pending verification.',
-      ko: '리사는 데뷔 전에 이름을 바꾸었습니다. 세부 내용은 확인 대기 중.',
+      es: 'Lisa nació como Pranpriya Manobal y cambió legalmente su nombre por Lalisa, «la que es elogiada», por consejo de un adivino.',
+      en: 'Lisa was born Pranpriya Manobal and legally changed her name to Lalisa, “the one being praised”, on a fortune teller’s advice.',
+      ko: '리사의 본명은 프란프리야 마노반으로, 점술가의 조언에 따라 ‘칭찬받는 사람’이라는 뜻의 라리사로 법적 개명했습니다.',
     },
   },
   {
     category: 'MEMBER',
     memberSlug: 'lisa',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Consultado 2026-09-13.',
     content: {
-      es: 'Lisa superó una audición de YG Entertainment celebrada en Tailandia. Año exacto pendiente de contrastar.',
-      en: 'Lisa passed a YG Entertainment audition held in Thailand. Exact year pending verification.',
-      ko: '리사는 태국에서 열린 YG 엔터테인먼트 오디션에 합격했습니다. 정확한 연도는 확인 대기 중.',
+      es: 'En 2010, con 13 años, Lisa fue la única seleccionada entre 4.000 aspirantes en una audición de YG Entertainment en Tailandia. Entró en la agencia en abril de 2011.',
+      en: 'In 2010, aged 13, Lisa was the only one selected out of 4,000 applicants at a YG Entertainment audition in Thailand. She joined the label in April 2011.',
+      ko: '리사는 2010년 13세 때 태국에서 열린 YG 엔터테인먼트 오디션에서 지원자 4,000명 중 유일하게 합격했고, 2011년 4월 YG에 들어갔습니다.',
     },
   },
   {
     category: 'MEMBER',
     memberSlug: 'rose',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Rosé (singer) — https://en.wikipedia.org/wiki/Ros%C3%A9_(singer). Consultado 2026-09-13.',
     content: {
-      es: 'Rosé superó una audición de YG Entertainment celebrada en Australia. Año exacto pendiente de contrastar.',
-      en: 'Rosé passed a YG Entertainment audition held in Australia. Exact year pending verification.',
-      ko: '로제는 호주에서 열린 YG 엔터테인먼트 오디션에 합격했습니다. 정확한 연도는 확인 대기 중.',
+      es: 'Rosé quedó primera entre 700 participantes en la audición de YG Entertainment de Sídney, en 2012, y dos meses después se mudó a Seúl como aprendiz.',
+      en: 'Rosé came first among 700 participants at the YG Entertainment audition in Sydney in 2012, and two months later moved to Seoul as a trainee.',
+      ko: '로제는 2012년 시드니에서 열린 YG 엔터테인먼트 오디션에서 참가자 700명 중 1위를 차지했고, 두 달 뒤 연습생으로 서울에 왔습니다.',
     },
   },
   {
     category: 'MEMBER',
     memberSlug: 'jennie',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Jennie (singer) — https://en.wikipedia.org/wiki/Jennie_(singer). Consultado 2026-09-13.',
     content: {
-      es: 'Jennie estudio durante parte de su infancia en Nueva Zelanda. Periodo exacto pendiente de contrastar.',
-      en: 'Jennie studied in New Zealand for part of her childhood. Exact period pending verification.',
-      ko: '제니는 어린 시절 일부를 뉴질랜드에서 보내며 학교를 다녔습니다. 정확한 시기는 확인 대기 중.',
+      es: 'Jennie estudió en Auckland (Nueva Zelanda) desde los nueve años, en la Waikowhai Intermediate School y el ACG Parnell College, y volvió a Corea en 2010, con 14.',
+      en: 'Jennie studied in Auckland, New Zealand, from the age of nine, at Waikowhai Intermediate School and ACG Parnell College, and returned to Korea in 2010, aged 14.',
+      ko: '제니는 아홉 살 때부터 뉴질랜드 오클랜드의 와이코와이 인터미디어트 스쿨과 ACG 파넬 칼리지에서 공부했고, 2010년 14세에 한국으로 돌아왔습니다.',
     },
   },
   {
     category: 'MEMBER',
     memberSlug: 'lisa',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, The White Lotus season 3 — https://en.wikipedia.org/wiki/The_White_Lotus_season_3. Consultado 2026-09-13.',
     content: {
-      es: 'Lisa formó parte del reparto de la tercera temporada de The White Lotus. Pendiente de contrastar.',
-      en: 'Lisa joined the cast of the third season of The White Lotus. Pending verification.',
-      ko: '리사가 The White Lotus 시즌 3에 출연했습니다. 확인 대기 중.',
+      es: 'Lisa forma parte del reparto de la tercera temporada de The White Lotus, estrenada en HBO en febrero de 2025: interpreta a Mook, mentora de bienestar del hotel.',
+      en: 'Lisa is part of the cast of the third season of The White Lotus, which premiered on HBO in February 2025, playing Mook, a health mentor at the resort.',
+      ko: '리사는 2025년 2월 HBO에서 공개된 The White Lotus 시즌 3에 출연해 리조트의 헬스 멘토 묵 역을 맡았습니다.',
     },
   },
 
@@ -447,42 +455,46 @@ export const TRIVIA: TriviaSeed[] = [
   },
   {
     category: 'RECORD',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, How You Like That — https://en.wikipedia.org/wiki/How_You_Like_That. Consultado 2026-09-13.',
     content: {
-      es: 'How You Like That batió varios récords de visualizaciones en 2020. Cifras exactas pendientes de contrastar.',
-      en: 'How You Like That broke several viewing records in 2020. Exact figures pending verification.',
-      ko: 'How You Like That은 2020년에 여러 조회수 기록을 세웠습니다. 정확한 수치는 확인 대기 중.',
+      es: 'En 2020 el videoclip de How You Like That sumó 86,3 millones de reproducciones en 24 horas y batió cinco Guinness World Records. Fue entonces el vídeo más rápido de YouTube en llegar a 100 millones: 32 horas.',
+      en: 'In 2020 the How You Like That video drew 86.3 million views in 24 hours and set five Guinness World Records. At the time it was the fastest video on YouTube to reach 100 million views: 32 hours.',
+      ko: '2020년 How You Like That 뮤직비디오는 24시간 만에 8,630만 회 조회되며 기네스 세계 기록 5개를 세웠습니다. 당시 YouTube에서 가장 빠르게 1억 회에 도달한 영상으로, 32시간이 걸렸습니다.',
     },
   },
   {
     category: 'RECORD',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, The Album (Blackpink album) — https://en.wikipedia.org/wiki/The_Album_(Blackpink_album). Consultado 2026-09-13.',
     content: {
-      es: 'THE ALBUM entró muy alto en la lista Billboard 200 en 2020. Posición exacta pendiente de contrastar.',
-      en: 'THE ALBUM entered the Billboard 200 very high in 2020. Exact position pending verification.',
-      ko: 'THE ALBUM은 2020년 빌보드 200에 높은 순위로 진입했습니다. 정확한 순위는 확인 대기 중.',
+      es: 'THE ALBUM debutó en el número 2 del Billboard 200 en octubre de 2020: la mejor posición de un álbum de artistas femeninas coreanas.',
+      en: 'THE ALBUM debuted at number 2 on the Billboard 200 in October 2020, the highest-charting album by a female Korean act.',
+      ko: 'THE ALBUM은 2020년 10월 빌보드 200에 2위로 진입하며 한국 여성 아티스트 앨범 최고 순위를 기록했습니다.',
     },
   },
   {
     category: 'RECORD',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Born Pink World Tour — https://en.wikipedia.org/wiki/Born_Pink_World_Tour. Consultado 2026-09-13.',
     content: {
-      es: 'La gira BORN PINK fue una de las más taquilleras de un grupo femenino de K-pop. Cifras pendientes de contrastar.',
-      en: 'The BORN PINK tour was among the highest-grossing by a K-pop girl group. Figures pending verification.',
-      ko: 'BORN PINK 투어는 K-팝 걸그룹 중 손꼽히는 수익을 올린 투어였습니다. 수치는 확인 대기 중.',
+      es: 'La gira BORN PINK recaudó 330 millones de dólares en 66 conciertos: es la gira más taquillera de la historia de un grupo femenino.',
+      en: 'The BORN PINK tour grossed 330 million dollars over 66 concerts, the highest-grossing concert tour ever by a female group.',
+      ko: 'BORN PINK 투어는 66회 공연으로 3억 3천만 달러의 수익을 올려 역대 여성 그룹 투어 중 최고 흥행 기록을 세웠습니다.',
     },
   },
   {
     category: 'RECORD',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'Su canal de YouTube alcanzó una cifra de suscriptores sin precedentes para un artista musical. Cifra y fecha pendientes de contrastar.',
-      en: 'Their YouTube channel reached an unprecedented subscriber count for a music artist. Figure and date pending verification.',
-      ko: '그룹의 YouTube 채널은 음악 아티스트로서 전례 없는 구독자 수를 기록했습니다. 수치와 시점은 확인 대기 중.',
+      es: 'Su canal de YouTube es el de un artista musical con más suscriptores, y fue el primero en superar los 100 millones.',
+      en: 'Their YouTube channel is the most-subscribed of any music act, and the first to pass 100 million subscribers.',
+      ko: '그룹의 YouTube 채널은 음악 아티스트 중 구독자가 가장 많으며, 처음으로 구독자 1억 명을 넘었습니다.',
     },
   },
 
@@ -498,22 +510,24 @@ export const TRIVIA: TriviaSeed[] = [
   },
   {
     category: 'STAGE',
-    verified: false,
-    source: SOURCES.pendingDate,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'Encabezaron el festival BST Hyde Park de Londres en 2023. Fecha exacta pendiente de contrastar.',
-      en: 'They headlined the BST Hyde Park festival in London in 2023. Exact date pending verification.',
-      ko: '2023년 런던 BST 하이드 파크 페스티벌의 헤드라이너로 섰습니다. 정확한 날짜는 확인 대기 중.',
+      es: 'El 2 de julio de 2023 encabezaron el festival BST Hyde Park de Londres: fueron la primera banda coreana en encabezar un gran festival del Reino Unido.',
+      en: 'On 2 July 2023 they headlined BST Hyde Park in London, becoming the first Korean band to headline a major UK festival.',
+      ko: '2023년 7월 2일 런던 BST 하이드 파크의 헤드라이너로 서며, 영국 대형 페스티벌의 헤드라이너가 된 첫 한국 밴드가 되었습니다.',
     },
   },
   {
     category: 'STAGE',
-    verified: false,
-    source: SOURCES.pendingDate,
+    verified: true,
+    source:
+      'Wikipedia, In Your Area World Tour — https://en.wikipedia.org/wiki/In_Your_Area_World_Tour. Consultado 2026-09-13.',
     content: {
-      es: 'La primera gira mundial del grupo, IN YOUR AREA, arranco a finales de 2018. Fecha exacta pendiente de contrastar.',
-      en: 'The group first world tour, IN YOUR AREA, began in late 2018. Exact date pending verification.',
-      ko: '그룹의 첫 월드 투어 IN YOUR AREA는 2018년 말에 시작되었습니다. 정확한 날짜는 확인 대기 중.',
+      es: 'La primera gira mundial del grupo, IN YOUR AREA, arrancó el 10 de noviembre de 2018 en Seúl.',
+      en: 'The first world tour by the group, IN YOUR AREA, began on 10 November 2018 in Seoul.',
+      ko: '그룹의 첫 월드 투어 IN YOUR AREA는 2018년 11월 10일 서울에서 시작되었습니다.',
     },
   },
 
@@ -529,22 +543,24 @@ export const TRIVIA: TriviaSeed[] = [
   },
   {
     category: 'OTHER',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'The Royal Family, «The King presents Honorary MBEs to BLACKPINK» — https://www.royal.uk/news-and-activity/2023-11-22/the-king-presents-honorary-mbes-to-blackpink. Consultado 2026-09-13.',
     content: {
-      es: 'Las cuatro integrantes recibieron una distinción honorifica británica por su labor divulgativa en la COP26. Detalles pendientes de contrastar.',
-      en: 'The four members received a British honorary distinction for their advocacy work at COP26. Details pending verification.',
-      ko: '멤버 4인은 COP26 홍보 활동으로 영국의 명예 훈장을 받았습니다. 세부 내용은 확인 대기 중.',
+      es: 'El 22 de noviembre de 2023 el rey Carlos III les entregó en el Palacio de Buckingham el MBE honorario, por su papel como embajadoras de la cumbre del clima COP26.',
+      en: 'On 22 November 2023 King Charles III presented them with honorary MBEs at Buckingham Palace, for their role as advocates for the COP26 climate summit.',
+      ko: '2023년 11월 22일 찰스 3세 국왕은 버킹엄궁에서 COP26 기후 정상회의 홍보대사로 활동한 네 멤버에게 명예 MBE를 수여했습니다.',
     },
   },
   {
     category: 'OTHER',
-    verified: false,
-    source: SOURCES.pending,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-09-13. Manila Bulletin — https://mb.com.ph/2024/2/21/blackpink-s-jisoo-launches-own-agency-blissoo-after-jennie-lisa. Billboard Philippines — https://billboardphilippines.com/market/industry-news/blackpinks-rose-signs-with-theblacklabel-yg-entertainment-solo-music-2024/. Consultado 2026-09-13.',
     content: {
-      es: 'En 2024 las cuatro integrantes organizaron sus carreras en solitario con estructuras propias, manteniendo las actividades de grupo con YG Entertainment. Pendiente de contrastar.',
-      en: 'In 2024 the four members organised their solo careers through their own structures while keeping group activities with YG Entertainment. Pending verification.',
-      ko: '2024년 멤버 4인은 각자의 체제로 솔로 활동을 정비하면서 YG 엔터테인먼트와의 그룹 활동은 유지했습니다. 확인 대기 중.',
+      es: 'En diciembre de 2023 renovaron con YG Entertainment solo para las actividades de grupo. Para la carrera en solitario, Jennie creó OA, Lisa LLOUD y Jisoo BLISSOO, y Rosé firmó con THEBLACKLABEL.',
+      en: 'In December 2023 they renewed with YG Entertainment for group activities only. For solo work, Jennie founded OA, Lisa LLOUD and Jisoo BLISSOO, while Rosé signed with THEBLACKLABEL.',
+      ko: '2023년 12월 멤버들은 그룹 활동에 한해 YG 엔터테인먼트와 재계약했습니다. 솔로 활동을 위해 제니는 OA, 리사는 LLOUD, 지수는 BLISSOO를 세웠고, 로제는 더블랙레이블과 계약했습니다.',
     },
   },
   {
@@ -671,6 +687,75 @@ export const TRIVIA: TriviaSeed[] = [
       es: 'Además de sus propios discos, BLACKPINK canta en canciones de otras artistas: Kiss and Make Up, de Dua Lipa, y Sour Candy, de Lady Gaga.',
       en: 'Besides its own records, BLACKPINK sings on songs by other artists: Dua Lipa Kiss and Make Up and Lady Gaga Sour Candy.',
       ko: 'BLACKPINK는 자신들의 앨범 외에도 두아 리파의 Kiss and Make Up, 레이디 가가의 Sour Candy에 참여했습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'Wikipedia, APT. (song) — https://en.wikipedia.org/wiki/Apt._(song). Consultado 2026-09-13.',
+    content: {
+      es: 'APT. llegó al número 3 del Billboard Hot 100: Rosé fue la primera artista femenina de K-pop en entrar en el top 10 de esa lista.',
+      en: 'APT. reached number 3 on the Billboard Hot 100, making Rosé the first female K-pop act in the top ten of that chart.',
+      ko: 'APT.는 빌보드 핫 100에서 3위에 올랐고, 로제는 이 차트 톱 10에 든 첫 K-팝 여성 아티스트가 되었습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'Wikipedia, APT. (song) — https://en.wikipedia.org/wiki/Apt._(song). Consultado 2026-09-13.',
+    content: {
+      es: 'Con APT., Rosé fue la primera artista de K-pop en ganar Canción del Año en los MTV Video Music Awards, en 2025.',
+      en: 'With APT., Rosé became the first K-pop act to win Song of the Year at the MTV Video Music Awards, in 2025.',
+      ko: '로제는 APT.로 2025년 MTV 비디오 뮤직 어워드에서 올해의 노래상을 받은 첫 K-팝 아티스트가 되었습니다.',
+    },
+  },
+  {
+    category: 'MEMBER',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'The Korea Times, «Rosé, Bruno Mars open Grammys with hit single APT.» — https://www.koreatimes.co.kr/entertainment/k-pop/20260202/rose-bruno-mars-open-grammys-with-hit-single-apt. Fecha local de Los Ángeles. Wikipedia, APT. (song) — https://en.wikipedia.org/wiki/Apt._(song). Consultado 2026-09-13.',
+    content: {
+      es: 'Rosé y Bruno Mars abrieron la gala de los Grammy de 2026 cantando APT., que tenía tres nominaciones.',
+      en: 'Rosé and Bruno Mars opened the 2026 Grammy Awards ceremony with APT., which had three nominations.',
+      ko: '로제와 브루노 마스는 2026년 그래미 어워드 시상식의 오프닝 무대에서 3개 부문 후보에 오른 APT.를 불렀습니다.',
+    },
+  },
+  {
+    category: 'STAGE',
+    verified: true,
+    source:
+      'Wikipedia, Deadline World Tour — https://en.wikipedia.org/wiki/Deadline_World_Tour. Fecha local de cada concierto. Consultado 2026-09-13.',
+    content: {
+      es: 'DEADLINE fue la primera gira del grupo solo en estadios: 33 conciertos entre julio de 2025 y enero de 2026. Con ella fueron el primer grupo femenino de K-pop en encabezar un concierto en el Citi Field de Nueva York.',
+      en: 'DEADLINE was the first all-stadium tour by the group: 33 concerts between July 2025 and January 2026. On it they became the first K-pop girl group to headline Citi Field in New York.',
+      ko: 'DEADLINE은 그룹의 첫 스타디움 투어로, 2025년 7월부터 2026년 1월까지 33회 공연을 펼쳤습니다. 이 투어에서 K-팝 걸그룹 최초로 뉴욕 시티 필드의 헤드라이너가 되었습니다.',
+    },
+  },
+  {
+    category: 'STAGE',
+    verified: true,
+    source:
+      'Wikipedia, Coachella 2025 — https://en.wikipedia.org/wiki/Coachella_2025. Fecha local de Indio, California. Consultado 2026-09-13.',
+    content: {
+      es: 'En Coachella 2025 actuaron dos integrantes en solitario: Lisa, en la carpa Sahara, y Jennie, en el Outdoor Theatre.',
+      en: 'Two members played Coachella 2025 as soloists: Lisa at the Sahara tent and Jennie at the Outdoor Theatre.',
+      ko: '코첼라 2025에는 두 멤버가 솔로로 출연했습니다. 리사는 사하라 텐트, 제니는 아웃도어 시어터 무대에 섰습니다.',
+    },
+  },
+  {
+    category: 'GROUP',
+    verified: true,
+    source:
+      'The Korea Times, «BLACKPINK meets fans for 10th anniversary» — https://www.koreatimes.co.kr/entertainment/k-pop/20260809/blackpink-meets-fans-for-10th-anniversary. Consultado 2026-09-13. Korea JoongAng Daily — https://www.koreajoongangdaily.com/entertainment/blackpink-to-launch-heritageinspired-10th-anniversary-merch-with-national-museum-of-korea/12809619. Consultado 2026-09-13.',
+    content: {
+      es: 'Por su décimo aniversario, el 8 de agosto de 2026, las cuatro se reunieron con 40 fans en el Museo Nacional de Corea, que además lanzó con el grupo una colección de productos inspirada en el patrimonio coreano.',
+      en: 'For their tenth anniversary, on 8 August 2026, the four met 40 fans at the National Museum of Korea, which also released a heritage-inspired merchandise collection with the group.',
+      ko: '데뷔 10주년인 2026년 8월 8일, 네 멤버는 국립중앙박물관에서 팬 40명을 만났습니다. 박물관은 그룹과 함께 한국 문화유산에서 영감을 받은 굿즈 컬렉션도 선보였습니다.',
     },
   },
 ];
