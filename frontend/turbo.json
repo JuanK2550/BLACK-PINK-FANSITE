@@ -3,6 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "cache": false,
       "env": ["API_GATEWAY_URL", "GOOGLE_SITE_VERIFICATION", "VERCEL", "VERCEL_ENV"],
       "passThroughEnv": [
         "REVALIDATE_SECRET",
