@@ -10,6 +10,7 @@ export interface WordmarkProps {
 export function Wordmark({ className, layout = 'inline' }: WordmarkProps) {
   return (
     <span
+      lang="en"
       className={cn(
         'font-display select-none font-extrabold leading-none tracking-[-0.045em]',
         layout === 'stacked' && 'flex flex-col',

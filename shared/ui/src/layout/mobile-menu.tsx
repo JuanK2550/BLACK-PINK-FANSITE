@@ -119,7 +119,7 @@ export function MobileMenu({
             opacity: 0,
             transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
           }}
-          className="bg-canvas z-80 fixed inset-0 flex flex-col overflow-y-auto lg:hidden"
+          className="bg-canvas z-80 fixed inset-0 flex flex-col overflow-y-auto xl:hidden"
         >
           <div className="border-line h-header px-gutter flex shrink-0 items-center justify-between border-b">
             <button
@@ -251,7 +251,12 @@ export function MobileMenu({
           </nav>
 
           <div className="border-line px-gutter flex shrink-0 items-center justify-between gap-4 border-t py-4">
-            <LanguageSwitcher locale={locale} onChange={onLocaleChange} label={labels.language} />
+            <LanguageSwitcher
+              locale={locale}
+              onChange={onLocaleChange}
+              label={labels.language}
+              placement="above"
+            />
             <ThemeToggle labelToLight={labels.toLight} labelToDark={labels.toDark} />
           </div>
         </motion.div>

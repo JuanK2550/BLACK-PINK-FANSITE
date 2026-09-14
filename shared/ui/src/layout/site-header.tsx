@@ -163,11 +163,11 @@ export function SiteHeader({
                 aria-label={labels.home}
                 className="focus-visible:outline-focus rounded-xs focus-visible:outline-offset-6 shrink-0 focus-visible:outline-2"
               >
-                <Wordmark className="text-xl sm:text-2xl" />
+                <Wordmark className="text-xl sm:text-2xl xl:text-xl 2xl:text-2xl" />
               </a>
 
-              <nav aria-label={labels.primaryNav} className="hidden lg:block">
-                <ul className="flex items-center gap-1">
+              <nav aria-label={labels.primaryNav} className="hidden xl:block">
+                <ul className="flex items-center">
                   {items.map((item) => (
                     <li
                       key={item.key}
@@ -212,8 +212,8 @@ export function SiteHeader({
                   )}
                 >
                   <SearchIcon className="text-lg" />
-                  <span className="hidden xl:inline">{labels.search}</span>
-                  <kbd className="border-line text-fg-subtle text-2xs rounded-xs hidden border px-1.5 py-0.5 font-sans xl:inline">
+                  <span className="hidden 2xl:inline">{labels.search}</span>
+                  <kbd className="border-line text-fg-subtle text-2xs rounded-xs hidden border px-1.5 py-0.5 font-sans 2xl:inline">
                     {isMac ? '⌘' : 'Ctrl'} K
                   </kbd>
                 </button>
@@ -235,7 +235,7 @@ export function SiteHeader({
                   onClick={() => setMobileOpen(true)}
                   aria-label={labels.openMenu}
                   aria-expanded={mobileOpen}
-                  className="text-fg hover:bg-accent-tint ease-out-soft grid h-10 w-10 place-items-center rounded-full text-xl transition-colors duration-[var(--dur-2)] active:scale-[0.94] lg:hidden"
+                  className="text-fg hover:bg-accent-tint ease-out-soft grid h-10 w-10 place-items-center rounded-full text-xl transition-colors duration-[var(--dur-2)] active:scale-[0.94] xl:hidden"
                 >
                   <MenuIcon />
                 </button>
@@ -269,7 +269,7 @@ export function SiteHeader({
               onKeyDown={(event) => {
                 if (event.key === 'Escape') closePanel(activeItem.key);
               }}
-              className="bg-glass border-line absolute inset-x-0 top-full hidden border-b backdrop-blur-xl backdrop-saturate-150 lg:block"
+              className="bg-glass border-line absolute inset-x-0 top-full hidden border-b backdrop-blur-xl backdrop-saturate-150 xl:block"
             >
               <Container width="wide" className="py-8">
                 {activeItem.panel === 'members' ? (
@@ -338,7 +338,7 @@ export function SiteHeader({
 
 function navLinkClass(active: boolean) {
   return cn(
-    'group relative inline-flex h-9 items-center rounded-xs px-3 text-sm font-medium',
+    'group relative inline-flex h-9 items-center rounded-xs px-2 text-sm font-medium',
     'transition-colors duration-[var(--dur-2)] ease-out-soft',
     'focus-visible:outline-focus focus-visible:outline-2 focus-visible:outline-offset-2',
     active ? 'text-fg' : 'text-fg-muted hover:text-blush',
@@ -350,7 +350,7 @@ function NavUnderline({ active }: { active: boolean }) {
     <span
       aria-hidden="true"
       className={cn(
-        'bg-accent pointer-events-none absolute inset-x-3 bottom-1 h-px origin-left',
+        'bg-accent pointer-events-none absolute inset-x-2 bottom-1 h-px origin-left',
         'ease-out-bp transition-transform duration-[var(--dur-2)]',
         active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
       )}

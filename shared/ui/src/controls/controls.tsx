@@ -17,9 +17,16 @@ export interface LanguageSwitcherProps {
   onChange: (locale: Locale) => void;
   label: string;
   className?: string;
+  placement?: 'below' | 'above';
 }
 
-export function LanguageSwitcher({ locale, onChange, label, className }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  locale,
+  onChange,
+  label,
+  className,
+  placement = 'below',
+}: LanguageSwitcherProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -74,8 +81,10 @@ export function LanguageSwitcher({ locale, onChange, label, className }: Languag
           role="menu"
           aria-label={label}
           className={cn(
-            'bg-overlay shadow-lift-2 shadow-hairline z-70 absolute right-0 mt-2 w-40 overflow-hidden rounded-md p-1',
-            'animate-bp-fade origin-top-right',
+            'bg-overlay shadow-lift-2 shadow-hairline z-70 animate-bp-fade absolute w-40 overflow-hidden rounded-md p-1',
+            placement === 'above'
+              ? 'bottom-full left-0 mb-2 origin-bottom-left'
+              : 'right-0 mt-2 origin-top-right',
           )}
         >
           {(Object.keys(LOCALE_LABELS) as Locale[]).map((value) => (
