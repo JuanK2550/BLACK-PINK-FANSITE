@@ -417,16 +417,17 @@ export const TIMELINE: TimelineSeed[] = [
     importance: 5,
     datePrecision: 'month',
     verified: true,
-    source: SOURCES.press,
+    source:
+      'Wikipedia, Born Pink — https://en.wikipedia.org/wiki/Born_Pink. Se guarda el mes: la semana de la lista es una etiqueta editorial de Billboard, no un instante. Consultado 2026-09-14.',
     title: {
       es: 'BORN PINK llega al número uno de la Billboard 200',
       en: 'BORN PINK reaches number one on the Billboard 200',
       ko: 'BORN PINK, 빌보드 200 1위',
     },
     description: {
-      es: 'Primer álbum de un grupo femenino de K-pop en encabezar la lista Billboard 200. Mes confirmado; semana exacta de la lista pendiente de contrastar.',
-      en: 'First album by a K-pop girl group to top the Billboard 200. Month confirmed; the exact chart week is pending verification.',
-      ko: 'K-팝 걸그룹 최초로 빌보드 200 정상에 오른 앨범. 월은 확인되었으나 정확한 차트 주차는 확인 대기 중.',
+      es: 'Debuta en el número uno con 102.000 unidades: el primer álbum de artistas femeninas coreanas en encabezar la lista, y el primero de un grupo femenino desde 2008.',
+      en: 'It debuts at number one with 102,000 units: the first album by a female Korean act to top the chart, and the first by a female group since 2008.',
+      ko: '10만 2천 유닛으로 1위로 데뷔했습니다. 한국 여성 아티스트 앨범 최초의 1위이자, 2008년 이후 처음으로 1위에 오른 여성 그룹 앨범입니다.',
     },
   },
   {
