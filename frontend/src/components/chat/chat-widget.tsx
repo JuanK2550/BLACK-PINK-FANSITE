@@ -24,6 +24,8 @@ interface Position {
 const DEFAULT_POSITION: Position = { x: 0.92, y: 0.88 };
 
 const FINE_POINTER = '(hover: hover) and (pointer: fine)';
+// Por debajo de md no hay canal reservado a la derecha: el globo taparía los reclamos de la portada.
+const NO_GUTTER = '(max-width: 47.99rem)';
 
 export function ChatWidget() {
   const t = useTranslations('Chat');
@@ -37,15 +39,24 @@ export function ChatWidget() {
   const [dragging, setDragging] = useState(false);
   const [waving, setWaving] = useState(false);
   const [canDrag, setCanDrag] = useState(false);
+  const [compact, setCompact] = useState(false);
 
   const bubbleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const query = window.matchMedia(FINE_POINTER);
-    const update = () => setCanDrag(query.matches);
+    const pointer = window.matchMedia(FINE_POINTER);
+    const narrow = window.matchMedia(NO_GUTTER);
+    const update = () => {
+      setCanDrag(pointer.matches);
+      setCompact(narrow.matches);
+    };
     update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
+    pointer.addEventListener('change', update);
+    narrow.addEventListener('change', update);
+    return () => {
+      pointer.removeEventListener('change', update);
+      narrow.removeEventListener('change', update);
+    };
   }, []);
 
   const returnFocus = useRef(false);
@@ -160,8 +171,14 @@ export function ChatWidget() {
         >
           <div className="relative">
             <AnimatePresence>
-              {greeting ? (
+              {greeting && compact ? (
+                <p key="greeting-sr" role="status" className="sr-only">
+                  {t('proactive')}
+                </p>
+              ) : null}
+              {greeting && !compact ? (
                 <motion.div
+                  key="greeting"
                   initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
