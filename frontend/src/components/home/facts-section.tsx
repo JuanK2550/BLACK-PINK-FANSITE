@@ -56,7 +56,9 @@ export async function FactsSection({ locale }: { locale: Locale }) {
             className="border-line grid gap-2 border-b py-8 last:border-b-0 md:grid-cols-[minmax(0,1fr)_12rem] md:gap-10"
           >
             <p className="font-display text-fg text-balance text-2xl font-bold">{fact.content}</p>
-            <p className="text-fg-subtle text-xs md:text-right">{fact.source}</p>
+            <p className="text-fg-subtle text-xs [overflow-wrap:anywhere] md:text-right">
+              {fact.source}
+            </p>
           </li>
         ))}
       </ul>

@@ -4,7 +4,14 @@
   "tasks": {
     "build": {
       "cache": false,
-      "env": ["API_GATEWAY_URL", "GOOGLE_SITE_VERIFICATION", "VERCEL", "VERCEL_ENV"],
+      "env": [
+        "API_GATEWAY_URL",
+        "GOOGLE_SITE_VERIFICATION",
+        "VERCEL",
+        "VERCEL_ANALYTICS",
+        "VERCEL_ENV",
+        "VERCEL_SPEED_INSIGHTS"
+      ],
       "passThroughEnv": [
         "REVALIDATE_SECRET",
         "SENTRY_AUTH_TOKEN",

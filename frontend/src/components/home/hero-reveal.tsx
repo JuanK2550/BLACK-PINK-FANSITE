@@ -24,7 +24,7 @@ export function HeroReveal({
 }: HeroRevealProps) {
   return (
     <>
-      <h1 className="font-display text-hero font-extrabold">
+      <h1 className="font-display text-hero font-extrabold" lang="en">
         <span className="bp-hero-in text-fg block">BLACK</span>
         <span className="bp-hero-in text-accent-text block" style={{ animationDelay: '90ms' }}>
           PINK

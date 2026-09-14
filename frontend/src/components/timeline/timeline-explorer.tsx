@@ -145,7 +145,9 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
                           {event.description}
                         </p>
                         {event.source ? (
-                          <p className="text-fg-subtle mt-2 text-xs">{event.source}</p>
+                          <p className="text-fg-subtle mt-2 text-xs [overflow-wrap:anywhere]">
+                            {event.source}
+                          </p>
                         ) : null}
                         {event.datePrecision !== 'day' ? (
                           <p className="text-fg-subtle text-2xs mt-2" data-uppercase>

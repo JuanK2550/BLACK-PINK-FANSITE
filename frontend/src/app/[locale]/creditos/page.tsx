@@ -162,7 +162,7 @@ export default async function CreditsPage({ params }: { params: Promise<{ locale
                   key={foto.id}
                   className="border-line flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t py-3 text-sm"
                 >
-                  <span className="text-fg">© {foto.autor}</span>
+                  <span className="text-fg min-w-0 [overflow-wrap:anywhere]">© {foto.autor}</span>
                   {foto.licenciaUrl ? (
                     <a
                       href={foto.licenciaUrl}

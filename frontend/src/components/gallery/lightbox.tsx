@@ -108,7 +108,7 @@ export function Lightbox({
             {foto.descripcion ? (
               <p className="text-fg max-w-prose text-pretty text-sm">{foto.descripcion}</p>
             ) : null}
-            <p className="text-fg-subtle mt-2 text-xs">
+            <p className="text-fg-subtle mt-2 text-xs [overflow-wrap:anywhere]">
               © {foto.autor}
               {' · '}
               {foto.licenciaUrl ? (

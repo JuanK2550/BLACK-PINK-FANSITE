@@ -231,11 +231,14 @@ Las migraciones ya las aplicó Render. Falta el contenido. Desde la carpeta del 
 $env:DATABASE_URL_CONTENT = "<directa de Neon>&schema=content"
 $env:DIRECT_URL_CONTENT = $env:DATABASE_URL_CONTENT
 pnpm --filter @blackpink/content-service db:seed
+pnpm --filter @blackpink/content-service db:orphans -- --fix
 Remove-Item Env:DATABASE_URL_CONTENT, Env:DIRECT_URL_CONTENT
 ```
 
 Las variables de la sesión mandan sobre tu `.env` local, así que el seed va a Neon y no a tu
-Docker.
+Docker. `db:orphans --fix` borra las filas que el seed ya no genera: al corregir el texto de un
+hito o de una curiosidad se crea una fila nueva, y sin este paso la versión vieja seguiría
+publicada al lado. La primera vez no borra nada.
 
 Después:
 
@@ -283,7 +286,10 @@ cada una solo en los entornos que marca la tabla:
 - *Settings → Build and Deployment → Node.js Version*: **22.x**.
 - *Settings → Build and Deployment → Deployment Checks → Add Checks → GitHub*:
   **«Lint, typecheck, test y build»**. Si esa opción no aparece en tu plan, sáltala.
-- Pestaña **Analytics → Enable** y **Speed Insights → Enable** (gratis y sin cookies).
+- Opcional: pestaña **Analytics → Enable** y **Speed Insights → Enable** (gratis y sin
+  cookies). **Después** añade `VERCEL_ANALYTICS=1` y `VERCEL_SPEED_INSIGHTS=1` en
+  Production. Sin activarlos en el panel, su script da 404 en cada página; por eso el sitio
+  no lo carga hasta que la variable lo pide.
 
 ### 10.4 Desplegar
 

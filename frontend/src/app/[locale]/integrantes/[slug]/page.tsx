@@ -232,7 +232,9 @@ export default async function MemberPage({ params }: PageProps) {
                         boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${accent} 40%, transparent)`,
                       }}
                     >
-                      <span className="text-fg-muted text-pretty text-xs">{fact.source}</span>
+                      <span className="text-fg-muted text-pretty text-xs [overflow-wrap:anywhere]">
+                        {fact.source}
+                      </span>
                       <span
                         className="bp-member-ink text-2xs mt-4"
                         style={memberInk}

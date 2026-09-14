@@ -176,11 +176,9 @@ export default async function LocaleLayout({
           </QueryProvider>
         </NextIntlClientProvider>
 
-        {process.env.VERCEL === '1' ? (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
+        {process.env.VERCEL === '1' && process.env.VERCEL_ANALYTICS === '1' ? <Analytics /> : null}
+        {process.env.VERCEL === '1' && process.env.VERCEL_SPEED_INSIGHTS === '1' ? (
+          <SpeedInsights />
         ) : null}
       </body>
     </html>

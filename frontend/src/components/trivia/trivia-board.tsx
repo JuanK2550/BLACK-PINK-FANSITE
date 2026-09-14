@@ -101,7 +101,7 @@ export function TriviaBoard({ facts }: TriviaBoardProps) {
             <p className="font-display text-fg text-balance text-3xl font-extrabold">
               {picked.content}
             </p>
-            <p className="text-fg-subtle mt-3 text-xs">{picked.source}</p>
+            <p className="text-fg-subtle mt-3 text-xs [overflow-wrap:anywhere]">{picked.source}</p>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -114,7 +114,9 @@ export function TriviaBoard({ facts }: TriviaBoardProps) {
             <li key={fact.id} className="bg-surface shadow-hairline mb-6 break-inside-avoid p-5">
               <p className="text-fg text-pretty text-base">{fact.content}</p>
 
-              <p className="border-line text-fg-subtle mt-4 border-t pt-3 text-xs">{fact.source}</p>
+              <p className="border-line text-fg-subtle mt-4 border-t pt-3 text-xs [overflow-wrap:anywhere]">
+                {fact.source}
+              </p>
 
               <p className="text-fg-subtle text-2xs mt-2" data-uppercase>
                 {cats(fact.category)}

@@ -26,6 +26,44 @@ import type { PinkyState } from './pinky/pinky-lion';
 import { useChat } from './use-chat';
 
 const MAX_AUDIO_SECONDS = 60;
+const FINE_POINTER = '(hover: hover) and (pointer: fine)';
+const FULL_SCREEN = '(max-width: 39.99rem)';
+
+interface ViewportBox {
+  top: number;
+  height: number;
+}
+
+// El teclado del móvil encoge el visualViewport, no la ventana: sin esto tapa el campo de texto.
+function useVisibleViewport(): ViewportBox | null {
+  const [box, setBox] = useState<ViewportBox | null>(null);
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const fullScreen = window.matchMedia(FULL_SCREEN);
+    if (!viewport) return;
+
+    function update() {
+      setBox(
+        fullScreen.matches && viewport
+          ? { top: Math.round(viewport.offsetTop), height: Math.round(viewport.height) }
+          : null,
+      );
+    }
+
+    update();
+    viewport.addEventListener('resize', update);
+    viewport.addEventListener('scroll', update);
+    fullScreen.addEventListener('change', update);
+    return () => {
+      viewport.removeEventListener('resize', update);
+      viewport.removeEventListener('scroll', update);
+      fullScreen.removeEventListener('change', update);
+    };
+  }, []);
+
+  return box;
+}
 
 function messageForCode(code: string, t: (key: string) => string): string {
   const map: Record<string, string> = {
@@ -50,6 +88,7 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
   const router = useRouter();
   const pathname = usePathname();
   const reduced = useReducedMotion() ?? false;
+  const visible = useVisibleViewport();
 
   const { messages, sending, send, clear } = useChat(locale);
   const [draft, setDraft] = useState('');
@@ -139,7 +178,20 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
   }, [locale]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (!window.matchMedia(FULL_SCREEN).matches) return;
+
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    return () => {
+      root.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
+    // En táctil no se abre el teclado solo: taparía media pantalla antes de leer nada.
+    if (window.matchMedia(FINE_POINTER).matches) inputRef.current?.focus();
+    else panelRef.current?.focus({ preventScroll: true });
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -185,6 +237,7 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
       role="dialog"
       aria-modal="false"
       aria-label={t('title')}
+      tabIndex={-1}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={reduced ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
@@ -192,9 +245,10 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
         duration: reduced ? 0.12 : 0.26,
         ease: [0.23, 1, 0.32, 1],
       }}
+      style={visible ? { top: visible.top, bottom: 'auto', height: visible.height } : undefined}
       className={[
-        'bg-canvas border-line flex flex-col overflow-hidden border shadow-[var(--shadow-lift-2)]',
-        'fixed inset-0 z-[85] rounded-none',
+        'bg-canvas border-line flex flex-col overflow-hidden border shadow-[var(--shadow-lift-2)] outline-none',
+        'fixed inset-0 z-[85] overscroll-contain rounded-none',
         'sm:inset-auto sm:bottom-4 sm:right-4 sm:h-[min(34rem,80vh)] sm:w-[23rem] sm:rounded-md',
       ].join(' ')}
     >
@@ -215,7 +269,7 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
           id="chat-locale"
           value={locale}
           onChange={(event) => router.replace(pathname, { locale: event.target.value as Locale })}
-          className="border-line text-fg-muted focus-visible:outline-focus shrink-0 rounded-sm border bg-transparent px-1 py-1 text-xs focus-visible:outline-2"
+          className="border-line text-fg-muted focus-visible:outline-focus shrink-0 rounded-sm border bg-transparent px-1 py-1 text-base focus-visible:outline-2 sm:text-xs"
         >
           {SUPPORTED_LOCALES.map((code) => (
             <option key={code} value={code} className="bg-canvas">
@@ -322,7 +376,7 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
               rows={1}
               maxLength={1000}
               placeholder={t('placeholder')}
-              className="border-line text-fg placeholder:text-fg-subtle focus-visible:outline-focus max-h-28 min-h-[2.5rem] flex-1 resize-none rounded-sm border bg-transparent px-3 py-2 text-sm focus-visible:outline-2"
+              className="border-line text-fg placeholder:text-fg-subtle focus-visible:outline-focus max-h-28 min-h-[2.5rem] flex-1 resize-none rounded-sm border bg-transparent px-3 py-2 text-base focus-visible:outline-2 sm:text-sm"
             />
 
             {draft.trim().length === 0 ? (
