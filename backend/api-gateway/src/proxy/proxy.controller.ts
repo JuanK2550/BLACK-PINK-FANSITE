@@ -28,6 +28,8 @@ export class ProxyController {
     }
 
     const query = new URL(request.url, 'http://gateway').searchParams;
+    // Parámetro de revisión interna: desde internet nunca llega a los servicios.
+    query.delete('includeUnverified');
     const locale = query.get('locale') ?? undefined;
 
     const result = await this.upstream.get(

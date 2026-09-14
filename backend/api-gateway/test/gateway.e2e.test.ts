@@ -106,6 +106,15 @@ describe('proxy: lista blanca', () => {
     expect(upstream.get).not.toHaveBeenCalled();
   });
 
+  it('includeUnverified no pasa del gateway: lo sin contrastar no se publica', async () => {
+    await request(app.getHttpServer())
+      .get('/api/v1/content/timeline?locale=es&includeUnverified=true&limit=5')
+      .expect(200);
+
+    const [, , query] = upstream.get.mock.calls[0]!;
+    expect(query).toBe('locale=es&limit=5');
+  });
+
   it('el prefijo /content no se puede usar para colarse en media', async () => {
     await request(app.getHttpServer()).get('/api/v1/content/playlists').expect(404);
     expect(upstream.get).not.toHaveBeenCalled();
