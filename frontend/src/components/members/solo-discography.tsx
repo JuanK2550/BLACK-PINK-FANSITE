@@ -38,11 +38,28 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
     [works],
   );
 
-  function Ficha({ work, index }: { work: SoloWork; index: number }) {
+  function Ficha({
+    work,
+    index,
+    grande = false,
+  }: {
+    work: SoloWork;
+    index: number;
+    grande?: boolean;
+  }) {
     return (
       <Reveal as="li" key={work.slug} delay={Math.min(index, 6) * 0.04}>
-        <div className="border-line border-t pt-5">
-          <div className="flex items-start gap-5">
+        <div
+          className={[
+            'border-line border-t pt-5',
+            grande ? 'xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10' : '',
+          ].join(' ')}
+        >
+          <div
+            className={
+              grande ? 'flex items-start gap-5 xl:flex-col xl:gap-4' : 'flex items-start gap-5'
+            }
+          >
             <AlbumCover
               cover={work}
               title={work.title}
@@ -75,43 +92,45 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
             </div>
           </div>
 
-          {work.tracks.length > 0 ? (
-            <AlbumTracklist
-              tracks={work.tracks}
-              locale={locale}
-              density="compact"
-              openId={openId}
-              onOpenChange={setOpenId}
-              labels={{
-                titleTrack: labels.titleTrack,
-                featuring: labels.featuring,
-                spotifyTitle: labels.spotifyTitle,
-                openOnSpotify: labels.openOnSpotify,
-                unavailable: labels.unavailable,
-                playTrack: labels.playTrack,
-                closeTrack: labels.closeTrack,
-              }}
-            />
-          ) : (
-            <EmbedPlayer
-              className="mt-4"
-              title={work.title}
-              spotify={
-                work.spotifyId
-                  ? {
-                      id: work.spotifyId,
-                      embedUrl: `https://open.spotify.com/embed/track/${work.spotifyId}`,
-                      watchUrl: `https://open.spotify.com/track/${work.spotifyId}`,
-                    }
-                  : null
-              }
-              labels={{
-                spotifyTitle: labels.spotifyTitle,
-                openOnSpotify: labels.openOnSpotify,
-                unavailable: labels.unavailable,
-              }}
-            />
-          )}
+          <div className={grande ? 'xl:[&>ol]:mt-0' : ''}>
+            {work.tracks.length > 0 ? (
+              <AlbumTracklist
+                tracks={work.tracks}
+                locale={locale}
+                density="compact"
+                openId={openId}
+                onOpenChange={setOpenId}
+                labels={{
+                  titleTrack: labels.titleTrack,
+                  featuring: labels.featuring,
+                  spotifyTitle: labels.spotifyTitle,
+                  openOnSpotify: labels.openOnSpotify,
+                  unavailable: labels.unavailable,
+                  playTrack: labels.playTrack,
+                  closeTrack: labels.closeTrack,
+                }}
+              />
+            ) : (
+              <EmbedPlayer
+                className="mt-4"
+                title={work.title}
+                spotify={
+                  work.spotifyId
+                    ? {
+                        id: work.spotifyId,
+                        embedUrl: `https://open.spotify.com/embed/track/${work.spotifyId}`,
+                        watchUrl: `https://open.spotify.com/track/${work.spotifyId}`,
+                      }
+                    : null
+                }
+                labels={{
+                  spotifyTitle: labels.spotifyTitle,
+                  openOnSpotify: labels.openOnSpotify,
+                  unavailable: labels.unavailable,
+                }}
+              />
+            )}
+          </div>
         </div>
       </Reveal>
     );
@@ -125,9 +144,9 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
             {labels.groupReleases}
           </p>
 
-          <ul className="mt-5 flex max-w-3xl flex-col gap-12">
+          <ul className="mt-5 flex flex-col gap-12">
             {discos.map((work, index) => (
-              <Ficha key={work.slug} work={work} index={index} />
+              <Ficha key={work.slug} work={work} index={index} grande />
             ))}
           </ul>
         </section>
