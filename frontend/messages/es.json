@@ -128,7 +128,9 @@
     "nextLabel": "Ir a la ficha de",
     "featuring": "con {artists}",
     "trackCount": "{count} canciones",
-    "titleTrack": "Canción principal"
+    "titleTrack": "Canción principal",
+    "soloReleases": "Álbumes y EP",
+    "soloSingles": "Sencillos y colaboraciones"
   },
   "DiscographyPage": {
     "title": "Discografía",

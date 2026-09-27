@@ -128,7 +128,9 @@
     "nextLabel": "프로필로 이동:",
     "featuring": "참여: {artists}",
     "trackCount": "{count}곡",
-    "titleTrack": "타이틀곡"
+    "titleTrack": "타이틀곡",
+    "soloReleases": "정규·미니 앨범",
+    "soloSingles": "싱글과 컬래버레이션"
   },
   "DiscographyPage": {
     "title": "디스코그래피",

@@ -1,7 +1,7 @@
 // Discografía en solitario de una integrante, con un solo reproductor abierto.
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Locale, SoloWork } from '@blackpink/types';
 import { EmbedPlayer, Reveal } from '@blackpink/ui';
 import { AlbumCover } from '../discography/album-cover';
@@ -20,16 +20,28 @@ export interface SoloDiscographyProps {
     unavailable: string;
     playTrack: string;
     closeTrack: string;
+    groupReleases: string;
+    groupSingles: string;
   };
 }
 
 export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
-  return (
-    <ul className="mt-block grid gap-x-12 gap-y-16 lg:grid-cols-2">
-      {works.map((work, index) => (
-        <Reveal as="li" key={work.slug} delay={Math.min(index, 6) * 0.04}>
+  // Un disco de doce canciones al lado de un sencillo dejaba media columna vacia:
+  // cada grupo tiene su propia rejilla y dentro todas las fichas miden parecido.
+  const { discos, sencillos } = useMemo(
+    () => ({
+      discos: works.filter((work) => work.tracks.length > 1),
+      sencillos: works.filter((work) => work.tracks.length <= 1),
+    }),
+    [works],
+  );
+
+  function Ficha({ work, index }: { work: SoloWork; index: number }) {
+    return (
+      <Reveal as="li" key={work.slug} delay={Math.min(index, 6) * 0.04}>
+        <div className="border-line border-t pt-5">
           <div className="flex items-start gap-5">
             <AlbumCover
               cover={work}
@@ -100,8 +112,40 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
               }}
             />
           )}
-        </Reveal>
-      ))}
-    </ul>
+        </div>
+      </Reveal>
+    );
+  }
+
+  return (
+    <div className="mt-block flex flex-col gap-16">
+      {discos.length > 0 ? (
+        <section>
+          <p className="text-fg-subtle text-2xs" data-uppercase>
+            {labels.groupReleases}
+          </p>
+
+          <ul className="mt-5 grid gap-x-12 gap-y-12 xl:grid-cols-2">
+            {discos.map((work, index) => (
+              <Ficha key={work.slug} work={work} index={index} />
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {sencillos.length > 0 ? (
+        <section>
+          <p className="text-fg-subtle text-2xs" data-uppercase>
+            {labels.groupSingles}
+          </p>
+
+          <ul className="mt-5 grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+            {sencillos.map((work, index) => (
+              <Ficha key={work.slug} work={work} index={index} />
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </div>
   );
 }

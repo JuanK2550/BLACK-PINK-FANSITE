@@ -203,6 +203,8 @@ export default async function MemberPage({ params }: PageProps) {
               unavailable: embed('unavailable'),
               playTrack: embed.raw('playTrack') as string,
               closeTrack: embed.raw('closeTrack') as string,
+              groupReleases: t('soloReleases'),
+              groupSingles: t('soloSingles'),
             }}
           />
         </Container>
