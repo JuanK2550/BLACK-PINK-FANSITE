@@ -421,6 +421,11 @@
       "source": "SCRIPT",
       "spotifyId": "6Wobsw9uZ0D0xkfOjxXSq9"
     },
+    "rose-new-trick#1": {
+      "durationSec": 183,
+      "source": "MANUAL",
+      "spotifyId": "5GKBPdWbW4RQtx9VkQ6xKO"
+    },
     "rose-on-my-mind#1": {
       "durationSec": 190,
       "source": "SCRIPT",
@@ -645,7 +650,7 @@
     },
     "rose-new-trick": {
       "durationSec": 183,
-      "source": "SCRIPT",
+      "source": "MANUAL",
       "spotifyId": "5GKBPdWbW4RQtx9VkQ6xKO"
     },
     "rose-on-my-mind": {

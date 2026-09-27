@@ -125,7 +125,7 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
             {labels.groupReleases}
           </p>
 
-          <ul className="mt-5 grid gap-x-12 gap-y-12 xl:grid-cols-2">
+          <ul className="mt-5 flex max-w-3xl flex-col gap-12">
             {discos.map((work, index) => (
               <Ficha key={work.slug} work={work} index={index} />
             ))}

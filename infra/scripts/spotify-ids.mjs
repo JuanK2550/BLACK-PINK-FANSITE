@@ -541,8 +541,16 @@ async function writeId(prisma, kind, id, spotifyId, durationSec) {
 
   if (kind === 'track') {
     await prisma.track.update({ where: { id }, data });
-  } else {
-    await prisma.soloWork.update({ where: { id }, data });
+    return;
+  }
+
+  const work = await prisma.soloWork.update({ where: { id }, data, include: { tracks: true } });
+
+  // Misma regla que --set: una obra de UNA cancion con el mismo titulo ES esa cancion, y
+  // el reproductor cuelga de la cancion. Sin esto, «new trick» tenia portada y no sonaba.
+  const unica = work.tracks.length === 1 ? work.tracks[0] : null;
+  if (unica && unica.title.toLowerCase() === work.title.toLowerCase()) {
+    await prisma.soloTrack.update({ where: { id: unica.id }, data });
   }
 }
 
