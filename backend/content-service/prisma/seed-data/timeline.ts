@@ -1089,4 +1089,24 @@ export const TIMELINE: TimelineSeed[] = [
       ko: '네 멤버가 서울 국립중앙박물관에서 추첨으로 선정된 팬 40명을 만났습니다.',
     },
   },
+  {
+    date: day('2026-09-18'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en ingles fecha el 17 de septiembre; se guarda el 18, que es el dia en KST y el que dan las fuentes coreanas. Consultado 2026-09-26.',
+    title: {
+      es: 'Rosé publica new trick',
+      en: 'Rosé releases new trick',
+      ko: '로제, new trick 발표',
+    },
+    description: {
+      es: 'Sencillo suelto de Rosé. El videoclip lo dirigió Dave Meyers y se grabó con un iPhone, dentro de la campaña Shot on iPhone de Apple.',
+      en: 'Standalone single by Rosé. The music video was directed by Dave Meyers and shot on an iPhone, as part of Apple Shot on iPhone campaign.',
+      ko: '로제의 단독 싱글. 뮤직비디오는 데이브 마이어스가 연출했으며, 애플의 Shot on iPhone 캠페인의 일환으로 아이폰으로 촬영했습니다.',
+    },
+  },
 ];

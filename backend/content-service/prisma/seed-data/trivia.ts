@@ -44,11 +44,12 @@ export const TRIVIA: TriviaSeed[] = [
   {
     category: 'GROUP',
     verified: true,
-    source: SOURCES.official,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Wikipedia, Rosé (singer) — https://en.wikipedia.org/wiki/Ros%C3%A9_(singer). Consultado 2026-09-26.',
     content: {
-      es: 'Lisa es la única integrante que no nació en Corea del Sur: es tailandesa.',
-      en: 'Lisa is the only member not born in South Korea: she is Thai.',
-      ko: '리사는 한국에서 태어나지 않은 유일한 멤버로, 태국 출신입니다.',
+      es: 'Dos integrantes nacieron fuera de Corea del Sur: Lisa, en Tailandia, y Rosé, en Nueva Zelanda.',
+      en: 'Two members were born outside South Korea: Lisa in Thailand and Rosé in New Zealand.',
+      ko: '두 멤버는 한국 밖에서 태어났습니다. 리사는 태국에서, 로제는 뉴질랜드에서 태어났습니다.',
     },
   },
   {

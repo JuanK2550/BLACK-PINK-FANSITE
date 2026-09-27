@@ -896,4 +896,23 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
       },
     ],
   },
+  {
+    slug: 'rose-new-trick',
+    memberSlug: 'rose',
+    title: 'new trick',
+    type: 'SINGLE',
+    releaseDate: day('2026-09-18'),
+    verified: true,
+    source:
+      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en ingles fecha el 17 de septiembre; se guarda el 18, que es el dia en KST y el que dan las fuentes coreanas. Se escribe en minusculas, como lo estilizan la artista y Spotify. Consultado 2026-09-26.',
+    translations: {
+      formatLabel: { es: 'Sencillo', en: 'Single', ko: '싱글' },
+      description: {
+        es: 'Sencillo suelto de Rosé, de corte pop punk, publicado con The Black Label y Atlantic Records.',
+        en: 'Standalone pop-punk single by Rosé, released through The Black Label and Atlantic Records.',
+        ko: '더블랙레이블과 애틀랜틱 레코드를 통해 발표한 로제의 팝 펑크 싱글.',
+      },
+    },
+    tracks: [{ title: 'new trick', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
 ];
