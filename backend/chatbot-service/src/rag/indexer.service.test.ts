@@ -13,11 +13,17 @@ const item: SourceItem = {
   text: 'JISOO es vocalista de BLACKPINK.',
 };
 
-function indexer(report: { items: SourceItem[]; failed: string[] }, existing: number) {
+function indexer(
+  report: { items: SourceItem[]; failed: string[] },
+  existing: number,
+  huella: string | null = null,
+) {
   const source = { collectWithReport: vi.fn().mockResolvedValue(report) };
   const store = {
     count: vi.fn().mockResolvedValue(existing),
     replaceLocale: vi.fn().mockResolvedValue(undefined),
+    fingerprint: vi.fn().mockResolvedValue(huella),
+    setFingerprint: vi.fn().mockResolvedValue(undefined),
   };
   const ai = {
     embed: vi.fn(({ texts }: { texts: string[] }) => Promise.resolve(texts.map(() => [0.1, 0.2]))),
@@ -52,5 +58,28 @@ describe('IndexerService', () => {
     expect(store.replaceLocale).toHaveBeenCalledWith('es', [
       expect.objectContaining({ id: 'es:member:jisoo', locale: 'es' }),
     ]);
+    expect(store.setFingerprint).toHaveBeenCalledOnce();
+  });
+
+  it('si el contenido no ha cambiado, NO pide embeddings: la cuota diaria es limitada', async () => {
+    const primero = indexer({ items: [item], failed: [] }, 0);
+    await primero.service.reindexLocale('es');
+    const huella = primero.store.setFingerprint.mock.calls[0]![1] as string;
+
+    const { service, store } = indexer({ items: [item], failed: [] }, 186, huella);
+
+    await expect(service.reindexLocale('es')).resolves.toBe(0);
+    expect(store.replaceLocale).not.toHaveBeenCalled();
+  });
+
+  it('con la misma huella pero sin indice, reindexa igual', async () => {
+    const primero = indexer({ items: [item], failed: [] }, 0);
+    await primero.service.reindexLocale('es');
+    const huella = primero.store.setFingerprint.mock.calls[0]![1] as string;
+
+    const { service, store } = indexer({ items: [item], failed: [] }, 0, huella);
+
+    await expect(service.reindexLocale('es')).resolves.toBe(1);
+    expect(store.replaceLocale).toHaveBeenCalledOnce();
   });
 });

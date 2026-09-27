@@ -70,6 +70,33 @@ export class VectorStoreService implements OnModuleDestroy {
       CREATE INDEX IF NOT EXISTS knowledge_chunks_locale_idx
         ON chat.knowledge_chunks (locale)
     `);
+
+    await this.pool.query(`
+      CREATE TABLE IF NOT EXISTS chat.index_state (
+        locale      text PRIMARY KEY,
+        fingerprint text NOT NULL,
+        updated_at  timestamptz NOT NULL DEFAULT now()
+      )
+    `);
+  }
+
+  async fingerprint(locale: string): Promise<string | null> {
+    const result = await this.pool.query<{ fingerprint: string }>(
+      'SELECT fingerprint FROM chat.index_state WHERE locale = $1',
+      [locale],
+    );
+
+    return result.rows[0]?.fingerprint ?? null;
+  }
+
+  async setFingerprint(locale: string, fingerprint: string): Promise<void> {
+    await this.pool.query(
+      `INSERT INTO chat.index_state (locale, fingerprint, updated_at)
+         VALUES ($1, $2, now())
+       ON CONFLICT (locale) DO UPDATE
+         SET fingerprint = excluded.fingerprint, updated_at = now()`,
+      [locale, fingerprint],
+    );
   }
 
   async count(locale?: string): Promise<number> {
