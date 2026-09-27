@@ -6,6 +6,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from './generated/client/client';
+import { parseConnection } from '../src/prisma/connection';
 import { AWARDS } from './seed-data/awards';
 import { QUIZ } from './seed-data/quiz';
 import { TIMELINE } from './seed-data/timeline';
@@ -16,8 +17,9 @@ if (existsSync(rootEnv)) {
   process.loadEnvFile(rootEnv);
 }
 
-const connectionString = process.env.DATABASE_URL_CONTENT ?? '';
-const schema = new URL(connectionString).searchParams.get('schema') ?? 'public';
+// El esquema lo resuelve parseConnection, igual que el seed: con dos lecturas distintas,
+// una URL sin ?schema= mandaba este script a public y el seed a content.
+const { connectionString, schema } = parseConnection(process.env.DATABASE_URL_CONTENT);
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }, { schema }) });
 
 const FIX = process.argv.includes('--fix');
