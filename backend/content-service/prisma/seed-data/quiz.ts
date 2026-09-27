@@ -149,7 +149,8 @@ export const QUIZ: QuizSeed[] = [
     difficulty: 'EASY',
     correctIndex: 1,
     verified: true,
-    source: SOURCES.official,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Wikipedia, Rosé (singer) — https://en.wikipedia.org/wiki/Ros%C3%A9_(singer). Consultado 2026-09-26.',
     question: {
       es: '¿De qué país es Lisa?',
       en: 'Which country is Lisa from?',
@@ -161,9 +162,9 @@ export const QUIZ: QuizSeed[] = [
       ko: ['일본', '태국', '한국', '중국'],
     },
     explanation: {
-      es: 'Lisa es la única integrante que no nació en Corea del Sur.',
-      en: 'Lisa is the only member not born in South Korea.',
-      ko: '리사는 한국에서 태어나지 않은 유일한 멤버입니다.',
+      es: 'Lisa nació en Tailandia y Rosé en Nueva Zelanda: dos de las cuatro nacieron fuera de Corea del Sur.',
+      en: 'Lisa was born in Thailand and Rosé in New Zealand: two of the four were born outside South Korea.',
+      ko: '리사는 태국에서, 로제는 뉴질랜드에서 태어났습니다. 네 멤버 중 둘은 한국 밖에서 태어났습니다.',
     },
   },
   {
