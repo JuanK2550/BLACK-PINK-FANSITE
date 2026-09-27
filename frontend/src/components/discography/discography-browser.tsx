@@ -122,7 +122,11 @@ export function DiscographyBrowser({ albums, locale }: DiscographyBrowserProps) 
       </p>
 
       {visible.length === 0 ? (
-        <EmptyState className="mt-6" title={empty('title')} description={empty('description')} />
+        <EmptyState
+          className="mt-6"
+          title={albums.length === 0 ? empty('title') : empty('filteredTitle')}
+          description={albums.length === 0 ? empty('description') : empty('filteredDescription')}
+        />
       ) : (
         <LayoutGroup>
           <motion.ul

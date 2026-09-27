@@ -100,7 +100,9 @@
   },
   "Empty": {
     "title": "Todavía no hay nada aquí",
-    "description": "Esta sección se llenará en cuanto se publique contenido contrastado. El sitio solo muestra datos verificados."
+    "description": "Esta sección se llenará en cuanto se publique contenido contrastado. El sitio solo muestra datos verificados.",
+    "filteredTitle": "Nada con estos filtros",
+    "filteredDescription": "El contenido está publicado, pero no hay nada que cumpla lo que has elegido. Prueba a quitar un filtro."
   },
   "MembersPage": {
     "title": "Integrantes",
@@ -234,7 +236,9 @@
     "trackCount": "pistas",
     "curated": "Selección de la casa",
     "derived": "Selección objetiva",
-    "nonedPlayable": "Ninguna pista de esta lista tiene todavía reproductor oficial."
+    "nonedPlayable": "Ninguna pista de esta lista tiene todavía reproductor oficial.",
+    "showAll": "Ver las {count} restantes",
+    "showLess": "Ver menos"
   },
   "Chat": {
     "title": "Chat con PINKY",

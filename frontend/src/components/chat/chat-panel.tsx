@@ -89,6 +89,7 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
   const pathname = usePathname();
   const reduced = useReducedMotion() ?? false;
   const visible = useVisibleViewport();
+  const fullScreen = visible !== null;
 
   const { messages, sending, send, clear } = useChat(locale);
   const [draft, setDraft] = useState('');
@@ -322,7 +323,11 @@ export function ChatPanel({ onClose, onMinimize }: ChatPanelProps) {
           <p className="text-fg-muted text-pretty text-sm">{t('welcome')}</p>
         </div>
       ) : (
-        <ChatMessages messages={messages} sending={sending} />
+        <ChatMessages
+          messages={messages}
+          sending={sending}
+          onNavigate={fullScreen ? onMinimize : undefined}
+        />
       )}
 
       {messages.length === 0 && suggestions.length > 0 ? (

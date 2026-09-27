@@ -27,14 +27,21 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
 
   const categories = useMemo(() => [...new Set(events.map((event) => event.category))], [events]);
 
+  // Cada barra cuenta contra el filtro de la otra: un contador que ignora el filtro puesto
+  // promete hitos que al pulsar no aparecen.
+  const forCategories = useMemo(
+    () => events.filter((event) => member === 'all' || event.memberSlug === member),
+    [events, member],
+  );
+
+  const forMembers = useMemo(
+    () => events.filter((event) => category === 'all' || event.category === category),
+    [category, events],
+  );
+
   const visible = useMemo(
-    () =>
-      events.filter(
-        (event) =>
-          (category === 'all' || event.category === category) &&
-          (member === 'all' || event.memberSlug === member),
-      ),
-    [category, events, member],
+    () => forCategories.filter((event) => category === 'all' || event.category === category),
+    [category, forCategories],
   );
 
   return (
@@ -49,11 +56,11 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
             value={category}
             onChange={setCategory}
             options={[
-              { value: 'all', label: disco('all'), count: events.length },
+              { value: 'all', label: disco('all'), count: forCategories.length },
               ...categories.map((value) => ({
                 value,
                 label: cats(value),
-                count: events.filter((event) => event.category === value).length,
+                count: forCategories.filter((event) => event.category === value).length,
               })),
             ]}
           />
@@ -68,11 +75,11 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
             value={member}
             onChange={setMember}
             options={[
-              { value: 'all', label: disco('all') },
+              { value: 'all', label: disco('all'), count: forMembers.length },
               ...members.map((entry) => ({
                 value: entry.slug,
                 label: entry.stageName,
-                count: events.filter((event) => event.memberSlug === entry.slug).length,
+                count: forMembers.filter((event) => event.memberSlug === entry.slug).length,
               })),
             ]}
           />
@@ -84,7 +91,11 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
       </p>
 
       {visible.length === 0 ? (
-        <EmptyState className="mt-6" title={empty('title')} description={empty('description')} />
+        <EmptyState
+          className="mt-6"
+          title={events.length === 0 ? empty('title') : empty('filteredTitle')}
+          description={events.length === 0 ? empty('description') : empty('filteredDescription')}
+        />
       ) : (
         <div className="mt-block lg:-mx-gutter lg:px-gutter lg:overflow-x-auto lg:pb-4">
           <ol className="relative flex flex-col gap-0 lg:min-w-max lg:flex-row lg:gap-8 lg:pt-10">

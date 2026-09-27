@@ -100,7 +100,9 @@
   },
   "Empty": {
     "title": "Nothing here yet",
-    "description": "This section fills up as verified content is published. The site only shows data that has been checked."
+    "description": "This section fills up as verified content is published. The site only shows data that has been checked.",
+    "filteredTitle": "Nothing matches these filters",
+    "filteredDescription": "The content is published, but nothing matches what you picked. Try removing a filter."
   },
   "MembersPage": {
     "title": "Members",
@@ -234,7 +236,9 @@
     "trackCount": "tracks",
     "curated": "Our own pick",
     "derived": "Objective selection",
-    "nonedPlayable": "No track on this list has an official player yet."
+    "nonedPlayable": "No track on this list has an official player yet.",
+    "showAll": "Show the other {count}",
+    "showLess": "Show fewer"
   },
   "Chat": {
     "title": "Chat with PINKY",

@@ -78,9 +78,11 @@ function renderSpan(span: Span, index: number) {
 export interface ChatMessagesProps {
   messages: ChatMessage[];
   sending: boolean;
+  // En movil el panel ocupa la pantalla: al navegar hay que apartarlo o parece que nada pasa.
+  onNavigate?: () => void;
 }
 
-export function ChatMessages({ messages, sending }: ChatMessagesProps) {
+export function ChatMessages({ messages, sending, onNavigate }: ChatMessagesProps) {
   const t = useTranslations('Chat');
   const reduced = useReducedMotion() ?? false;
   const endRef = useRef<HTMLDivElement>(null);
@@ -158,6 +160,7 @@ export function ChatMessages({ messages, sending }: ChatMessagesProps) {
                         <Link
                           key={cite.path}
                           href={cite.path}
+                          onClick={onNavigate}
                           className="text-fg-subtle hover:text-accent-text text-2xs underline underline-offset-4"
                         >
                           {cite.label}
@@ -169,6 +172,7 @@ export function ChatMessages({ messages, sending }: ChatMessagesProps) {
                   {message.action && message.action.action !== 'none' && message.action.path ? (
                     <Link
                       href={message.action.path}
+                      onClick={onNavigate}
                       className="border-line hover:border-accent hover:text-accent-text ease-out-bp mt-3 inline-flex items-center rounded-full border px-3 py-1.5 text-xs transition-colors duration-[var(--dur-2)]"
                     >
                       {message.action.label ?? t('go')}

@@ -6,6 +6,7 @@ import type { Locale } from '@blackpink/types';
 import { Container, Reveal } from '@blackpink/ui';
 import { JsonLd } from '../../../components/layout/json-ld';
 import { PageHeader } from '../../../components/layout/page-header';
+import { PlaylistEntries } from '../../../components/playlists/playlist-entries';
 import { routing } from '../../../i18n/routing';
 import { getPlaylist, getPlaylists } from '../../../lib/api';
 import { breadcrumbJsonLd, buildMetadata, SITE_URL, webPageJsonLd } from '../../../lib/seo';
@@ -109,32 +110,13 @@ export default async function PlaylistsPage({ params }: { params: Promise<{ loca
 
                 {detail ? (
                   <>
-                    <ol className="mt-5 flex-1">
-                      {detail.entries.slice(0, 5).map((entry) => (
-                        <li
-                          key={entry.position}
-                          className="border-line flex items-baseline gap-3 border-b py-2 last:border-b-0"
-                        >
-                          <span data-numeric className="text-fg-subtle w-5 shrink-0 text-xs">
-                            {String(entry.position).padStart(2, '0')}
-                          </span>
-                          <span className="text-fg min-w-0 flex-1 truncate text-sm">
-                            {entry.title}
-                          </span>
-                          {entry.subtitle ? (
-                            <span className="text-fg-subtle shrink-0 truncate text-xs">
-                              {entry.subtitle}
-                            </span>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ol>
-
-                    {detail.entries.length > 5 ? (
-                      <p className="text-fg-subtle mt-2 text-xs">
-                        + <span data-numeric>{detail.entries.length - 5}</span>
-                      </p>
-                    ) : null}
+                    <PlaylistEntries
+                      entries={detail.entries}
+                      labels={{
+                        more: t('showAll', { count: detail.entries.length - 5 }),
+                        less: t('showLess'),
+                      }}
+                    />
 
                     {detail.playableCount === 0 ? (
                       <p className="text-fg-subtle mt-4 text-xs">{t('nonedPlayable')}</p>

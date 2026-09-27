@@ -107,7 +107,11 @@ export function TriviaBoard({ facts }: TriviaBoardProps) {
       </AnimatePresence>
 
       {visible.length === 0 ? (
-        <EmptyState className="mt-8" title={empty('title')} description={empty('description')} />
+        <EmptyState
+          className="mt-8"
+          title={facts.length === 0 ? empty('title') : empty('filteredTitle')}
+          description={facts.length === 0 ? empty('description') : empty('filteredDescription')}
+        />
       ) : (
         <ul className="mt-block gap-6 sm:columns-2 lg:columns-3">
           {visible.map((fact) => (
