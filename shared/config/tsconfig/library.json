@@ -3,8 +3,8 @@
   "display": "Library (paquetes compartidos compilados a dist)",
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true
