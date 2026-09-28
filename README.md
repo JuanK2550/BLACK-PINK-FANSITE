@@ -4,6 +4,8 @@
 > Proyecto informativo y sin ánimo de lucro. La música se reproduce **solo** con el
 > reproductor oficial de Spotify: el sitio no aloja audio ni vídeo con copyright.
 
+**Web publicada: [blackpink-fansite.vercel.app](https://blackpink-fansite.vercel.app)**
+
 Web en tres idiomas (español, inglés y coreano) con la discografía completa del grupo y de
 cada integrante, cronología, curiosidades, premios, galería, quiz, comparador de integrantes
 y un chatbot (PINKY) que responde sobre el contenido del sitio, también por voz.
