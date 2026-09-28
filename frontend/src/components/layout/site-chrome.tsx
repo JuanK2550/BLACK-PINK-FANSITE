@@ -10,6 +10,7 @@ import { MemberPhoto } from '../members/member-photo';
 import { DisclaimerBanner, SiteFooter, SiteHeader, SkipLink } from '@blackpink/ui';
 import type { FooterColumn, NavItem, SearchEntry } from '@blackpink/ui';
 import { OFFICIAL_LINKS } from '../../data/site';
+import { LanguageLinks } from './language-links';
 import { usePathname, useRouter } from '../../i18n/routing';
 
 export interface SiteChromeProps {
@@ -181,6 +182,7 @@ export function SiteChrome({ children, members, albums }: SiteChromeProps) {
       </main>
 
       <SiteFooter
+        languages={<LanguageLinks label={header('language')} />}
         locale={locale}
         columns={footerColumns}
         socials={OFFICIAL_LINKS}

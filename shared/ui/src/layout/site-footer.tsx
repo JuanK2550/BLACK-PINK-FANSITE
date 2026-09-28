@@ -1,5 +1,6 @@
 // Pie del sitio.
 
+import type { ReactNode } from 'react';
 import type { Locale } from '@blackpink/types';
 import { cn } from '../cn';
 import { Container } from './container';
@@ -22,6 +23,9 @@ export interface SiteFooterProps {
   socials: SocialLink[];
   localePrefix?: string;
   labels: FooterLabels;
+  // Enlaces rastreables a los otros idiomas: el selector de la cabecera son botones,
+  // y un buscador no los pulsa.
+  languages?: ReactNode;
   className?: string;
 }
 
@@ -31,6 +35,7 @@ export function SiteFooter({
   socials,
   localePrefix = '',
   labels,
+  languages,
   className,
 }: SiteFooterProps) {
   return (
@@ -92,6 +97,7 @@ export function SiteFooter({
             <strong className="text-fg font-medium">{DISCLAIMER[locale]}</strong> {labels.legal}
           </p>
           <p className="text-fg-subtle mt-3 text-xs">{labels.credit}</p>
+          {languages}
         </div>
       </Container>
     </footer>
