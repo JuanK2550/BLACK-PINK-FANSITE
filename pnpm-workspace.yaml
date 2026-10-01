@@ -44,4 +44,4 @@ catalog:
   'pino-http': '^11.0.0'
   'reflect-metadata': '^0.2.2'
   'rxjs': '^7.8.1'
-  'supertest': '^7.2.2'
+  'supertest': '^7.3.0'
