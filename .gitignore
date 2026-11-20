@@ -44,15 +44,3 @@ playwright-report/
 blob-report/
 .lighthouseci/
 lighthouse-informes/
-
-# Herramientas de IA: se quedan en el equipo local, no van al repositorio
-.claude/
-.agents/
-.codex/
-skills-lock.json
-CLAUDE.md
-DESIGN.md
-PRODUCT.md
-.github/skills/
-.github/agents/
-.github/hooks/
