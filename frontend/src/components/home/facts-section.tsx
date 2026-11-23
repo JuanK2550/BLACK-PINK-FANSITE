@@ -6,6 +6,9 @@ import { EmptyState, SectionHeading, Skeleton } from '@blackpink/ui';
 import { getTrivia } from '../../lib/api';
 import { SectionError, SectionFrame } from '../layout/section-frame';
 
+// Con uniones invisibles: el guion no deja que la palabra se parta al final de la línea.
+const KPOP = 'K⁠-⁠pop';
+
 export async function FactsSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'Home' });
   const empty = await getTranslations({ locale, namespace: 'Empty' });
@@ -55,7 +58,9 @@ export async function FactsSection({ locale }: { locale: Locale }) {
             key={fact.id}
             className="border-line grid gap-2 border-b py-8 last:border-b-0 md:grid-cols-[minmax(0,1fr)_12rem] md:gap-10"
           >
-            <p className="font-display text-fg text-balance text-2xl font-bold">{fact.content}</p>
+            <p className="font-display text-fg text-balance text-2xl font-bold">
+              {fact.content.replaceAll('K-pop', KPOP)}
+            </p>
             <p className="text-fg-subtle text-xs [overflow-wrap:anywhere] md:text-right">
               {fact.source}
             </p>

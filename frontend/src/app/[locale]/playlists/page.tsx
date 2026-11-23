@@ -92,7 +92,7 @@ export default async function PlaylistsPage({ params }: { params: Promise<{ loca
 
         <ul className="grid gap-x-8 gap-y-10 md:grid-cols-2">
           {playlists.map(({ summary, detail }, index) => (
-            <Reveal as="li" key={summary.slug} delay={index * 0.05}>
+            <Reveal as="li" key={summary.slug} className="min-w-0" delay={index * 0.05}>
               <article className="border-line flex h-full flex-col border-t pt-5">
                 <div className="min-w-0">
                   <h2 className="font-display text-fg text-balance text-2xl font-bold">

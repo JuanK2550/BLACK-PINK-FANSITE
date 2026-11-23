@@ -38,7 +38,7 @@
     "tagline": "Biografías, discografía, cronología y curiosidades sobre BLACKPINK, en español, inglés y coreano.",
     "officialTitle": "Canales oficiales",
     "officialNote": "Enlaces a los canales oficiales del grupo. Este sitio no los gestiona ni tiene relación con ellos.",
-    "legal": "Todas las marcas, imágenes y grabaciones pertenecen a sus respectivos titulares. Este sitio no aloja ni sirve archivos de audio o video: la música se reproduce únicamente en el reproductor oficial de Spotify.",
+    "legal": "Todas las marcas, imágenes y grabaciones pertenecen a sus respectivos titulares. Este sitio no aloja ni sirve archivos de audio o vídeo: la música se reproduce únicamente en el reproductor oficial de Spotify.",
     "credit": "Proyecto de fans sin ánimo de lucro.",
     "explore": "Explorar",
     "project": "El proyecto"
@@ -122,7 +122,7 @@
     "timeline": "Su cronología",
     "soloWork": "En solitario",
     "trivia": "Curiosidades",
-    "flipHint": "Toca una tarjeta para ver de donde sale el dato",
+    "flipHint": "Toca una tarjeta para ver de dónde sale el dato",
     "sourceLabel": "Fuente",
     "next": "Siguiente integrante",
     "nextLabel": "Ir a la ficha de",
@@ -143,7 +143,7 @@
     "sortOldest": "Más antiguo",
     "sortTitle": "Por título",
     "viewLabel": "Vista",
-    "viewGrid": "Cuadricula",
+    "viewGrid": "Cuadrícula",
     "viewList": "Lista",
     "results": "lanzamientos"
   },
@@ -156,9 +156,12 @@
   },
   "TimelinePage": {
     "title": "Cronología",
-    "description": "Del debut a hoy, hito a hito. Cada entrada dice de donde sale.",
+    "description": "Del debut a hoy, hito a hito. Cada entrada dice de dónde sale.",
     "filterCategory": "Tipo",
     "filterMember": "Integrante",
+    "order": "Orden",
+    "orderOldest": "Del debut a hoy",
+    "orderNewest": "Lo más reciente",
     "expand": "Ver detalle",
     "collapse": "Ocultar detalle",
     "approximate": "Fecha aproximada"
@@ -239,7 +242,7 @@
     "curated": "Selección de la casa",
     "derived": "Selección objetiva",
     "nonedPlayable": "Ninguna pista de esta lista tiene todavía reproductor oficial.",
-    "showAll": "Ver las {count} restantes",
+    "showAll": "{count, plural, one {Ver la restante} other {Ver las # restantes}}",
     "showLess": "Ver menos"
   },
   "Chat": {
@@ -296,7 +299,7 @@
     "viewSource": "Ver en Wikimedia Commons",
     "empty": "Todavía no hay imágenes con licencia que acreditar.",
     "otherHeading": "El resto del sitio",
-    "otherBody": "Los marcos sin fotografía son relleno propio de este sitio. No se aloja ni se sirve ningún archivo de audio ni de video: la música suena en el reproductor oficial de Spotify.",
+    "otherBody": "Los marcos sin fotografía son relleno propio de este sitio. No se aloja ni se sirve ningún archivo de audio ni de vídeo: la música suena en el reproductor oficial de Spotify.",
     "galleryHeading": "Las fotografías de la galería",
     "galleryBody": "Las sesenta imágenes de la galería también proceden de Wikimedia Commons. Se han reescalado a 1400 píxeles de ancho como máximo y convertido a JPEG; ninguna se ha recortado ni modificado de otro modo. Indicar el cambio de tamaño es una obligación de la licencia y esto es esa indicación.",
     "galleryShareAlike": "Nueve de las sesenta están bajo CC BY-SA, que añade la cláusula ShareAlike: una obra DERIVADA de esas imágenes tendría que publicarse bajo la misma licencia. Redimensionar no crea una obra derivada, y por eso este sitio solo redimensiona y nunca recorta. La licencia de cada fotografía aparece junto a ella.",

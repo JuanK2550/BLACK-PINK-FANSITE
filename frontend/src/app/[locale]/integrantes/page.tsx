@@ -97,8 +97,8 @@ export default async function MembersPage({ params }: { params: Promise<{ locale
             href={`/${locale}/integrantes/comparar`}
             className="group/compare border-line hover:border-line-strong focus-visible:outline-focus ease-out-soft mt-section flex items-center justify-between gap-6 border-t py-10 transition-colors duration-[var(--dur-2)] focus-visible:outline-2 focus-visible:outline-offset-4"
           >
-            <span>
-              <span className="font-display text-fg group-hover/compare:text-accent-text ease-out-soft block text-3xl font-extrabold transition-colors duration-[var(--dur-2)]">
+            <span className="min-w-0">
+              <span className="font-display text-fg group-hover/compare:text-accent-text ease-out-soft block text-2xl font-extrabold transition-colors duration-[var(--dur-2)] sm:text-3xl">
                 {t('compareTitle')}
               </span>
               <span className="text-fg-muted mt-2 block max-w-prose text-pretty text-sm">

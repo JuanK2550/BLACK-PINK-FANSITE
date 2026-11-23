@@ -24,7 +24,7 @@ export function DisclaimerBanner({ locale = 'es', className }: DisclaimerBannerP
         className,
       )}
     >
-      <span className="bg-accent mr-2 inline-block h-1 w-1 translate-y-[-0.15em] rounded-full align-middle" />
+      <span className="bg-accent mr-2 inline-flex h-1 w-1 translate-y-[-0.15em] rounded-full align-middle" />
       {DISCLAIMER[locale]}
     </div>
   );

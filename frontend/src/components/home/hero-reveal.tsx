@@ -52,12 +52,12 @@ export function HeroReveal({
         className="bp-hero-in border-line mt-12 border-t pt-4"
         style={{ animationDelay: '300ms' }}
       >
-        <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <ul className="flex flex-wrap items-center gap-x-6 gap-y-0.5">
           {items.map((item) => (
             <li key={item.key}>
               <a
                 href={`/${locale}${item.href}`}
-                className="text-fg-muted hover:text-accent-text text-2xs ease-out-soft transition-colors duration-[var(--dur-2)]"
+                className="text-fg-muted hover:text-accent-text text-2xs ease-out-soft inline-flex py-1.5 transition-colors duration-[var(--dur-2)]"
                 data-uppercase
               >
                 {item.label}

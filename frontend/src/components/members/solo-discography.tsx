@@ -25,6 +25,107 @@ export interface SoloDiscographyProps {
   };
 }
 
+interface FichaProps {
+  work: SoloWork;
+  index: number;
+  grande?: boolean;
+  locale: Locale;
+  labels: SoloDiscographyProps['labels'];
+  openId: string | null;
+  onOpenChange: (id: string | null) => void;
+}
+
+// Fuera del componente: definida dentro, cada pulsación remontaba todas las fichas y se perdía el foco.
+function Ficha({ work, index, grande = false, locale, labels, openId, onOpenChange }: FichaProps) {
+  return (
+    <Reveal as="li" delay={Math.min(index, 6) * 0.04}>
+      <div
+        className={[
+          'border-line border-t pt-5',
+          grande ? 'xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10' : '',
+        ].join(' ')}
+      >
+        <div
+          className={
+            grande ? 'flex items-start gap-5 xl:flex-col xl:gap-4' : 'flex items-start gap-5'
+          }
+        >
+          <AlbumCover
+            cover={work}
+            title={work.title}
+            alt={labels.coverAlt.replace('{title}', work.title)}
+            variant="thumb"
+            glyph={work.releaseDate.slice(2, 4)}
+            sizes="96px"
+            className="w-24 shrink-0"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-fg text-balance text-xl font-bold">{work.title}</p>
+            <p className="text-fg-muted mt-1 text-sm">
+              {work.formatLabel ?? work.type}
+              {' · '}
+              <time dateTime={work.releaseDate} data-numeric>
+                {work.releaseDate.slice(0, 4)}
+              </time>
+              {work.tracks.length > 1 ? (
+                <>
+                  {' · '}
+                  <span data-numeric>
+                    {labels.tracks.replace('{count}', String(work.tracks.length))}
+                  </span>
+                </>
+              ) : null}
+            </p>
+            {work.description ? (
+              <p className="text-fg-subtle mt-2 text-pretty text-sm">{work.description}</p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className={grande ? 'xl:[&>ol]:mt-0' : ''}>
+          {work.tracks.length > 0 ? (
+            <AlbumTracklist
+              tracks={work.tracks}
+              locale={locale}
+              density="compact"
+              openId={openId}
+              onOpenChange={onOpenChange}
+              labels={{
+                titleTrack: labels.titleTrack,
+                featuring: labels.featuring,
+                spotifyTitle: labels.spotifyTitle,
+                openOnSpotify: labels.openOnSpotify,
+                unavailable: labels.unavailable,
+                playTrack: labels.playTrack,
+                closeTrack: labels.closeTrack,
+              }}
+            />
+          ) : (
+            <EmbedPlayer
+              className="mt-4"
+              title={work.title}
+              spotify={
+                work.spotifyId
+                  ? {
+                      id: work.spotifyId,
+                      embedUrl: `https://open.spotify.com/embed/track/${work.spotifyId}`,
+                      watchUrl: `https://open.spotify.com/track/${work.spotifyId}`,
+                    }
+                  : null
+              }
+              labels={{
+                spotifyTitle: labels.spotifyTitle,
+                openOnSpotify: labels.openOnSpotify,
+                unavailable: labels.unavailable,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
 export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -38,103 +139,7 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
     [works],
   );
 
-  function Ficha({
-    work,
-    index,
-    grande = false,
-  }: {
-    work: SoloWork;
-    index: number;
-    grande?: boolean;
-  }) {
-    return (
-      <Reveal as="li" key={work.slug} delay={Math.min(index, 6) * 0.04}>
-        <div
-          className={[
-            'border-line border-t pt-5',
-            grande ? 'xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10' : '',
-          ].join(' ')}
-        >
-          <div
-            className={
-              grande ? 'flex items-start gap-5 xl:flex-col xl:gap-4' : 'flex items-start gap-5'
-            }
-          >
-            <AlbumCover
-              cover={work}
-              title={work.title}
-              alt={labels.coverAlt.replace('{title}', work.title)}
-              variant="thumb"
-              glyph={work.releaseDate.slice(2, 4)}
-              sizes="96px"
-              className="w-24 shrink-0"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="font-display text-fg text-balance text-xl font-bold">{work.title}</p>
-              <p className="text-fg-muted mt-1 text-sm">
-                {work.formatLabel ?? work.type}
-                {' · '}
-                <time dateTime={work.releaseDate} data-numeric>
-                  {work.releaseDate.slice(0, 4)}
-                </time>
-                {work.tracks.length > 1 ? (
-                  <>
-                    {' · '}
-                    <span data-numeric>
-                      {labels.tracks.replace('{count}', String(work.tracks.length))}
-                    </span>
-                  </>
-                ) : null}
-              </p>
-              {work.description ? (
-                <p className="text-fg-subtle mt-2 text-pretty text-sm">{work.description}</p>
-              ) : null}
-            </div>
-          </div>
-
-          <div className={grande ? 'xl:[&>ol]:mt-0' : ''}>
-            {work.tracks.length > 0 ? (
-              <AlbumTracklist
-                tracks={work.tracks}
-                locale={locale}
-                density="compact"
-                openId={openId}
-                onOpenChange={setOpenId}
-                labels={{
-                  titleTrack: labels.titleTrack,
-                  featuring: labels.featuring,
-                  spotifyTitle: labels.spotifyTitle,
-                  openOnSpotify: labels.openOnSpotify,
-                  unavailable: labels.unavailable,
-                  playTrack: labels.playTrack,
-                  closeTrack: labels.closeTrack,
-                }}
-              />
-            ) : (
-              <EmbedPlayer
-                className="mt-4"
-                title={work.title}
-                spotify={
-                  work.spotifyId
-                    ? {
-                        id: work.spotifyId,
-                        embedUrl: `https://open.spotify.com/embed/track/${work.spotifyId}`,
-                        watchUrl: `https://open.spotify.com/track/${work.spotifyId}`,
-                      }
-                    : null
-                }
-                labels={{
-                  spotifyTitle: labels.spotifyTitle,
-                  openOnSpotify: labels.openOnSpotify,
-                  unavailable: labels.unavailable,
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </Reveal>
-    );
-  }
+  const comunes = { locale, labels, openId, onOpenChange: setOpenId };
 
   return (
     <div className="mt-block flex flex-col gap-16">
@@ -146,7 +151,7 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
 
           <ul className="mt-5 flex flex-col gap-12">
             {discos.map((work, index) => (
-              <Ficha key={work.slug} work={work} index={index} grande />
+              <Ficha key={work.slug} work={work} index={index} grande {...comunes} />
             ))}
           </ul>
         </section>
@@ -160,7 +165,7 @@ export function SoloDiscography({ works, locale, labels }: SoloDiscographyProps)
 
           <ul className="mt-5 grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
             {sencillos.map((work, index) => (
-              <Ficha key={work.slug} work={work} index={index} />
+              <Ficha key={work.slug} work={work} index={index} {...comunes} />
             ))}
           </ul>
         </section>

@@ -148,7 +148,7 @@ export function ChatMessages({ messages, sending, onNavigate }: ChatMessagesProp
                       streaming={message.streaming === true}
                       trailing={
                         message.streaming && message.text.length > 0 ? (
-                          <span className="bg-accent ml-0.5 inline-block h-3.5 w-[2px] align-middle" />
+                          <span className="bg-accent ml-0.5 inline-flex h-3.5 w-[2px] align-middle" />
                         ) : null
                       }
                     />

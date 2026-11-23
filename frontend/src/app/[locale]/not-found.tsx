@@ -62,7 +62,7 @@ export default async function NotFound() {
       <p className="mt-block">
         <a
           href={`/${locale}`}
-          className="focus-visible:outline-focus rounded-xs focus-visible:outline-offset-6 inline-block focus-visible:outline-2"
+          className="focus-visible:outline-focus rounded-xs focus-visible:outline-offset-6 inline-flex focus-visible:outline-2"
         >
           <Wordmark className="text-2xl" />
         </a>

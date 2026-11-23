@@ -44,7 +44,9 @@ export function SectionHeading({
     <div className={cn(!hideRule && 'border-line border-t', 'pt-6', className)}>
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="min-w-0">
-          <h2 className="font-display text-fg text-balance text-4xl font-extrabold">{title}</h2>
+          <h2 className="font-display text-fg hyphens-auto text-balance text-3xl font-extrabold sm:text-4xl">
+            {title}
+          </h2>
           {description ? (
             <p className="text-fg-muted mt-3 max-w-prose text-pretty text-base">{description}</p>
           ) : null}

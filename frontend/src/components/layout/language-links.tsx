@@ -27,7 +27,7 @@ export function LanguageLinks({ label }: { label: string }) {
           lang={code}
           aria-current={code === actual ? 'page' : undefined}
           className={[
-            'focus-visible:outline-focus ease-out-soft text-xs transition-colors duration-[var(--dur-2)] focus-visible:outline-2',
+            'focus-visible:outline-focus ease-out-soft inline-flex py-1.5 text-xs transition-colors duration-[var(--dur-2)] focus-visible:outline-2',
             code === actual ? 'text-fg' : 'text-fg-subtle hover:text-accent-text',
           ].join(' ')}
         >

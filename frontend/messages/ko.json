@@ -159,6 +159,9 @@
     "description": "데뷔부터 오늘까지, 하나씩. 각 항목은 출처를 밝힙니다.",
     "filterCategory": "유형",
     "filterMember": "멤버",
+    "order": "정렬",
+    "orderOldest": "데뷔부터",
+    "orderNewest": "최신순",
     "expand": "자세히 보기",
     "collapse": "접기",
     "approximate": "대략적인 날짜"

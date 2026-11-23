@@ -53,12 +53,12 @@ export function SiteFooter({
                 <h2 className="text-fg-subtle text-2xs" data-uppercase>
                   {column.title}
                 </h2>
-                <ul className="mt-4 space-y-2.5">
+                <ul className="mt-2.5 space-y-0.5">
                   {column.links.map((link) => (
                     <li key={link.href}>
                       <a
                         href={`${localePrefix}${link.href}`}
-                        className="text-fg-muted hover:text-accent-text ease-out-soft text-sm transition-colors duration-[var(--dur-2)]"
+                        className="text-fg-muted hover:text-accent-text ease-out-soft inline-flex py-1.5 text-sm transition-colors duration-[var(--dur-2)]"
                       >
                         {link.label}
                       </a>
@@ -72,14 +72,14 @@ export function SiteFooter({
               <h2 className="text-fg-subtle text-2xs" data-uppercase>
                 {labels.officialTitle}
               </h2>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-2.5 space-y-0.5">
                 {socials.map((social) => (
                   <li key={social.href}>
                     <a
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
-                      className="group/ext text-fg-muted hover:text-accent-text ease-out-soft inline-flex items-center gap-1.5 text-sm transition-colors duration-[var(--dur-2)]"
+                      className="group/ext text-fg-muted hover:text-accent-text ease-out-soft inline-flex items-center gap-1.5 py-1.5 text-sm transition-colors duration-[var(--dur-2)]"
                     >
                       {social.label}
                       <ArrowRightIcon className="ease-out-bp -rotate-45 text-xs transition-transform duration-[var(--dur-2)] group-hover/ext:translate-x-0.5" />

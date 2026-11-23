@@ -159,6 +159,9 @@
     "description": "From the debut to today, milestone by milestone. Every entry cites its source.",
     "filterCategory": "Type",
     "filterMember": "Member",
+    "order": "Order",
+    "orderOldest": "From the debut",
+    "orderNewest": "Most recent",
     "expand": "Show detail",
     "collapse": "Hide detail",
     "approximate": "Approximate date"
@@ -239,7 +242,7 @@
     "curated": "Our own pick",
     "derived": "Objective selection",
     "nonedPlayable": "No track on this list has an official player yet.",
-    "showAll": "Show the other {count}",
+    "showAll": "{count, plural, one {Show the other one} other {Show the other #}}",
     "showLess": "Show fewer"
   },
   "Chat": {

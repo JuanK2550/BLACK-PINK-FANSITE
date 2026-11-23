@@ -23,6 +23,7 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
 
   const [category, setCategory] = useState('all');
   const [member, setMember] = useState('all');
+  const [order, setOrder] = useState('oldest');
   const [open, setOpen] = useState<string | null>(null);
 
   const categories = useMemo(() => [...new Set(events.map((event) => event.category))], [events]);
@@ -39,10 +40,12 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
     [category, events],
   );
 
-  const visible = useMemo(
-    () => forCategories.filter((event) => category === 'all' || event.category === category),
-    [category, forCategories],
-  );
+  const visible = useMemo(() => {
+    const matching = forCategories.filter(
+      (event) => category === 'all' || event.category === category,
+    );
+    return order === 'newest' ? matching.reverse() : matching;
+  }, [category, forCategories, order]);
 
   return (
     <>
@@ -84,6 +87,21 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
             ]}
           />
         </div>
+
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="text-fg-subtle text-2xs shrink-0" data-uppercase>
+            {t('order')}
+          </span>
+          <FilterBar
+            label={t('order')}
+            value={order}
+            onChange={setOrder}
+            options={[
+              { value: 'oldest', label: t('orderOldest') },
+              { value: 'newest', label: t('orderNewest') },
+            ]}
+          />
+        </div>
       </div>
 
       <p role="status" aria-live="polite" className="text-fg-subtle text-2xs mt-6" data-uppercase>
@@ -116,7 +134,7 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
                 >
                   <span
                     aria-hidden="true"
-                    className="bg-line-strong absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full lg:left-0 lg:top-10 lg:-translate-y-1/2"
+                    className="bg-line-strong absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full lg:left-0 lg:top-0 lg:-translate-y-1/2"
                     style={expanded ? { backgroundColor: 'var(--color-accent)' } : undefined}
                   />
 
@@ -125,12 +143,12 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
                     aria-expanded={expanded}
                     aria-controls={`event-${event.id}`}
                     onClick={() => setOpen(expanded ? null : event.id)}
-                    className="focus-visible:outline-focus block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 lg:mt-4"
+                    className="focus-visible:outline-focus block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 lg:mt-6"
                   >
                     <time
                       data-numeric
                       dateTime={event.date}
-                      className="text-accent-text font-display block text-2xl font-extrabold"
+                      className="text-accent-text font-display block text-xl font-extrabold"
                     >
                       {formatDate(event.date, locale, event.datePrecision)}
                     </time>
@@ -139,7 +157,7 @@ export function TimelineExplorer({ events, members, locale }: TimelineExplorerPr
                       {cats(event.category)}
                     </span>
 
-                    <span className="text-fg mt-2 block text-pretty text-sm">{event.title}</span>
+                    <span className="text-fg mt-2 block text-pretty text-base">{event.title}</span>
                   </button>
 
                   <AnimatePresence initial={false}>

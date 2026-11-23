@@ -13,8 +13,9 @@ export async function TimelineSection({ locale }: { locale: Locale }) {
 
   let events;
   try {
-    const page = await getTimeline({ locale, limit: 8 });
-    events = page.items;
+    const { items } = await getTimeline({ locale, limit: 100 });
+    // Los hitos mayores: con los ocho primeros, «del debut a hoy» se quedaba en 2018.
+    events = items.filter((event) => event.importance === 5);
   } catch (error) {
     return (
       <SectionFrame id="cronologia">
@@ -63,7 +64,7 @@ export async function TimelineSection({ locale }: { locale: Locale }) {
             <li key={event.id} className="group relative w-56 shrink-0">
               <span
                 aria-hidden="true"
-                className="bg-line-strong group-hover:bg-accent ease-out-soft absolute left-0 top-8 h-2.5 w-2.5 -translate-y-1/2 rounded-full transition-colors duration-[var(--dur-2)]"
+                className="bg-line-strong group-hover:bg-accent ease-out-soft absolute left-0 top-0 h-2.5 w-2.5 -translate-y-1/2 rounded-full transition-colors duration-[var(--dur-2)]"
               />
               <time
                 className="font-display text-accent-text mt-6 block text-3xl font-extrabold"

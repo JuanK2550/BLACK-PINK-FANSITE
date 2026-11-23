@@ -64,6 +64,27 @@ test.describe('reproduccion', () => {
     await expect(page.locator('iframe[src*="open.spotify.com/embed"]')).toHaveCount(1);
   });
 
+  test('abrir una cancion no pierde el foco ni remonta la ficha de la integrante', async ({
+    page,
+  }) => {
+    await page.goto('/es/integrantes/lisa');
+    await esperarHidratacion(page);
+
+    const panel = await page
+      .getByRole('button', { name: /^Escuchar / })
+      .first()
+      .getAttribute('aria-controls');
+    const pista = page.locator(`button[aria-controls="${panel}"]`);
+
+    await pista.evaluate((boton) => boton.setAttribute('data-original', ''));
+    await pista.focus();
+    await page.keyboard.press('Enter');
+
+    await expect(pista).toHaveAttribute('aria-expanded', 'true');
+    await expect(pista).toHaveAttribute('data-original', '');
+    await expect(pista).toBeFocused();
+  });
+
   test('la segunda pulsacion cierra y el iframe desaparece del DOM', async ({ page }) => {
     await page.goto('/es/discografia/born-pink');
     await esperarHidratacion(page);

@@ -26,9 +26,13 @@ export function PlaylistEntries({ entries, labels }: PlaylistEntriesProps) {
             <span data-numeric className="text-fg-subtle w-5 shrink-0 text-xs">
               {String(entry.position).padStart(2, '0')}
             </span>
-            <span className="text-fg min-w-0 flex-1 truncate text-sm">{entry.title}</span>
+            <span className="text-fg min-w-0 flex-1 text-sm [overflow-wrap:anywhere]">
+              {entry.title}
+            </span>
             {entry.subtitle ? (
-              <span className="text-fg-subtle shrink-0 truncate text-xs">{entry.subtitle}</span>
+              <span className="text-fg-subtle max-w-[50%] shrink-0 truncate text-right text-xs">
+                {entry.subtitle}
+              </span>
             ) : null}
           </li>
         ))}
@@ -39,7 +43,7 @@ export function PlaylistEntries({ entries, labels }: PlaylistEntriesProps) {
           type="button"
           aria-expanded={expanded}
           onClick={() => setExpanded((value) => !value)}
-          className="text-fg-subtle hover:text-accent-text focus-visible:outline-focus ease-out-soft mt-3 self-start text-xs underline underline-offset-4 transition-colors duration-[var(--dur-2)] focus-visible:outline-2"
+          className="text-fg-subtle hover:text-accent-text focus-visible:outline-focus ease-out-soft mt-2 min-w-11 self-start py-2 text-left text-xs underline underline-offset-4 transition-colors duration-[var(--dur-2)] focus-visible:outline-2"
         >
           {expanded ? labels.less : labels.more}
         </button>

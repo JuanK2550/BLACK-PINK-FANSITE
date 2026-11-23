@@ -55,7 +55,7 @@ export async function LatestAlbumSection({ locale }: { locale: Locale }) {
       />
 
       <div className="mt-block grid gap-8 lg:grid-cols-12 lg:gap-12">
-        <div className="lg:col-span-5">
+        <div className="min-w-0 lg:col-span-5">
           <AlbumCover
             cover={album}
             title={album.title}
@@ -64,7 +64,9 @@ export async function LatestAlbumSection({ locale }: { locale: Locale }) {
             sizes="(max-width: 1024px) 92vw, 40vw"
           />
           <div className="mt-4 flex items-baseline justify-between gap-4">
-            <p className="font-display text-fg text-3xl font-extrabold">{album.title}</p>
+            <p className="font-display text-fg min-w-0 text-2xl font-extrabold [overflow-wrap:anywhere] sm:text-3xl">
+              {album.title}
+            </p>
             <time className="text-accent-text text-lg font-medium" dateTime={album.releaseDate}>
               {album.year}
             </time>
@@ -74,7 +76,7 @@ export async function LatestAlbumSection({ locale }: { locale: Locale }) {
           ) : null}
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="min-w-0 lg:col-span-7">
           <h3 className="text-fg-subtle text-2xs" data-uppercase>
             {t('album.tracklist')}
           </h3>
@@ -88,7 +90,7 @@ export async function LatestAlbumSection({ locale }: { locale: Locale }) {
                 <span data-numeric className="text-fg-subtle w-6 shrink-0 text-xs">
                   {String(track.trackNumber).padStart(2, '0')}
                 </span>
-                <span className="text-fg flex-1 text-base">
+                <span className="text-fg min-w-0 flex-1 text-base">
                   {track.localizedTitle ?? track.title}
                 </span>
                 {track.durationSec ? (
