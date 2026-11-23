@@ -3,6 +3,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsIn,
   IsOptional,
@@ -13,11 +14,11 @@ import {
 } from 'class-validator';
 import { SUPPORTED_LOCALES, type Locale } from '@blackpink/types';
 
-export const MAX_MESSAGE_CHARS = 1000;
+const MAX_MESSAGE_CHARS = 1000;
 
 export const MAX_HISTORY_TURNS = 10;
 
-export class ChatTurnDto {
+class ChatTurnDto {
   @ApiProperty({ enum: ['user', 'model'] })
   @IsIn(['user', 'model'])
   role!: 'user' | 'model';
@@ -48,6 +49,7 @@ export class ChatRequestDto {
   @ApiPropertyOptional({ type: [ChatTurnDto] })
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(MAX_HISTORY_TURNS)
   @ValidateNested({ each: true })
   @Type(() => ChatTurnDto)
   history?: ChatTurnDto[];

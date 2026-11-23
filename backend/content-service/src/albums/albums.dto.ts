@@ -7,12 +7,7 @@ import type { AlbumType } from '@blackpink/types';
 
 export const ALBUM_TYPES = ['SINGLE', 'EP', 'ALBUM', 'COMPILATION', 'COLLABORATION'] as const;
 
-export const ALBUM_SORTS = [
-  'releaseDate_desc',
-  'releaseDate_asc',
-  'title_asc',
-  'title_desc',
-] as const;
+const ALBUM_SORTS = ['releaseDate_desc', 'releaseDate_asc', 'title_asc', 'title_desc'] as const;
 
 export type AlbumSort = (typeof ALBUM_SORTS)[number];
 

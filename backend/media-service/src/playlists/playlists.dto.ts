@@ -2,14 +2,14 @@
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class EmbedTargetDto {
+class EmbedTargetDto {
   @ApiProperty({ description: 'Identificador en la plataforma.' }) id!: string;
   @ApiProperty({ description: 'URL del reproductor incrustable, para un iframe.' })
   embedUrl!: string;
   @ApiProperty({ description: 'URL para abrir la cancion en la plataforma.' }) watchUrl!: string;
 }
 
-export class PlaylistEntryDtoSchema {
+class PlaylistEntryDtoSchema {
   @ApiProperty() position!: number;
   @ApiProperty() title!: string;
   @ApiProperty({ nullable: true }) subtitle!: string | null;
@@ -40,7 +40,7 @@ export class PlaylistDetailDtoSchema extends PlaylistSummaryDtoSchema {
   note!: string | null;
 }
 
-export class TrackEmbedAlbumDto {
+class TrackEmbedAlbumDto {
   @ApiProperty() slug!: string;
   @ApiProperty() title!: string;
   @ApiProperty() year!: number;

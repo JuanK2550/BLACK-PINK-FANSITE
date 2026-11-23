@@ -7,6 +7,7 @@ import { RetrievalService } from '../rag/retrieval.service';
 import { VectorStoreService } from '../rag/vector-store.service';
 import { SafetyService } from '../safety/safety.service';
 import { newContextFence } from '../safety/sanitize';
+import { MAX_HISTORY_TURNS } from './chat.dto';
 import { buildSystemPrompt, splitAction } from './prompt';
 import { NO_ACTION, resolveAction, type ChatAction, type KnownTarget } from './sitemap';
 
@@ -114,7 +115,7 @@ export class ChatService {
 
     try {
       for await (const piece of this.ai.streamChat(
-        { system, history: history.slice(-10), message },
+        { system, history: history.slice(-MAX_HISTORY_TURNS), message },
         signal,
       )) {
         full += piece;

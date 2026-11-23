@@ -10,7 +10,7 @@ export interface CircuitBreakerOptions {
   successThreshold: number;
 }
 
-export const DEFAULT_BREAKER_OPTIONS: CircuitBreakerOptions = {
+const DEFAULT_BREAKER_OPTIONS: CircuitBreakerOptions = {
   failureThreshold: 5,
   openMs: 15_000,
   successThreshold: 2,

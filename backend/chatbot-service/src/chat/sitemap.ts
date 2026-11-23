@@ -18,7 +18,7 @@ interface Section {
   describes: string;
 }
 
-export const SECTIONS: Section[] = [
+const SECTIONS: Section[] = [
   {
     path: '/grupo',
     labels: { es: 'Ir a Grupo', en: 'Go to Group', ko: '그룹 페이지로' },
@@ -75,7 +75,7 @@ export function describeSitemap(): string {
   return SECTIONS.map((section) => `${section.path} — ${section.describes}`).join('\n');
 }
 
-export function localizePath(path: string, locale: Locale): string {
+function localizePath(path: string, locale: Locale): string {
   return `/${locale}${path}`;
 }
 

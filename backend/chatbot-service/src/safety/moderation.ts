@@ -29,7 +29,7 @@ const CATALOG_SAFE = [
   'as if it its your last',
 ];
 
-export const MODERATION_RULES: ModerationRule[] = [
+const MODERATION_RULES: ModerationRule[] = [
   {
     id: 'sexual-explicit',
     category: 'sexual',

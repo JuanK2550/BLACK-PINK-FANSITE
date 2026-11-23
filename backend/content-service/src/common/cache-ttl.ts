@@ -1,6 +1,6 @@
 // Tiempo de caché de cada endpoint.
 
-export const CACHE_TTL = {
+const CACHE_TTL = {
   members: 3600,
   memberDetail: 3600,
   albums: 3600,

@@ -6,78 +6,9 @@ settings:
 
 catalogs:
   default:
-    '@nestjs/cli':
-      specifier: ^11.0.0
-      version: 11.0.24
-    '@nestjs/common':
-      specifier: ^11.0.0
-      version: 11.2.3
-    '@nestjs/config':
-      specifier: ^4.0.0
-      version: 4.0.4
-    '@nestjs/core':
-      specifier: ^11.0.0
-      version: 11.2.3
-    '@nestjs/platform-express':
-      specifier: ^11.0.0
-      version: 11.2.3
-    '@nestjs/schematics':
-      specifier: ^11.0.0
-      version: 11.1.0
-    '@nestjs/swagger':
-      specifier: ^11.4.7
-      version: 11.4.7
-    '@nestjs/testing':
-      specifier: ^11.2.3
-      version: 11.2.3
-    '@nestjs/throttler':
-      specifier: ^6.4.0
-      version: 6.5.0
     '@sentry/nextjs':
       specifier: ^10.74.0
       version: 10.74.0
-    '@sentry/node':
-      specifier: ^10.74.0
-      version: 10.74.0
-    class-transformer:
-      specifier: ^0.5.1
-      version: 0.5.1
-    class-validator:
-      specifier: ^0.15.1
-      version: 0.15.1
-    compression:
-      specifier: ^1.8.1
-      version: 1.8.1
-    helmet:
-      specifier: ^8.1.0
-      version: 8.3.0
-    ioredis:
-      specifier: ^5.11.1
-      version: 5.11.1
-    nestjs-pino:
-      specifier: ^4.6.1
-      version: 4.6.1
-    pg:
-      specifier: ^8.16.3
-      version: 8.23.0
-    pino:
-      specifier: ^10.3.1
-      version: 10.3.1
-    pino-http:
-      specifier: ^11.0.0
-      version: 11.0.0
-    reflect-metadata:
-      specifier: ^0.2.2
-      version: 0.2.2
-    rxjs:
-      specifier: ^7.8.1
-      version: 7.8.2
-    sharp:
-      specifier: ^0.34.0
-      version: 0.34.5
-    supertest:
-      specifier: ^7.2.2
-      version: 7.2.2
 
 importers:
 
@@ -719,9 +650,6 @@ importers:
       tailwindcss:
         specifier: ^4.0.0
         version: 4.3.3
-      tsx:
-        specifier: ^4.23.12
-        version: 4.23.12
       typescript:
         specifier: ^5.7.0
         version: 5.9.3

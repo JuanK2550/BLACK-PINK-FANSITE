@@ -34,12 +34,6 @@ export function getGalleryPhotos(): GalleryPhoto[] {
   return [...DATOS.fotos].sort((a, b) => (a.fecha ?? '').localeCompare(b.fecha ?? ''));
 }
 
-export function getGalleryDate(): string {
-  return DATOS.generado;
-}
-
-export const GALLERY_SUBJECTS = ['grupo', 'jisoo', 'jennie', 'rose', 'lisa'] as const;
-
 const NOMBRES: Record<string, string> = {
   jisoo: 'JISOO',
   jennie: 'JENNIE',
