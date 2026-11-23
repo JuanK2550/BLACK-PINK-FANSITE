@@ -842,4 +842,168 @@ export const QUIZ: QuizSeed[] = [
       ko: '로제였지만, 당시에는 YG 신인 걸그룹의 목소리로만 소개되었습니다.',
     },
   },
+  {
+    difficulty: 'MEDIUM',
+    correctIndex: 2,
+    verified: true,
+    source:
+      'Wikipedia, Press Play (Lisa EP) — https://en.wikipedia.org/wiki/Press_Play_(Lisa_EP). Consultado 2026-11-21.',
+    question: {
+      es: '¿Cómo se llama el primer EP de Lisa, de octubre de 2026?',
+      en: 'What is the title of Lisa’s first EP, from October 2026?',
+      ko: '2026년 10월에 나온 리사의 첫 EP 제목은 무엇인가요?',
+    },
+    options: {
+      es: ['LALISA', 'Alter Ego', 'PRESS PLAY', 'Fallen Angel'],
+      en: ['LALISA', 'Alter Ego', 'PRESS PLAY', 'Fallen Angel'],
+      ko: ['LALISA', 'Alter Ego', 'PRESS PLAY', 'Fallen Angel'],
+    },
+    explanation: {
+      es: 'PRESS PLAY salió el 23 de octubre de 2026 con seis canciones; SaWaDiKa fue el adelanto.',
+      en: 'PRESS PLAY came out on 23 October 2026 with six songs; SaWaDiKa was the lead single.',
+      ko: 'PRESS PLAY는 2026년 10월 23일 여섯 곡으로 발매되었으며 SaWaDiKa가 선공개 싱글이었습니다.',
+    },
+  },
+  {
+    difficulty: 'MEDIUM',
+    correctIndex: 0,
+    verified: true,
+    source:
+      'Wikipedia, Viva La Lisa — https://en.wikipedia.org/wiki/Viva_La_Lisa. Consultado 2026-11-21.',
+    question: {
+      es: '¿En qué ciudad hizo Lisa su residencia de conciertos Viva La Lisa?',
+      en: 'In which city did Lisa stage her concert residency Viva La Lisa?',
+      ko: '리사가 Viva La Lisa 레지던시 공연을 연 도시는 어디인가요?',
+    },
+    options: {
+      es: ['Las Vegas', 'Bangkok', 'Tokio', 'Londres'],
+      en: ['Las Vegas', 'Bangkok', 'Tokyo', 'London'],
+      ko: ['라스베이거스', '방콕', '도쿄', '런던'],
+    },
+    explanation: {
+      es: 'En el Colosseum del Caesars Palace, desde el 12 de noviembre de 2026.',
+      en: 'At the Colosseum at Caesars Palace, from 12 November 2026.',
+      ko: '2026년 11월 12일부터 시저스 팰리스 콜로세움에서 열렸습니다.',
+    },
+  },
+  {
+    difficulty: 'MEDIUM',
+    correctIndex: 1,
+    verified: true,
+    source:
+      'Wikipedia, Addicted (Jisoo song) — https://en.wikipedia.org/wiki/Addicted_(Jisoo_song). Consultado 2026-11-21.',
+    question: {
+      es: '¿Qué sencillo publicó Jisoo dos meses después de CLICK?',
+      en: 'Which single did Jisoo release two months after CLICK?',
+      ko: '지수가 CLICK 두 달 뒤에 발표한 싱글은 무엇인가요?',
+    },
+    options: {
+      es: ['earthquake', 'ADDICTED', 'FLOWER', 'EYES CLOSED'],
+      en: ['earthquake', 'ADDICTED', 'FLOWER', 'EYES CLOSED'],
+      ko: ['earthquake', 'ADDICTED', 'FLOWER', 'EYES CLOSED'],
+    },
+    explanation: {
+      es: 'ADDICTED salió el 30 de octubre de 2026.',
+      en: 'ADDICTED came out on 30 October 2026.',
+      ko: 'ADDICTED는 2026년 10월 30일에 발매되었습니다.',
+    },
+  },
+  {
+    difficulty: 'HARD',
+    correctIndex: 3,
+    verified: true,
+    source:
+      'Wikipedia, Sun Showers — https://en.wikipedia.org/wiki/Sun_Showers. Consultado 2026-11-21.',
+    question: {
+      es: '¿Para la banda sonora de qué película es Sun Showers, de Jisoo?',
+      en: 'Jisoo’s Sun Showers is for the soundtrack of which film?',
+      ko: '지수의 Sun Showers는 어떤 영화의 사운드트랙인가요?',
+    },
+    options: {
+      es: ['F1', 'Steps', 'Always Lalisa', 'The Angry Birds Movie 3'],
+      en: ['F1', 'Steps', 'Always Lalisa', 'The Angry Birds Movie 3'],
+      ko: ['F1', 'Steps', 'Always Lalisa', 'The Angry Birds Movie 3'],
+    },
+    explanation: {
+      es: 'Es el adelanto de la banda sonora, publicado el 20 de noviembre de 2026.',
+      en: 'It is the lead single of the soundtrack, released on 20 November 2026.',
+      ko: '2026년 11월 20일에 발매된 사운드트랙의 리드 싱글입니다.',
+    },
+  },
+  {
+    difficulty: 'MEDIUM',
+    correctIndex: 1,
+    verified: true,
+    source:
+      'Wikipedia, Grand Theft Auto VI: The Album — https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI:_The_Album. Consultado 2026-11-21.',
+    question: {
+      es: '¿Qué integrante canta Power Trip, de la banda sonora de Grand Theft Auto VI?',
+      en: 'Which member sings Power Trip, from the Grand Theft Auto VI soundtrack?',
+      ko: 'Grand Theft Auto VI 사운드트랙의 Power Trip을 부른 멤버는 누구인가요?',
+    },
+    options: {
+      es: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
+      en: ['Jisoo', 'Jennie', 'Rosé', 'Lisa'],
+      ko: ['지수', '제니', '로제', '리사'],
+    },
+    explanation: {
+      es: 'Es de Jennie: la pista 21 del disco.',
+      en: 'It is by Jennie: track 21 of the album.',
+      ko: '제니의 곡으로, 앨범의 21번 트랙입니다.',
+    },
+  },
+  {
+    difficulty: 'HARD',
+    correctIndex: 2,
+    verified: true,
+    source:
+      'Wikipedia, Dracula (song) — https://en.wikipedia.org/wiki/Dracula_(song). Consultado 2026-11-21.',
+    question: {
+      es: '¿Con quién canta Jennie el remix de Dracula?',
+      en: 'Who does Jennie sing the Dracula remix with?',
+      ko: '제니가 Dracula 리믹스를 함께 부른 아티스트는 누구인가요?',
+    },
+    options: {
+      es: ['The Weeknd', 'ZICO', 'Tame Impala', 'Dua Lipa'],
+      en: ['The Weeknd', 'ZICO', 'Tame Impala', 'Dua Lipa'],
+      ko: ['The Weeknd', 'ZICO', 'Tame Impala', 'Dua Lipa'],
+    },
+    explanation: {
+      es: 'Con Tame Impala. El remix llegó al número 3 del Billboard Hot 100.',
+      en: 'With Tame Impala. The remix reached number 3 on the Billboard Hot 100.',
+      ko: '테임 임팔라입니다. 이 리믹스는 빌보드 핫 100 3위에 올랐습니다.',
+    },
+  },
+  {
+    difficulty: 'HARD',
+    correctIndex: 0,
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Consultado 2026-11-21.',
+    question: {
+      es: '¿Qué condecoración recibió el grupo en Corea en octubre de 2026?',
+      en: 'Which Korean honour did the group receive in October 2026?',
+      ko: '그룹이 2026년 10월 한국에서 받은 훈장은 무엇인가요?',
+    },
+    options: {
+      es: [
+        'La Orden Okgwan al Mérito Cultural',
+        'La Gran Orden de Mugunghwa',
+        'La Orden al Mérito Civil',
+        'La Orden al Mérito Deportivo',
+      ],
+      en: [
+        'The Okgwan Order of Cultural Merit',
+        'The Grand Order of Mugunghwa',
+        'The Order of Civil Merit',
+        'The Order of Sports Merit',
+      ],
+      ko: ['옥관문화훈장', '무궁화대훈장', '국민훈장', '체육훈장'],
+    },
+    explanation: {
+      es: 'Fueron el primer grupo femenino de K-pop en recibirla. El MBE británico fue en 2023.',
+      en: 'They were the first K-pop girl group to receive it. The British MBE came in 2023.',
+      ko: 'K팝 걸그룹 최초 수훈입니다. 영국 MBE는 2023년에 받았습니다.',
+    },
+  },
 ];

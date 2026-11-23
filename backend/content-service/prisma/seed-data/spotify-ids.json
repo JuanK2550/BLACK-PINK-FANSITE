@@ -41,6 +41,11 @@
       "source": "SCRIPT",
       "spotifyId": "54XqJ3fP3GxmUejMsKwCaK"
     },
+    "jennie-power-trip#1": {
+      "durationSec": 197,
+      "source": "MANUAL",
+      "spotifyId": "1cyE4XiRueT0ANCp3CuJOK"
+    },
     "jennie-ruby#1": {
       "durationSec": 98,
       "source": "SCRIPT",
@@ -231,6 +236,11 @@
       "source": "SCRIPT",
       "spotifyId": "2wVDWtLKXunswWecARNILj"
     },
+    "jennie-someone-to-hold#1": {
+      "durationSec": 213,
+      "source": "MANUAL",
+      "spotifyId": "41GdHxKlxBzXZde4io6tbz"
+    },
     "jennie-special#1": {
       "durationSec": 237,
       "source": "MANUAL",
@@ -250,6 +260,11 @@
       "durationSec": 180,
       "source": "SCRIPT",
       "spotifyId": "0Vz146N2GxkVJw4kSGXrNi"
+    },
+    "jisoo-addicted#1": {
+      "durationSec": 179,
+      "source": "MANUAL",
+      "spotifyId": "0SqDNsDiJyvrbXGsIvt0hN"
     },
     "jisoo-amortage#1": {
       "durationSec": 191,
@@ -290,6 +305,11 @@
       "durationSec": 164,
       "source": "SCRIPT",
       "spotifyId": "2YXswOX5aKv6OHRKUcAMLQ"
+    },
+    "jisoo-sun-showers#1": {
+      "durationSec": 171,
+      "source": "MANUAL",
+      "spotifyId": "43LLlCRgC6fYYqIaXGLmpd"
     },
     "lisa-alter-ego#1": {
       "durationSec": 231,
@@ -386,6 +406,41 @@
       "source": "SCRIPT",
       "spotifyId": "7hU3IHwjX150XLoTVmjD0q"
     },
+    "lisa-leave-with-me#1": {
+      "durationSec": 185,
+      "source": "MANUAL",
+      "spotifyId": "6SDT6lj8sVzFK0o8UI2Y2G"
+    },
+    "lisa-press-play#1": {
+      "durationSec": 189,
+      "source": "MANUAL",
+      "spotifyId": "0UECk3l1544vRUzYoZO5gI"
+    },
+    "lisa-press-play#2": {
+      "durationSec": 171,
+      "source": "MANUAL",
+      "spotifyId": "5Uexd0lzW1yRLgjlUqi3Uc"
+    },
+    "lisa-press-play#3": {
+      "durationSec": 139,
+      "source": "MANUAL",
+      "spotifyId": "6esE3NNWOh6qiQSo4I62Lv"
+    },
+    "lisa-press-play#4": {
+      "durationSec": 171,
+      "source": "MANUAL",
+      "spotifyId": "3bgnrHHwyYRtz3ykzAVImy"
+    },
+    "lisa-press-play#5": {
+      "durationSec": 159,
+      "source": "MANUAL",
+      "spotifyId": "4NOZnyEKqujVEhHYobZfrk"
+    },
+    "lisa-press-play#6": {
+      "durationSec": 154,
+      "source": "MANUAL",
+      "spotifyId": "2dvKssoXPLt3RwTEGCIdGd"
+    },
     "lisa-priceless#1": {
       "durationSec": 163,
       "source": "SCRIPT",
@@ -395,11 +450,6 @@
       "durationSec": 138,
       "source": "SCRIPT",
       "spotifyId": "6vvPecFTmWxDfEJ6cYT1wa"
-    },
-    "lisa-sawadika#1": {
-      "durationSec": 189,
-      "source": "SCRIPT",
-      "spotifyId": "1VWiDyYTrqQhhmnWANWkFa"
     },
     "lisa-sg#1": {
       "durationSec": 226,
@@ -538,6 +588,11 @@
       "source": "SCRIPT",
       "spotifyId": "54XqJ3fP3GxmUejMsKwCaK"
     },
+    "jennie-power-trip": {
+      "durationSec": 197,
+      "source": "MANUAL",
+      "spotifyId": "1cyE4XiRueT0ANCp3CuJOK"
+    },
     "jennie-ruby": {
       "durationSec": 124,
       "source": "SCRIPT",
@@ -558,6 +613,11 @@
       "source": "SCRIPT",
       "spotifyId": "2wVDWtLKXunswWecARNILj"
     },
+    "jennie-someone-to-hold": {
+      "durationSec": 213,
+      "source": "MANUAL",
+      "spotifyId": "41GdHxKlxBzXZde4io6tbz"
+    },
     "jennie-special": {
       "durationSec": 237,
       "source": "MANUAL",
@@ -572,6 +632,11 @@
       "durationSec": 179,
       "source": "SCRIPT",
       "spotifyId": "6gcuJpHu0Ey30D5WR76y98"
+    },
+    "jisoo-addicted": {
+      "durationSec": 179,
+      "source": "MANUAL",
+      "spotifyId": "0SqDNsDiJyvrbXGsIvt0hN"
     },
     "jisoo-amortage": {
       "durationSec": 191,
@@ -593,6 +658,11 @@
       "source": "MANUAL",
       "spotifyId": "69CrOS7vEHIrhC2ILyEi0s"
     },
+    "jisoo-sun-showers": {
+      "durationSec": 171,
+      "source": "MANUAL",
+      "spotifyId": "43LLlCRgC6fYYqIaXGLmpd"
+    },
     "lisa-alter-ego": {
       "durationSec": 231,
       "source": "SCRIPT",
@@ -613,6 +683,16 @@
       "source": "SCRIPT",
       "spotifyId": "7uQZVznj0uQOGC9KhV2Mg6"
     },
+    "lisa-leave-with-me": {
+      "durationSec": 185,
+      "source": "MANUAL",
+      "spotifyId": "6SDT6lj8sVzFK0o8UI2Y2G"
+    },
+    "lisa-press-play": {
+      "durationSec": 189,
+      "source": "MANUAL",
+      "spotifyId": "0UECk3l1544vRUzYoZO5gI"
+    },
     "lisa-priceless": {
       "durationSec": 163,
       "source": "SCRIPT",
@@ -622,11 +702,6 @@
       "durationSec": 138,
       "source": "SCRIPT",
       "spotifyId": "6vvPecFTmWxDfEJ6cYT1wa"
-    },
-    "lisa-sawadika": {
-      "durationSec": 189,
-      "source": "SCRIPT",
-      "spotifyId": "1VWiDyYTrqQhhmnWANWkFa"
     },
     "lisa-sg": {
       "durationSec": 226,

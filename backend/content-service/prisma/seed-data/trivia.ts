@@ -209,11 +209,12 @@ export const TRIVIA: TriviaSeed[] = [
     category: 'MEMBER',
     memberSlug: 'lisa',
     verified: true,
-    source: SOURCES.press,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Harper’s Bazaar, 2024-07-26 — https://www.harpersbazaar.com/fashion/designers/a61709912/the-week-in-fashion-blackpink-lisa-named-louis-vuitton-ambassador/. Consultado 2026-11-21.',
     content: {
-      es: 'Lisa es embajadora global de Celine.',
-      en: 'Lisa is a global ambassador for Celine.',
-      ko: '리사는 셀린느의 글로벌 앰배서더입니다.',
+      es: 'Lisa es embajadora de Louis Vuitton desde julio de 2024; antes, en 2020, la nombró embajadora global Celine.',
+      en: 'Lisa has been a Louis Vuitton house ambassador since July 2024; before that, in 2020, Celine named her global ambassador.',
+      ko: '리사는 2024년 7월부터 루이 비통 앰배서더이며, 그에 앞서 2020년에는 셀린느 글로벌 앰배서더로 선정되었습니다.',
     },
   },
   {
@@ -471,9 +472,9 @@ export const TRIVIA: TriviaSeed[] = [
     source:
       'Wikipedia, The Album (Blackpink album) — https://en.wikipedia.org/wiki/The_Album_(Blackpink_album). Consultado 2026-09-13.',
     content: {
-      es: 'THE ALBUM debutó en el número 2 del Billboard 200 en octubre de 2020: la mejor posición de un álbum de artistas femeninas coreanas.',
-      en: 'THE ALBUM debuted at number 2 on the Billboard 200 in October 2020, the highest-charting album by a female Korean act.',
-      ko: 'THE ALBUM은 2020년 10월 빌보드 200에 2위로 진입하며 한국 여성 아티스트 앨범 최고 순위를 기록했습니다.',
+      es: 'THE ALBUM debutó en el número 2 del Billboard 200 en octubre de 2020: entonces, la mejor posición de un álbum de artistas femeninas coreanas.',
+      en: 'THE ALBUM debuted at number 2 on the Billboard 200 in October 2020, at the time the highest-charting album by a female Korean act.',
+      ko: 'THE ALBUM은 2020년 10월 빌보드 200에 2위로 진입하며 당시 한국 여성 아티스트 앨범 최고 순위를 기록했습니다.',
     },
   },
   {
@@ -600,11 +601,11 @@ export const TRIVIA: TriviaSeed[] = [
     memberSlug: 'jisoo',
     verified: true,
     source:
-      'Wikipedia, Jisoo discography — https://en.wikipedia.org/wiki/Jisoo_discography. Consultado 2026-09-11.',
+      'Wikipedia, Jisoo discography — https://en.wikipedia.org/wiki/Jisoo. Consultado 2026-11-21.',
     content: {
-      es: 'Jisoo fundó su propio sello, Blissoo, en febrero de 2024, y con él publicó AMORTAGE y CLICK.',
-      en: 'Jisoo founded her own label, Blissoo, in February 2024, and released AMORTAGE and CLICK through it.',
-      ko: '지수는 2024년 2월 자신의 레이블 블리수를 설립했고, 이 레이블로 AMORTAGE와 CLICK을 발표했습니다.',
+      es: 'Jisoo fundó su propio sello, Blissoo, en febrero de 2024, y con él ha publicado AMORTAGE, CLICK, ADDICTED y Sun Showers.',
+      en: 'Jisoo founded her own label, Blissoo, in February 2024, and has released AMORTAGE, CLICK, ADDICTED and Sun Showers through it.',
+      ko: '지수는 2024년 2월 자신의 레이블 블리수를 설립했고, 이 레이블로 AMORTAGE, CLICK, ADDICTED, Sun Showers를 발표했습니다.',
     },
   },
   {
@@ -757,6 +758,147 @@ export const TRIVIA: TriviaSeed[] = [
       es: 'Por su décimo aniversario, el 8 de agosto de 2026, las cuatro se reunieron con 40 fans en el Museo Nacional de Corea, que además lanzó con el grupo una colección de productos inspirada en el patrimonio coreano.',
       en: 'For their tenth anniversary, on 8 August 2026, the four met 40 fans at the National Museum of Korea, which also released a heritage-inspired merchandise collection with the group.',
       ko: '데뷔 10주년인 2026년 8월 8일, 네 멤버는 국립중앙박물관에서 팬 40명을 만났습니다. 박물관은 그룹과 함께 한국 문화유산에서 영감을 받은 굿즈 컬렉션도 선보였습니다.',
+    },
+  },
+  {
+    category: 'MUSIC',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Press Play (Lisa EP) — https://en.wikipedia.org/wiki/Press_Play_(Lisa_EP). Consultado 2026-11-21.',
+    content: {
+      es: 'PRESS PLAY es el primer EP de Lisa: seis canciones en las que, según contó ella, cada una tiene su propio personaje, como en una película.',
+      en: 'PRESS PLAY is Lisa’s first EP: six songs in which, as she put it, each one has its own character, like a movie.',
+      ko: 'PRESS PLAY는 리사의 첫 EP로, 리사는 여섯 곡마다 영화처럼 각기 다른 캐릭터가 있다고 설명했습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'lisa',
+    verified: true,
+    source: 'Wikipedia, Sawadika — https://en.wikipedia.org/wiki/Sawadika. Consultado 2026-11-21.',
+    content: {
+      es: 'El videoclip de SaWaDiKa sumó 73,3 millones de reproducciones en 24 horas: entonces, el segundo mayor estreno de un solista en YouTube, por detrás de LALISA, también suyo.',
+      en: 'The SaWaDiKa music video drew 73.3 million views in 24 hours: at the time, the second-biggest debut by a soloist on YouTube, behind her own LALISA.',
+      ko: 'SaWaDiKa 뮤직비디오는 24시간 만에 7,330만 회 조회되어, 당시 리사 자신의 LALISA에 이어 솔로 아티스트 역대 2위 YouTube 데뷔를 기록했습니다.',
+    },
+  },
+  {
+    category: 'STAGE',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Viva La Lisa — https://en.wikipedia.org/wiki/Viva_La_Lisa. Consultado 2026-11-21.',
+    content: {
+      es: 'Con Viva La Lisa, en noviembre de 2026, Lisa fue la primera artista de K-pop con una residencia de conciertos en Las Vegas.',
+      en: 'With Viva La Lisa, in November 2026, Lisa became the first K-pop artist to stage a Las Vegas residency.',
+      ko: '2026년 11월 Viva La Lisa로 리사는 라스베이거스에서 레지던시 공연을 연 최초의 K팝 아티스트가 되었습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). The Korea Herald — https://www.koreaherald.com/article/10886430. Consultado 2026-11-21.',
+    content: {
+      es: 'En 2026 Lisa ganó Mejor Pop en los MTV Video Music Awards con Dream: es la primera solista de K-pop que gana esa categoría.',
+      en: 'In 2026 Lisa won Best Pop at the MTV Video Music Awards with Dream, the first K-pop soloist to win that category.',
+      ko: '2026년 리사는 Dream으로 MTV 비디오 뮤직 어워드 베스트 팝 부문을 수상한 최초의 K팝 솔로 아티스트가 되었습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. The Korea Herald — https://www.koreaherald.com/article/10920234. Consultado 2026-11-21.',
+    content: {
+      es: 'El 29 de octubre de 2026 recibieron la Orden Okgwan al Mérito Cultural de Corea: son el primer grupo femenino de K-pop que la recibe.',
+      en: 'On 29 October 2026 they received the Okgwan Order of Cultural Merit of Korea, the first K-pop girl group to do so.',
+      ko: '2026년 10월 29일 옥관문화훈장을 받았습니다. K팝 걸그룹 최초입니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Korea JoongAng Daily — https://www.koreajoongangdaily.com/entertainment/blackpinks-deadline-breaks-record-for-highest-first-day-sales-by-k-pop-girl-group/12136553. Consultado 2026-11-21.',
+    content: {
+      es: 'DEADLINE vendió 1.461.785 copias en su primer día y 1.774.577 en su primera semana, según Hanteo: los dos eran récord de un grupo femenino de K-pop.',
+      en: 'DEADLINE sold 1,461,785 copies on its first day and 1,774,577 in its first week, according to Hanteo: both were records for a K-pop girl group.',
+      ko: '한터차트 기준 DEADLINE은 발매 첫날 1,461,785장, 첫 주 1,774,577장이 판매되어 당시 K팝 걸그룹 신기록을 세웠습니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Dracula (song) — https://en.wikipedia.org/wiki/Dracula_(song). 69th Annual Grammy Awards — https://en.wikipedia.org/wiki/69th_Annual_Grammy_Awards. Wikipedia, Jennie (singer) — https://en.wikipedia.org/wiki/Jennie_(singer). Consultado 2026-11-21.',
+    content: {
+      es: 'El remix de Dracula, de Tame Impala con Jennie, llegó al número 3 del Billboard Hot 100 e igualó a APT. como la canción de una artista de K-pop que más alto ha llegado. Tiene dos nominaciones a los Grammy de 2027.',
+      en: 'The Dracula remix, by Tame Impala with Jennie, reached number 3 on the Billboard Hot 100, tying APT. as the highest-charting song by a female K-pop artist. It has two nominations for the 2027 Grammys.',
+      ko: '테임 임팔라와 제니의 Dracula 리믹스는 빌보드 핫 100 3위에 올라 APT.와 함께 K팝 여성 아티스트 최고 순위를 기록했습니다. 2027년 그래미 2개 부문 후보에 올랐습니다.',
+    },
+  },
+  {
+    category: 'STAGE',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Jennie (singer) — https://en.wikipedia.org/wiki/Jennie_(singer). Chicago Sun-Times — https://chicago.suntimes.com/lollapalooza/2026/08/01/review-jennie-lollapalooza. Consultado 2026-11-21.',
+    content: {
+      es: 'En 2026 Jennie encabezó el Governors Ball de Nueva York y Lollapalooza en Chicago, donde fue la primera solista femenina de K-pop en hacerlo.',
+      en: 'In 2026 Jennie headlined Governors Ball in New York and Lollapalooza in Chicago, where she was the first female K-pop soloist to do so.',
+      ko: '2026년 제니는 뉴욕 거버너스 볼과 시카고 롤라팔루자의 헤드라이너로 섰으며, 롤라팔루자에서는 K팝 여성 솔로 최초였습니다.',
+    },
+  },
+  {
+    category: 'MEMBER',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Someone to Hold (Jennie song) — https://en.wikipedia.org/wiki/Someone_to_Hold_(Jennie_song). Grand Theft Auto VI: The Album — https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI:_The_Album. Consultado 2026-11-21.',
+    content: {
+      es: 'En noviembre de 2026 Jennie publicó dos canciones para bandas sonoras: Someone to Hold, para la película Steps, y Power Trip, para el videojuego Grand Theft Auto VI.',
+      en: 'In November 2026 Jennie released two soundtrack songs: Someone to Hold, for the film Steps, and Power Trip, for the video game Grand Theft Auto VI.',
+      ko: '2026년 11월 제니는 영화 「Steps」의 Someone to Hold와 게임 「Grand Theft Auto VI」의 Power Trip, 두 곡의 사운드트랙을 발표했습니다.',
+    },
+  },
+  {
+    category: 'MEMBER',
+    memberSlug: 'jisoo',
+    verified: true,
+    source:
+      'Wikipedia, Sun Showers — https://en.wikipedia.org/wiki/Sun_Showers. Consultado 2026-11-21.',
+    content: {
+      es: 'En la portada de Sun Showers, la canción de Jisoo para The Angry Birds Movie 3, sale Shumon, una bolita de polvo que ella misma dibujaba en secundaria.',
+      en: 'The cover of Sun Showers, Jisoo’s song for The Angry Birds Movie 3, features Shumon, a little dustball she drew in middle school.',
+      ko: '「The Angry Birds Movie 3」에 수록된 지수의 Sun Showers 커버에는 지수가 중학교 때 그린 먼지 캐릭터 슈몬이 등장합니다.',
+    },
+  },
+  {
+    category: 'RECORD',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'Wikipedia, Rosé (singer) — https://en.wikipedia.org/wiki/Ros%C3%A9_(singer). The Korea Herald — https://www.koreaherald.com/article/10684607. Consultado 2026-11-21.',
+    content: {
+      es: 'Rosé fue la primera artista de K-pop en ganar un Brit Award: Canción Internacional del Año en 2026, con APT.',
+      en: 'Rosé was the first K-pop artist to win a Brit Award: International Song of the Year in 2026, with APT.',
+      ko: '로제는 2026년 APT.로 올해의 인터내셔널 송을 받아 브릿 어워드를 수상한 최초의 K팝 아티스트가 되었습니다.',
+    },
+  },
+  {
+    category: 'OTHER',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Always Lalisa — https://en.wikipedia.org/wiki/Always_Lalisa. Consultado 2026-11-21.',
+    content: {
+      es: 'Always Lalisa, el documental sobre un año de la carrera en solitario de Lisa, se estrenó en septiembre de 2026 en el Festival de Toronto.',
+      en: 'Always Lalisa, the documentary about a year of Lisa’s solo career, premiered at the Toronto film festival in September 2026.',
+      ko: '리사의 솔로 활동 1년을 담은 다큐멘터리 「Always Lalisa」는 2026년 9월 토론토 영화제에서 처음 공개되었습니다.',
     },
   },
 ];

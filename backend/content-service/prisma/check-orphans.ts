@@ -9,6 +9,7 @@ import { PrismaClient } from './generated/client/client';
 import { parseConnection } from '../src/prisma/connection';
 import { AWARDS } from './seed-data/awards';
 import { QUIZ } from './seed-data/quiz';
+import { SOLO_WORKS } from './seed-data/solo-works';
 import { TIMELINE } from './seed-data/timeline';
 import { TRIVIA } from './seed-data/trivia';
 
@@ -40,6 +41,7 @@ async function main(): Promise<void> {
       ),
     ),
     awards: new Set(AWARDS.map(claveAward)),
+    soloWorks: new Set(SOLO_WORKS.map((work) => work.slug)),
   };
 
   const huerfanos = {
@@ -64,13 +66,19 @@ async function main(): Promise<void> {
         },
       })
     ).filter((row) => !esperados.awards.has(claveAward(row))),
+    soloWorks: (
+      await prisma.soloWork.findMany({
+        select: { id: true, slug: true, title: true, verified: true },
+      })
+    ).filter((row) => !esperados.soloWorks.has(row.slug)),
   };
 
   const total =
     huerfanos.trivia.length +
     huerfanos.quiz.length +
     huerfanos.timeline.length +
-    huerfanos.awards.length;
+    huerfanos.awards.length +
+    huerfanos.soloWorks.length;
 
   if (total === 0) {
     console.log('Sin filas huerfanas: la base coincide con el seed.');
@@ -98,6 +106,11 @@ async function main(): Promise<void> {
       `  [premio]     ${row.verified ? 'verificado' : 'sin contrastar'}  ${row.organization} ${row.year} — ${row.name}`,
     );
   }
+  for (const row of huerfanos.soloWorks) {
+    console.log(
+      `  [obra]       ${row.verified ? 'verificada' : 'sin contrastar'}  ${row.slug} — ${row.title}`,
+    );
+  }
 
   if (!FIX) {
     console.log('\nRepite con --fix para borrarlas.');
@@ -110,6 +123,7 @@ async function main(): Promise<void> {
     where: { id: { in: huerfanos.timeline.map((r) => r.id) } },
   });
   await prisma.award.deleteMany({ where: { id: { in: huerfanos.awards.map((r) => r.id) } } });
+  await prisma.soloWork.deleteMany({ where: { id: { in: huerfanos.soloWorks.map((r) => r.id) } } });
   console.log(`\n${total} fila(s) borradas.`);
 }
 

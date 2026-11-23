@@ -12,7 +12,7 @@ export const SOURCES = {
   official:
     'Canales oficiales del grupo y de YG Entertainment (blackpinkofficial.com y canal de YouTube @BLACKPINK).',
   discography:
-    'Fichas de lanzamiento publicadas por YG Entertainment y catalogos publicos de Spotify y YouTube Music.',
+    'Fichas de lanzamiento publicadas por YG Entertainment y catálogos públicos de Spotify y YouTube Music.',
   press:
     'Cobertura de prensa musical internacional (Billboard, Rolling Stone, NME) en la fecha del hecho.',
   festival: 'Carteles y comunicados oficiales del festival correspondiente.',
@@ -20,7 +20,7 @@ export const SOURCES = {
   pending:
     'Conocimiento público ampliamente difundido. PENDIENTE de contrastar contra fuente primaria antes de publicarlo.',
   pendingDate:
-    'El hecho esta documentado, pero la fecha exacta esta PENDIENTE de contrastar. Se guarda con la precision realmente conocida.',
+    'El hecho está documentado, pero la fecha exacta está PENDIENTE de contrastar. Se guarda con la precisión realmente conocida.',
   siteChoice:
     'Decisión de presentación de este sitio de fans. No es información oficial del grupo.',
 } as const;

@@ -530,7 +530,7 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
       },
     },
     tracks: [
-      { title: 'FALLEN ANGEL', trackNumber: 1, verified: true },
+      { title: 'FALLEN ANGEL', trackNumber: 1, isTitleTrack: true, verified: true },
       { title: 'HEAVEN', trackNumber: 2, verified: true },
       { title: 'Less than a Lover', trackNumber: 3, isTitleTrack: true, verified: true },
     ],
@@ -743,25 +743,6 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
     ],
   },
   {
-    slug: 'lisa-sawadika',
-    memberSlug: 'lisa',
-    title: 'SaWaDiKa',
-    type: 'SINGLE',
-    releaseDate: day('2026-09-02'),
-    verified: true,
-    source:
-      'Wikipedia, Lisa (rapper) discography — https://en.wikipedia.org/wiki/Lisa_(rapper)_discography. Sencillo de 2026. La fuente escrita solo da el año: la fecha es la de la ficha de Spotify. Sin conversión a KST contrastada; es un lanzamiento occidental de viernes o de hora coreana, que en los dos casos cae el mismo día en KST. Lista de canciones, duraciones e identificadores: ficha oficial en Spotify. Consultado 2026-09-11.',
-    translations: {
-      formatLabel: { es: 'Sencillo', en: 'Single', ko: '싱글' },
-      description: {
-        es: 'Sencillo de Lisa.',
-        en: 'Lisa single.',
-        ko: '리사의 싱글.',
-      },
-    },
-    tracks: [{ title: 'SaWaDiKa', trackNumber: 1, isTitleTrack: true, verified: true }],
-  },
-  {
     slug: 'rose-without-you',
     memberSlug: 'rose',
     title: 'Without You',
@@ -904,7 +885,7 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
     releaseDate: day('2026-09-18'),
     verified: true,
     source:
-      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en ingles fecha el 17 de septiembre; se guarda el 18, que es el dia en KST y el que dan las fuentes coreanas. Se escribe en minusculas, como lo estilizan la artista y Spotify. Consultado 2026-09-26.',
+      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en inglés fecha el 17 de septiembre; se guarda el 18, que es el día en KST y el que dan las fuentes coreanas. Se escribe en minúsculas, como lo estilizan la artista y Spotify. Consultado 2026-09-26.',
     translations: {
       formatLabel: { es: 'Sencillo', en: 'Single', ko: '싱글' },
       description: {
@@ -914,5 +895,126 @@ export const SOLO_WORKS: SoloWorkSeed[] = [
       },
     },
     tracks: [{ title: 'new trick', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
+  {
+    slug: 'lisa-press-play',
+    memberSlug: 'lisa',
+    title: 'PRESS PLAY',
+    type: 'EP',
+    releaseDate: day('2026-10-23'),
+    verified: true,
+    source:
+      'Wikipedia, Press Play (Lisa EP) — https://en.wikipedia.org/wiki/Press_Play_(Lisa_EP). Publicado el 23-10-2026 por Lloud y RCA Records. SaWaDiKa se adelantó como sencillo el 03-09-2026 (fecha en KST; la ficha de Spotify en EE. UU. dice 02-09) y Tarantino salió como sencillo el mismo día que el EP. Títulos con la grafía de la ficha oficial en Spotify. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'EP', en: 'EP', ko: '미니 앨범' },
+      description: {
+        es: 'Primer EP de Lisa, publicado con LLOUD y RCA Records. SaWaDiKa se adelantó como sencillo.',
+        en: 'The first EP by Lisa, released through LLOUD and RCA Records. SaWaDiKa came out first as a single.',
+        ko: 'LLOUD와 RCA 레코드를 통해 발표한 리사의 첫 EP. SaWaDiKa가 선공개 싱글로 먼저 나왔습니다.',
+      },
+    },
+    tracks: [
+      { title: 'SaWaDiKa', trackNumber: 1, isTitleTrack: true, verified: true },
+      { title: 'V12', trackNumber: 2, verified: true },
+      { title: 'Cobra', trackNumber: 3, verified: true },
+      { title: 'Tarantino', trackNumber: 4, isTitleTrack: true, verified: true },
+      { title: 'Cut U Off', trackNumber: 5, verified: true },
+      { title: 'Sweat', trackNumber: 6, verified: true },
+    ],
+  },
+  {
+    slug: 'jisoo-addicted',
+    memberSlug: 'jisoo',
+    title: 'ADDICTED',
+    type: 'SINGLE',
+    releaseDate: day('2026-10-30'),
+    verified: true,
+    source:
+      'Wikipedia, Addicted (Jisoo song) — https://en.wikipedia.org/wiki/Addicted_(Jisoo_song). Yonhap — https://en.yna.co.kr/view/AEN20261027001900315. Publicado el 30-10-2026 por Blissoo y Warner Records; la ficha de Spotify en EE. UU. dice 29-10 por el huso horario. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'Sencillo', en: 'Single', ko: '싱글' },
+      description: {
+        es: 'Sencillo de Jisoo, publicado con Blissoo y Warner Records dos meses después de CLICK.',
+        en: 'Single by Jisoo, released through Blissoo and Warner Records two months after CLICK.',
+        ko: 'CLICK 이후 두 달 만에 블리수와 워너 레코드를 통해 발표한 지수의 싱글.',
+      },
+    },
+    tracks: [{ title: 'ADDICTED', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
+  {
+    slug: 'jennie-someone-to-hold',
+    memberSlug: 'jennie',
+    title: 'Someone to Hold',
+    type: 'OST',
+    releaseDate: day('2026-11-06'),
+    verified: true,
+    source:
+      'Wikipedia, Someone to Hold (Jennie song) — https://en.wikipedia.org/wiki/Someone_to_Hold_(Jennie_song). Billboard, 2026-11-06 — https://www.billboard.com/music/pop/jennie-someone-to-hold-stream-it-now-1236375680/. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'Banda sonora', en: 'Soundtrack', ko: 'OST' },
+      description: {
+        es: 'Canción de Jennie para Steps, la película de animación de Netflix, y adelanto de su banda sonora.',
+        en: 'Jennie song for Steps, the Netflix animated film, and the lead single from its soundtrack.',
+        ko: '넷플릭스 애니메이션 영화 「Steps」 사운드트랙의 리드 싱글로 발표한 제니의 곡.',
+      },
+    },
+    tracks: [{ title: 'Someone to Hold', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
+  {
+    slug: 'lisa-leave-with-me',
+    memberSlug: 'lisa',
+    title: 'Leave With Me',
+    type: 'OST',
+    releaseDate: day('2026-11-18'),
+    verified: true,
+    source:
+      'Wikipedia, Leave with Me — https://en.wikipedia.org/wiki/Leave_with_Me. The Hollywood Reporter, 2026-11-10 — https://www.hollywoodreporter.com/music/film-tv-music-news/lisa-always-lalisa-youtube-premium-new-single-leave-with-me-1236751658/. Las fuentes dan el 18 de noviembre sin hora: no se convierte a KST. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'Banda sonora', en: 'Soundtrack', ko: 'OST' },
+      description: {
+        es: 'Balada de Lisa para los créditos finales de su documental, Always Lalisa.',
+        en: 'Ballad by Lisa for the closing credits of her documentary, Always Lalisa.',
+        ko: '다큐멘터리 「Always Lalisa」의 엔딩 크레디트를 위해 만든 리사의 발라드.',
+      },
+    },
+    tracks: [{ title: 'Leave With Me', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
+  {
+    slug: 'jennie-power-trip',
+    memberSlug: 'jennie',
+    title: 'Power Trip',
+    type: 'OST',
+    releaseDate: day('2026-11-20'),
+    verified: true,
+    source:
+      'Wikipedia, Grand Theft Auto VI: The Album — https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI:_The_Album. Billboard, 2026-11-14 — https://www.billboard.com/music/music-news/gta-6-album-tracklist-grand-theft-auto-vi-soundtrack-1236382244/. Pista 21 del disco, publicado el 20-11-2026; la ficha suelta de Spotify en EE. UU. dice 19-11. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'Banda sonora', en: 'Soundtrack', ko: 'OST' },
+      description: {
+        es: 'Canción de Jennie para Grand Theft Auto VI: The Album, la banda sonora del videojuego.',
+        en: 'Jennie song for Grand Theft Auto VI: The Album, the soundtrack of the video game.',
+        ko: '비디오 게임 사운드트랙 「Grand Theft Auto VI: The Album」에 수록된 제니의 곡.',
+      },
+    },
+    tracks: [{ title: 'Power Trip', trackNumber: 1, isTitleTrack: true, verified: true }],
+  },
+  {
+    slug: 'jisoo-sun-showers',
+    memberSlug: 'jisoo',
+    title: 'Sun Showers',
+    type: 'OST',
+    releaseDate: day('2026-11-20'),
+    verified: true,
+    source:
+      'Wikipedia, Sun Showers — https://en.wikipedia.org/wiki/Sun_Showers. Rolling Stone — https://www.rollingstone.com/music/music-news/blackpink-jisoo-sun-showers-single-angry-birds-movie-1235661547/. Consultado 2026-11-21.',
+    translations: {
+      formatLabel: { es: 'Banda sonora', en: 'Soundtrack', ko: 'OST' },
+      description: {
+        es: 'Canción de Jisoo para la película de animación The Angry Birds Movie 3 y adelanto de su banda sonora.',
+        en: 'Jisoo song for the animated film The Angry Birds Movie 3, and the lead single from its soundtrack.',
+        ko: '애니메이션 영화 「The Angry Birds Movie 3」 사운드트랙의 리드 싱글로 발표한 지수의 곡.',
+      },
+    },
+    tracks: [{ title: 'Sun Showers', trackNumber: 1, isTitleTrack: true, verified: true }],
   },
 ];

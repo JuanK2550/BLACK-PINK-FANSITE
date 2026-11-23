@@ -18,7 +18,7 @@ export interface AwardSeed {
 }
 
 const FUENTE =
-  'Wikipedia, List of awards and nominations received by Blackpink — https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Blackpink. Consultado 2026-08-29. El ano registrado es el de la ceremonia, no el de la obra premiada.';
+  'Wikipedia, List of awards and nominations received by Blackpink — https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Blackpink. Consultado 2026-08-29. El año registrado es el de la ceremonia, no el de la obra premiada.';
 
 const CATEGORIES = {
   rookie: { es: 'Revelación', en: 'New artist', ko: '신인상' },
@@ -103,6 +103,13 @@ const WINS: Row[] = [
   ['Asia Artist Awards', 2025, 'Legendary Group – Female', 'group', null],
   ['Asia Star Entertainer Awards', 2026, 'Song of the Year (daesang)', 'daesang', 'Jump'],
   ['Golden Disc Awards', 2026, 'Best Digital Song (Bonsang)', 'bonsang', 'Jump'],
+  [
+    'Korean Popular Culture and Arts Awards',
+    2026,
+    'Okgwan Order of Cultural Merit',
+    'special',
+    null,
+  ],
 ];
 
 const NOMINATIONS: Row[] = [

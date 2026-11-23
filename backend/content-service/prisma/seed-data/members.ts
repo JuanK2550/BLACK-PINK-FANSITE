@@ -63,7 +63,7 @@ export const MEMBERS: MemberSeed[] = [
       licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
       source:
         'https://commons.wikimedia.org/wiki/File:20240226_Kim_Jisoo_%EA%B9%80%EC%A7%80%EC%88%98_03.jpg ' +
-        '(original 672x918; el archivo servido esta AMPLIADO a 960px de ancho, que no anade detalle: es el unico de los cuatro que sube de tamano en vez de bajar)',
+        '(original 672x918; el archivo servido está AMPLIADO a 960px de ancho, que no añade detalle: es el único de los cuatro que sube de tamaño en vez de bajar)',
       date: day('2024-02-26'),
       focus: '50% 28%',
       alt: {
@@ -77,9 +77,9 @@ export const MEMBERS: MemberSeed[] = [
       nationality: { es: 'Corea del Sur', en: 'South Korea', ko: '대한민국' },
       nickname: { es: 'La mayor del grupo', en: 'The eldest member', ko: '맏언니' },
       bio: {
-        es: 'Jisoo es la integrante de mayor edad de BLACKPINK y una de las voces del grupo desde el debut en 2016. Compagina la actividad musical con el trabajo como actriz y con su papel de embajadora global de Dior.',
-        en: 'Jisoo is the eldest member of BLACKPINK and one of the group vocalists since their 2016 debut. She combines music with acting work and her role as a global ambassador for Dior.',
-        ko: '지수는 BLACKPINK의 맏언니이자 2016년 데뷔부터 그룹의 보컬을 맡아 왔습니다. 음악 활동과 함께 배우로도 활동하며 디올의 글로벌 앰배서더를 맡고 있습니다.',
+        es: 'Jisoo es la integrante de mayor edad de BLACKPINK y una de las voces del grupo desde el debut en 2016. Compagina la actividad musical con el trabajo como actriz y con su papel de embajadora global de Dior. En 2024 fundó su propio sello, Blissoo.',
+        en: 'Jisoo is the eldest member of BLACKPINK and one of the group vocalists since their 2016 debut. She combines music with acting work and her role as a global ambassador for Dior. In 2024 she founded her own label, Blissoo.',
+        ko: '지수는 BLACKPINK의 맏언니이자 2016년 데뷔부터 그룹의 보컬을 맡아 왔습니다. 음악 활동과 함께 배우로도 활동하며 디올의 글로벌 앰배서더를 맡고 있습니다. 2024년에는 자신의 레이블 블리수를 설립했습니다.',
       },
       description: {
         es: 'Vocalista de BLACKPINK. Debut en solitario en 2023 con el álbum sencillo ME.',
@@ -124,9 +124,9 @@ export const MEMBERS: MemberSeed[] = [
       nationality: { es: 'Corea del Sur', en: 'South Korea', ko: '대한민국' },
       nickname: { es: 'La primera en solitario', en: 'First to go solo', ko: '첫 솔로 주자' },
       bio: {
-        es: 'Jennie reparte su papel en el grupo entre el rap y la voz. En 2018 se convirtió en la primera integrante en publicar en solitario, con SOLO, y es embajadora global de Chanel.',
-        en: 'Jennie splits her role in the group between rapping and singing. In 2018 she became the first member to release solo material, with SOLO, and she is a global ambassador for Chanel.',
-        ko: '제니는 그룹 안에서 랩과 보컬을 함께 맡고 있습니다. 2018년 SOLO로 멤버 중 처음 솔로 활동을 시작했으며 샤넬의 글로벌 앰배서더입니다.',
+        es: 'Jennie reparte su papel en el grupo entre el rap y la voz. En 2018 se convirtió en la primera integrante en publicar en solitario, con SOLO, y es embajadora global de Chanel. Su primer álbum de estudio, Ruby, salió en 2025 con su propio sello, OA.',
+        en: 'Jennie splits her role in the group between rapping and singing. In 2018 she became the first member to release solo material, with SOLO, and she is a global ambassador for Chanel. Her first studio album, Ruby, came out in 2025 through her own label, OA.',
+        ko: '제니는 그룹 안에서 랩과 보컬을 함께 맡고 있습니다. 2018년 SOLO로 멤버 중 처음 솔로 활동을 시작했으며 샤넬의 글로벌 앰배서더입니다. 2025년 자신의 레이블 OA를 통해 첫 정규 앨범 Ruby를 발표했습니다.',
       },
       description: {
         es: 'Rapera y vocalista de BLACKPINK. Primera integrante con lanzamiento en solitario (2018).',
@@ -172,9 +172,9 @@ export const MEMBERS: MemberSeed[] = [
       nationality: { es: 'Nueva Zelanda', en: 'New Zealand', ko: '뉴질랜드' },
       nickname: { es: 'La voz principal', en: 'The lead voice', ko: '메인 보컬' },
       bio: {
-        es: 'Rosé nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur para formarse como artista. Es la vocalista principal del grupo y embajadora global de Saint Laurent. Su nombre artístico viene de su nombre en inglés, Roseanne.',
-        en: 'Rosé was born in New Zealand and raised in Australia before moving to South Korea to train as an artist. She is the group main vocalist and a global ambassador for Saint Laurent. Her stage name comes from her English name, Roseanne.',
-        ko: '로제는 뉴질랜드에서 태어나 호주에서 자란 뒤 한국으로 건너와 연습생 생활을 했습니다. 그룹의 메인 보컬이며 생로랑의 글로벌 앰배서더입니다. 활동명은 영어 이름 Roseanne에서 왔습니다.',
+        es: 'Rosé nació en Nueva Zelanda y se crió en Australia antes de mudarse a Corea del Sur para formarse como artista. Es la vocalista principal del grupo y embajadora global de Saint Laurent. Su nombre artístico viene de su nombre en inglés, Roseanne. Con APT. fue la primera artista femenina de K-pop en el top 10 del Billboard Hot 100.',
+        en: 'Rosé was born in New Zealand and raised in Australia before moving to South Korea to train as an artist. She is the group main vocalist and a global ambassador for Saint Laurent. Her stage name comes from her English name, Roseanne. With APT. she was the first female K-pop artist in the top 10 of the Billboard Hot 100.',
+        ko: '로제는 뉴질랜드에서 태어나 호주에서 자란 뒤 한국으로 건너와 연습생 생활을 했습니다. 그룹의 메인 보컬이며 생로랑의 글로벌 앰배서더입니다. 활동명은 영어 이름 Roseanne에서 왔습니다. APT.로 빌보드 핫 100 톱 10에 오른 최초의 K팝 여성 아티스트가 되었습니다.',
       },
       description: {
         es: 'Vocalista principal de BLACKPINK. Debut en solitario en 2021 con el álbum sencillo R.',
@@ -223,9 +223,9 @@ export const MEMBERS: MemberSeed[] = [
       nationality: { es: 'Tailandia', en: 'Thailand', ko: '태국' },
       nickname: { es: 'La menor del grupo', en: 'The youngest member', ko: '막내' },
       bio: {
-        es: 'Lisa es la integrante más joven y la única que no nació en Corea del Sur: es tailandesa. Dentro del grupo reparte su papel entre el rap y la danza, y es embajadora global de Celine.',
-        en: 'Lisa is the youngest member and the only one not born in South Korea: she is Thai. Within the group she splits her role between rapping and dancing, and she is a global ambassador for Celine.',
-        ko: '리사는 그룹의 막내이자 유일하게 한국에서 태어나지 않은 멤버로, 태국 출신입니다. 그룹 안에서 랩과 댄스를 함께 맡고 있으며 셀린느의 글로벌 앰배서더입니다.',
+        es: 'Lisa es la integrante más joven y nació en Tailandia. Dentro del grupo reparte su papel entre el rap y la danza, y es embajadora de Louis Vuitton desde 2024. Con su propio sello, LLOUD, publicó el álbum Alter Ego en 2025 y el EP PRESS PLAY en 2026.',
+        en: 'Lisa is the youngest member and was born in Thailand. Within the group she splits her role between rapping and dancing, and she has been a Louis Vuitton ambassador since 2024. Through her own label, LLOUD, she released the album Alter Ego in 2025 and the EP PRESS PLAY in 2026.',
+        ko: '리사는 그룹의 막내로 태국에서 태어났습니다. 그룹 안에서 랩과 댄스를 함께 맡고 있으며 2024년부터 루이 비통 앰배서더입니다. 자신의 레이블 LLOUD를 통해 2025년 앨범 Alter Ego와 2026년 EP PRESS PLAY를 발표했습니다.',
       },
       description: {
         es: 'Rapera y bailarina principal de BLACKPINK. Debut en solitario en 2021 con el álbum sencillo LALISA.',

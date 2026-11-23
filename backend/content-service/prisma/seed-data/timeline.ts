@@ -270,7 +270,7 @@ export const TIMELINE: TimelineSeed[] = [
     source:
       'TenAsia, "BLACKPINK Becomes First Kpop Girl Group to Win MTV VMA", 2020-08-31 — http://en.tenasia.com/archives/106836. La victoria (Song of Summer) figura además en Wikipedia, List of awards and nominations received by Blackpink — https://en.wikipedia.org/wiki/List_of_awards_and_nominations_received_by_Blackpink. Consultado 2026-08-29. Se guarda el mes: la fuente fecha la noticia, no la gala.',
     title: {
-      es: 'Primer MTV Vídeo Music Award del grupo',
+      es: 'Primer MTV Video Music Award del grupo',
       en: 'The group first MTV Video Music Award',
       ko: '그룹 최초의 MTV 비디오 뮤직 어워드 수상',
     },
@@ -510,7 +510,7 @@ export const TIMELINE: TimelineSeed[] = [
     source:
       'Gulf News, "Blackpink becomes the first girl group in 24 years to win Best Group at the VMAs", 2023-09-13 — https://gulfnews.com/entertainment/blackpink-becomes-the-first-girl-group-in-24-years-to-win-best-group-at-the-vmas-1.1694609053080. La victoria figura además en Wikipedia, List of awards and nominations received by Blackpink. Consultado 2026-08-29. Nota: el titular dice "Best Group"; la categoría oficial de la gala de 2023 es "Group of the Year", que es como se guarda en premios. Se guarda el mes: la fuente fecha la noticia, no la gala.',
     title: {
-      es: 'Group of the Year en los MTV Vídeo Music Awards',
+      es: 'Group of the Year en los MTV Video Music Awards',
       en: 'Group of the Year at the MTV Video Music Awards',
       ko: 'MTV 비디오 뮤직 어워드 Group of the Year 수상',
     },
@@ -836,26 +836,6 @@ export const TIMELINE: TimelineSeed[] = [
     },
   },
   {
-    date: day('2026-09-02'),
-    category: 'SOLO',
-    importance: 3,
-    datePrecision: 'day',
-    memberSlug: 'lisa',
-    verified: true,
-    source:
-      'Wikipedia, Lisa (rapper) discography — https://en.wikipedia.org/wiki/Lisa_(rapper)_discography. Fecha: ficha oficial en Spotify. Consultado 2026-09-11.',
-    title: {
-      es: 'Lisa publica SaWaDiKa',
-      en: 'Lisa releases SaWaDiKa',
-      ko: '리사, SaWaDiKa 발표',
-    },
-    description: {
-      es: 'Sencillo de Lisa.',
-      en: 'Lisa single.',
-      ko: '리사의 싱글.',
-    },
-  },
-  {
     date: day('2026-09-04'),
     category: 'SOLO',
     importance: 3,
@@ -1097,7 +1077,7 @@ export const TIMELINE: TimelineSeed[] = [
     memberSlug: 'rose',
     verified: true,
     source:
-      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en ingles fecha el 17 de septiembre; se guarda el 18, que es el dia en KST y el que dan las fuentes coreanas. Consultado 2026-09-26.',
+      'Wikipedia, New Trick — https://en.wikipedia.org/wiki/New_Trick. The Korea Times — https://www.koreatimes.co.kr/entertainment/k-pop/20260918/blackpinks-rose-drops-new-single-new-trick. Nota: la Wikipedia en inglés fecha el 17 de septiembre; se guarda el 18, que es el día en KST y el que dan las fuentes coreanas. Consultado 2026-09-26.',
     title: {
       es: 'Rosé publica new trick',
       en: 'Rosé releases new trick',
@@ -1107,6 +1087,383 @@ export const TIMELINE: TimelineSeed[] = [
       es: 'Sencillo suelto de Rosé. El videoclip lo dirigió Dave Meyers y se grabó con un iPhone, dentro de la campaña Shot on iPhone de Apple.',
       en: 'Standalone single by Rosé. The music video was directed by Dave Meyers and shot on an iPhone, as part of Apple Shot on iPhone campaign.',
       ko: '로제의 단독 싱글. 뮤직비디오는 데이브 마이어스가 연출했으며, 애플의 Shot on iPhone 캠페인의 일환으로 아이폰으로 촬영했습니다.',
+    },
+  },
+  {
+    date: day('2026-02-06'),
+    category: 'SOLO',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Dracula (song) — https://en.wikipedia.org/wiki/Dracula_(song). Consultado 2026-11-21.',
+    title: {
+      es: 'Jennie y Tame Impala publican el remix de Dracula',
+      en: 'Jennie and Tame Impala release the Dracula remix',
+      ko: '제니와 테임 임팔라, Dracula 리믹스 발표',
+    },
+    description: {
+      es: 'El remix llegó al número 3 del Billboard Hot 100: es la primera canción de Jennie en el top 10 de esa lista.',
+      en: 'The remix reached number 3 on the Billboard Hot 100: the first Jennie song in the top 10 of that chart.',
+      ko: '이 리믹스는 빌보드 핫 100 3위에 올랐으며, 제니의 첫 핫 100 톱 10 진입곡입니다.',
+    },
+  },
+  {
+    date: day('2026-02-20'),
+    category: 'RECORD',
+    importance: 4,
+    datePrecision: 'day',
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. Korea JoongAng Daily, 2026-02-21 — https://www.koreajoongangdaily.com/entertainment/blackpink-becomes-first-artist-in-world-with-100-million-youtube-subscribers-receives-special-award/12075985. Consultado 2026-11-21.',
+    title: {
+      es: '100 millones de suscriptores en YouTube',
+      en: '100 million YouTube subscribers',
+      ko: 'YouTube 구독자 1억 명 달성',
+    },
+    description: {
+      es: 'BLACKPINK es el primer artista del mundo cuyo canal de YouTube supera los 100 millones de suscriptores.',
+      en: 'BLACKPINK is the first artist in the world whose YouTube channel passes 100 million subscribers.',
+      ko: 'BLACKPINK는 전 세계 아티스트 최초로 YouTube 구독자 1억 명을 넘었습니다.',
+    },
+  },
+  {
+    date: day('2026-02-28'),
+    category: 'AWARD',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'rose',
+    verified: true,
+    source:
+      'Wikipedia, Rosé (singer) — https://en.wikipedia.org/wiki/Ros%C3%A9_(singer). The Korea Herald, 2026-03-01 — https://www.koreaherald.com/article/10684607. Consultado 2026-11-21.',
+    title: {
+      es: 'APT. gana un Brit Award',
+      en: 'APT. wins a Brit Award',
+      ko: 'APT., 브릿 어워드 수상',
+    },
+    description: {
+      es: 'Rosé gana con APT. el premio a la Canción Internacional del Año: es la primera vez que un artista de K-pop gana en los Brit Awards.',
+      en: 'Rosé wins International Song of the Year with APT.: the first win by a K-pop artist at the Brit Awards.',
+      ko: '로제가 APT.로 올해의 인터내셔널 송을 수상했습니다. K팝 아티스트의 첫 브릿 어워드 수상입니다.',
+    },
+  },
+  {
+    date: day('2026-06-07'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Jennie (singer) — https://en.wikipedia.org/wiki/Jennie_(singer). Teen Vogue, 2026-06-08 — https://www.teenvogue.com/story/jennie-stray-kids-ravyn-lenae-best-gov-ball-2026-moments. Fecha local de Nueva York. Consultado 2026-11-21.',
+    title: {
+      es: 'Jennie encabeza el Governors Ball',
+      en: 'Jennie headlines Governors Ball',
+      ko: '제니, 거버너스 볼 헤드라이너',
+    },
+    description: {
+      es: 'Primera solista de K-pop que encabeza el festival de Nueva York. Ese verano encabezó también Roskilde, Open’er y Mad Cool.',
+      en: 'The first K-pop solo artist to headline the New York festival. That summer she also headlined Roskilde, Open’er and Mad Cool.',
+      ko: '뉴욕 페스티벌의 헤드라이너로 선 최초의 K팝 솔로 아티스트입니다. 같은 여름 로스킬레, 오프너, 매드 쿨의 헤드라이너로도 올랐습니다.',
+    },
+  },
+  {
+    date: day('2026-06-12'),
+    category: 'SOLO',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). Fecha local de Los Ángeles. Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa actúa en la inauguración del Mundial',
+      en: 'Lisa performs at the World Cup opening ceremony',
+      ko: '리사, 월드컵 개막식 공연',
+    },
+    description: {
+      es: 'Canta Goals con Anitta y Rema en la ceremonia inaugural de Los Ángeles de la Copa Mundial de la FIFA 2026.',
+      en: 'She performs Goals with Anitta and Rema at the Los Angeles opening ceremony of the 2026 FIFA World Cup.',
+      ko: '2026 FIFA 월드컵 로스앤젤레스 개막식에서 아니타, 레마와 함께 Goals를 불렀습니다.',
+    },
+  },
+  {
+    date: day('2026-08-01'),
+    category: 'SOLO',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Jennie (singer) — https://en.wikipedia.org/wiki/Jennie_(singer). Chicago Sun-Times, 2026-08-01 — https://chicago.suntimes.com/lollapalooza/2026/08/01/review-jennie-lollapalooza. Fecha local de Chicago. Consultado 2026-11-21.',
+    title: {
+      es: 'Jennie encabeza Lollapalooza',
+      en: 'Jennie headlines Lollapalooza',
+      ko: '제니, 롤라팔루자 헤드라이너',
+    },
+    description: {
+      es: 'Primera solista femenina de K-pop que encabeza el festival de Chicago. Dos semanas después encabezó Summer Sonic, en Japón.',
+      en: 'The first female K-pop soloist to headline the Chicago festival. Two weeks later she headlined Summer Sonic in Japan.',
+      ko: '시카고 페스티벌의 헤드라이너로 선 최초의 K팝 여성 솔로 아티스트입니다. 2주 뒤에는 일본 서머소닉의 헤드라이너로도 올랐습니다.',
+    },
+  },
+  {
+    date: day('2026-09-03'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Sawadika — https://en.wikipedia.org/wiki/Sawadika. Fecha en KST; la ficha de Spotify en EE. UU. dice 02-09. Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa publica SaWaDiKa',
+      en: 'Lisa releases SaWaDiKa',
+      ko: '리사, SaWaDiKa 발표',
+    },
+    description: {
+      es: 'Sencillo que adelantó PRESS PLAY. El videoclip, rodado en Bangkok, sumó 73,3 millones de reproducciones en 24 horas.',
+      en: 'The single that preceded PRESS PLAY. Its music video, filmed in Bangkok, drew 73.3 million views in 24 hours.',
+      ko: 'PRESS PLAY의 선공개 싱글. 방콕에서 촬영한 뮤직비디오는 24시간 만에 7,330만 회 조회되었습니다.',
+    },
+  },
+  {
+    date: day('2026-09-11'),
+    category: 'OTHER',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Always Lalisa — https://en.wikipedia.org/wiki/Always_Lalisa. Fecha local de Toronto. Consultado 2026-11-21.',
+    title: {
+      es: 'Estreno de Always Lalisa en Toronto',
+      en: 'Always Lalisa premieres in Toronto',
+      ko: '「Always Lalisa」 토론토 첫 공개',
+    },
+    description: {
+      es: 'El documental de Sue Kim sobre un año de la carrera en solitario de Lisa se estrena en el Festival de Toronto. Llegó a los cines el 12 de octubre y a YouTube Premium el 18 de noviembre.',
+      en: 'The Sue Kim documentary about a year of Lisa’s solo career premieres at the Toronto film festival. It reached cinemas on October 12 and YouTube Premium on November 18.',
+      ko: '리사의 솔로 활동 1년을 담은 수 킴 감독의 다큐멘터리가 토론토 영화제에서 처음 공개되었습니다. 10월 12일 극장, 11월 18일 YouTube 프리미엄에서 공개되었습니다.',
+    },
+  },
+  {
+    date: day('2026-09-27'),
+    category: 'AWARD',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Lisa (rapper) — https://en.wikipedia.org/wiki/Lisa_(rapper). The Korea Herald, 2026-09-28 — https://www.koreaherald.com/article/10886430. Fecha local de la gala. Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa gana Mejor Pop en los MTV VMA',
+      en: 'Lisa wins Best Pop at the MTV VMAs',
+      ko: '리사, MTV VMA 베스트 팝 수상',
+    },
+    description: {
+      es: 'Lo gana con Dream: es la primera solista de K-pop que se lleva esa categoría.',
+      en: 'She wins with Dream: the first K-pop soloist to take that category.',
+      ko: 'Dream으로 수상했으며, 이 부문을 받은 최초의 K팝 솔로 아티스트입니다.',
+    },
+  },
+  {
+    date: day('2026-10-23'),
+    category: 'SOLO',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Press Play (Lisa EP) — https://en.wikipedia.org/wiki/Press_Play_(Lisa_EP). Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa publica PRESS PLAY',
+      en: 'Lisa releases PRESS PLAY',
+      ko: '리사, PRESS PLAY 발표',
+    },
+    description: {
+      es: 'Primer EP de Lisa, con seis canciones: SaWaDiKa, V12, Cobra, Tarantino, Cut U Off y Sweat.',
+      en: 'The first EP by Lisa, with six songs: SaWaDiKa, V12, Cobra, Tarantino, Cut U Off and Sweat.',
+      ko: 'SaWaDiKa, V12, Cobra, Tarantino, Cut U Off, Sweat 여섯 곡이 담긴 리사의 첫 EP.',
+    },
+  },
+  {
+    date: day('2026-10-29'),
+    category: 'AWARD',
+    importance: 5,
+    datePrecision: 'day',
+    verified: true,
+    source:
+      'Wikipedia, Blackpink — https://en.wikipedia.org/wiki/Blackpink. The Korea Times, 2026-10-29 — https://www.koreatimes.co.kr/lifestyle/people-events/20261029/late-singer-shin-hae-chul-blackpink-among-10-to-receive-cultural-merit. The Korea Herald, 2026-10-30 — https://www.koreaherald.com/article/10920234. Consultado 2026-11-21.',
+    title: {
+      es: 'Orden al Mérito Cultural de Corea',
+      en: 'Korean Order of Cultural Merit',
+      ko: '옥관문화훈장 수훈',
+    },
+    description: {
+      es: 'Las cuatro reciben la Orden Okgwan al Mérito Cultural en los Premios de Cultura Popular y Artes de Corea. Es el primer grupo femenino de K-pop que la recibe.',
+      en: 'The four members receive the Okgwan Order of Cultural Merit at the Korean Popular Culture and Arts Awards, the first K-pop girl group to do so.',
+      ko: '네 멤버가 대한민국 대중문화예술상에서 옥관문화훈장을 받았습니다. K팝 걸그룹 최초입니다.',
+    },
+  },
+  {
+    date: day('2026-10-30'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'jisoo',
+    verified: true,
+    source:
+      'Wikipedia, Addicted (Jisoo song) — https://en.wikipedia.org/wiki/Addicted_(Jisoo_song). Consultado 2026-11-21.',
+    title: {
+      es: 'Jisoo publica ADDICTED',
+      en: 'Jisoo releases ADDICTED',
+      ko: '지수, ADDICTED 발표',
+    },
+    description: {
+      es: 'Sencillo de Jisoo, dos meses después de CLICK.',
+      en: 'Single by Jisoo, two months after CLICK.',
+      ko: 'CLICK 이후 두 달 만에 발표한 지수의 싱글.',
+    },
+  },
+  {
+    date: day('2026-11-06'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Someone to Hold (Jennie song) — https://en.wikipedia.org/wiki/Someone_to_Hold_(Jennie_song). Consultado 2026-11-21.',
+    title: {
+      es: 'Jennie publica Someone to Hold',
+      en: 'Jennie releases Someone to Hold',
+      ko: '제니, Someone to Hold 발표',
+    },
+    description: {
+      es: 'Adelanto de la banda sonora de Steps, la película de animación de Netflix. Es su primera canción para una película de animación.',
+      en: 'The lead single from the soundtrack of Steps, the Netflix animated film. It is her first song for an animated film.',
+      ko: '넷플릭스 애니메이션 영화 「Steps」 사운드트랙의 리드 싱글로, 제니의 첫 애니메이션 영화 참여곡입니다.',
+    },
+  },
+  {
+    date: day('2026-11-12'),
+    category: 'TOUR',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Viva La Lisa — https://en.wikipedia.org/wiki/Viva_La_Lisa. Rolling Stone, 2026-03-30 — https://www.rollingstone.com/music/music-news/lisa-blackpink-las-vegas-residency-1235538653/. Fecha local de Las Vegas. Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa arranca su residencia en Las Vegas',
+      en: 'Lisa opens her Las Vegas residency',
+      ko: '리사, 라스베이거스 레지던시 시작',
+    },
+    description: {
+      es: 'Primer concierto de Viva La Lisa, en el Colosseum del Caesars Palace: es la primera residencia de un artista de K-pop en Las Vegas, con seis fechas anunciadas.',
+      en: 'Opening night of Viva La Lisa at the Colosseum at Caesars Palace: the first Las Vegas residency by a K-pop artist, with six dates announced.',
+      ko: '시저스 팰리스 콜로세움에서 Viva La Lisa의 첫 공연이 열렸습니다. K팝 아티스트 최초의 라스베이거스 레지던시로, 총 6회 공연이 발표되었습니다.',
+    },
+  },
+  {
+    date: day('2026-11-16'),
+    category: 'AWARD',
+    importance: 4,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, 69th Annual Grammy Awards — https://en.wikipedia.org/wiki/69th_Annual_Grammy_Awards. Nominaciones anunciadas el 16-11-2026; la gala es el 07-02-2027. Consultado 2026-11-21.',
+    title: {
+      es: 'Dracula, dos veces nominada a los Grammy',
+      en: 'Dracula earns two Grammy nominations',
+      ko: 'Dracula, 그래미 2개 부문 후보',
+    },
+    description: {
+      es: 'El remix de Jennie y Tame Impala opta a Grabación del Año y a Mejor Interpretación Pop de Dúo o Grupo.',
+      en: 'The remix by Jennie and Tame Impala is up for Record of the Year and Best Pop Duo/Group Performance.',
+      ko: '제니와 테임 임팔라의 리믹스가 올해의 레코드와 베스트 팝 듀오/그룹 퍼포먼스 후보에 올랐습니다.',
+    },
+  },
+  {
+    date: day('2026-11-16'),
+    category: 'OTHER',
+    importance: 4,
+    datePrecision: 'day',
+    verified: true,
+    source:
+      'The Korea Herald — https://www.koreaherald.com/article/10939874. Korea JoongAng Daily — https://www.koreajoongangdaily.com/entertainment/blackpink-absent-from-ygs-latest-exclusive-contract-list-for-q3/12975680. El hito recoge lo que YG publicó y declaró, sin interpretarlo. Consultado 2026-11-21.',
+    title: {
+      es: 'YG dice que las actividades de grupo siguen en conversaciones',
+      en: 'YG says group activities are still under discussion',
+      ko: 'YG, 그룹 활동 논의 중이라고 발표',
+    },
+    description: {
+      es: 'El informe trimestral de YG Entertainment no incluye a BLACKPINK entre sus contratos en exclusiva. La agencia declara que las integrantes están con su carrera individual y que las actividades de grupo se siguen hablando.',
+      en: 'The YG Entertainment quarterly report leaves BLACKPINK off its exclusive-contract list. The agency says the members are pursuing individual work while group activities remain under discussion.',
+      ko: 'YG엔터테인먼트 분기 보고서의 전속 계약 아티스트 명단에 BLACKPINK가 포함되지 않았습니다. YG는 멤버들이 개인 활동 중이며 그룹 활동에 관한 논의가 이어지고 있다고 밝혔습니다.',
+    },
+  },
+  {
+    date: day('2026-11-18'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'lisa',
+    verified: true,
+    source:
+      'Wikipedia, Leave with Me — https://en.wikipedia.org/wiki/Leave_with_Me. Consultado 2026-11-21.',
+    title: {
+      es: 'Lisa publica Leave With Me',
+      en: 'Lisa releases Leave With Me',
+      ko: '리사, Leave With Me 발표',
+    },
+    description: {
+      es: 'Balada para los créditos finales del documental Always Lalisa, publicada el día en que llegó a YouTube Premium.',
+      en: 'Ballad for the closing credits of the documentary Always Lalisa, released the day it reached YouTube Premium.',
+      ko: '다큐멘터리 「Always Lalisa」의 엔딩 크레디트 곡으로, YouTube 프리미엄 공개일에 발표된 발라드입니다.',
+    },
+  },
+  {
+    date: day('2026-11-20'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'jennie',
+    verified: true,
+    source:
+      'Wikipedia, Grand Theft Auto VI: The Album — https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI:_The_Album. Consultado 2026-11-21.',
+    title: {
+      es: 'Jennie canta Power Trip para Grand Theft Auto VI',
+      en: 'Jennie sings Power Trip for Grand Theft Auto VI',
+      ko: '제니, Grand Theft Auto VI 수록곡 Power Trip 발표',
+    },
+    description: {
+      es: 'Pista 21 de las 34 que tiene la banda sonora del videojuego.',
+      en: 'Track 21 of the 34 on the soundtrack of the video game.',
+      ko: '총 34곡이 수록된 게임 사운드트랙의 21번 트랙입니다.',
+    },
+  },
+  {
+    date: day('2026-11-20'),
+    category: 'SOLO',
+    importance: 3,
+    datePrecision: 'day',
+    memberSlug: 'jisoo',
+    verified: true,
+    source:
+      'Wikipedia, Sun Showers — https://en.wikipedia.org/wiki/Sun_Showers. Consultado 2026-11-21.',
+    title: {
+      es: 'Jisoo publica Sun Showers',
+      en: 'Jisoo releases Sun Showers',
+      ko: '지수, Sun Showers 발표',
+    },
+    description: {
+      es: 'Adelanto de la banda sonora de The Angry Birds Movie 3.',
+      en: 'The lead single from the soundtrack of The Angry Birds Movie 3.',
+      ko: '「The Angry Birds Movie 3」 사운드트랙의 리드 싱글입니다.',
     },
   },
 ];
