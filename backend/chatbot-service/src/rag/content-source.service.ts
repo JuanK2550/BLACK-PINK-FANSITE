@@ -73,11 +73,15 @@ export class ContentSourceService {
     const failed: string[] = [];
     this.failures.set(locale, failed);
 
+    // Nombre de cada integrante por slug, para que hitos y curiosidades digan de quién son.
+    const roster = await this.get<{ slug: string; stageName: string }[]>(`/api/v1/members`, locale);
+    const names = new Map((roster ?? []).map((member) => [member.slug, member.stageName]));
+
     const parts = await Promise.all([
       this.members(locale),
       this.albums(locale),
-      this.timeline(locale),
-      this.trivia(locale),
+      this.timeline(locale, names),
+      this.trivia(locale, names),
       this.awards(locale),
     ]);
 
@@ -167,6 +171,7 @@ export class ContentSourceService {
           sourcePath: `/integrantes/${member.slug}`,
           text: [
             `${work.title}, ${work.formatLabel ?? 'lanzamiento'} de ${member.stageName}, publicado el ${work.releaseDate}.`,
+            `Es trabajo en solitario de ${member.stageName}, no un disco del grupo.`,
             work.description ?? '',
             canciones ? `Canciones: ${canciones}.` : '',
           ]
@@ -214,6 +219,9 @@ export class ContentSourceService {
         sourcePath: `/discografia/${album.slug}`,
         text: [
           `${album.title} (${album.formatLabel ?? album.type}), publicado el ${album.releaseDate}.`,
+          album.type === 'COLLABORATION'
+            ? 'Es una cancion de otra artista en la que participa BLACKPINK como grupo.'
+            : 'Es un lanzamiento de BLACKPINK como grupo, no de una integrante en solitario.',
           album.label ? `Sello: ${album.label}.` : '',
           album.description ?? '',
           album.tracks.length > 0
@@ -233,38 +241,59 @@ export class ContentSourceService {
     return items;
   }
 
-  private async timeline(locale: Locale): Promise<SourceItem[]> {
-    const events = await this.get<
-      {
-        id: string;
-        date: string;
-        datePrecision: string;
-        title: string;
-        description: string | null;
-      }[]
-    >(`/api/v1/timeline`, locale, { limit: '60' });
+  private async timeline(locale: Locale, names: Map<string, string>): Promise<SourceItem[]> {
+    const events = await this.getAll<{
+      id: string;
+      date: string;
+      datePrecision: string;
+      title: string;
+      description: string | null;
+      memberSlug: string | null;
+    }>(`/api/v1/timeline`, locale);
 
-    return (events ?? []).map((event) => ({
+    return events.map((event) => ({
       key: `timeline:${event.id}`,
       sourceLabel: label(locale, 'timeline'),
       sourcePath: '/cronologia',
-      text: `${formatDate(event.date, event.datePrecision)}: ${event.title}. ${event.description ?? ''}`.trim(),
+      text: [
+        `${formatDate(event.date, event.datePrecision)}: ${event.title}.`,
+        event.description ?? '',
+        whose(event.memberSlug, names, 'Hito'),
+      ]
+        .filter(Boolean)
+        .join(' '),
     }));
   }
 
-  private async trivia(locale: Locale): Promise<SourceItem[]> {
-    const facts = await this.get<{ id: string; category: string; content: string }[]>(
-      `/api/v1/trivia`,
-      locale,
-      { limit: '80' },
-    );
+  private async trivia(locale: Locale, names: Map<string, string>): Promise<SourceItem[]> {
+    const facts = await this.getAll<{
+      id: string;
+      category: string;
+      content: string;
+      memberSlug: string | null;
+    }>(`/api/v1/trivia`, locale);
 
-    return (facts ?? []).map((fact) => ({
+    return facts.map((fact) => ({
       key: `trivia:${fact.id}`,
       sourceLabel: label(locale, 'trivia'),
       sourcePath: '/curiosidades',
-      text: fact.content,
+      text: [fact.content, whose(fact.memberSlug, names, 'Dato')].filter(Boolean).join(' '),
     }));
+  }
+
+  // Todas las páginas: con un límite fijo, lo más reciente de la cronología se quedaba fuera.
+  private async getAll<T>(path: string, locale: Locale): Promise<T[]> {
+    const items: T[] = [];
+    for (let page = 1; page <= MAX_PAGES; page += 1) {
+      const batch = await this.get<T[]>(path, locale, {
+        limit: String(PAGE_SIZE),
+        page: String(page),
+      });
+      if (!batch) break;
+      items.push(...batch);
+      if (batch.length < PAGE_SIZE) break;
+    }
+    return items;
   }
 
   private async awards(locale: Locale): Promise<SourceItem[]> {
@@ -346,6 +375,13 @@ export class ContentSourceService {
 }
 
 const GET_ATTEMPTS = 2;
+const PAGE_SIZE = 100;
+const MAX_PAGES = 10;
+
+function whose(slug: string | null, names: Map<string, string>, noun: string): string {
+  const name = slug ? names.get(slug) : undefined;
+  return name ? `(${noun} de ${name}.)` : `(${noun} del grupo.)`;
+}
 const RETRY_PAUSE_MS = 500;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

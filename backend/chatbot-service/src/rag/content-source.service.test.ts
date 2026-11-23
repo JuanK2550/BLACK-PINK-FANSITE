@@ -136,6 +136,45 @@ describe('ContentSourceService', () => {
     }
   });
 
+  it('lee TODAS las paginas de la cronologia y dice de quien es cada hito', async () => {
+    const hito = (n: number, memberSlug: string | null) => ({
+      id: `h${n}`,
+      date: '2026-10-23',
+      datePrecision: 'day',
+      title: `Hito ${n}`,
+      description: null,
+      memberSlug,
+    });
+    fetchMock.mockImplementation((input: URL | string) => {
+      const url = new URL(String(input));
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const payload =
+        url.pathname === '/api/v1/members'
+          ? [{ slug: 'lisa', stageName: 'LISA' }]
+          : url.pathname === '/api/v1/members/lisa'
+            ? { slug: 'lisa', stageName: 'LISA', soloWorks: [], trivia: [] }
+            : url.pathname === '/api/v1/timeline'
+              ? page === 1
+                ? Array.from({ length: 100 }, (_, i) => hito(i, null))
+                : [hito(100, 'lisa')]
+              : [];
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ data: payload }),
+      } as unknown as Response);
+    });
+
+    const service = new ContentSourceService(
+      configWith({ CONTENT_SERVICE_URL: 'http://content.test' }),
+    );
+    const items = (await service.collect('es')).filter((i) => i.key.startsWith('timeline:'));
+
+    expect(items).toHaveLength(101);
+    expect(items.at(-1)?.text).toContain('(Hito de LISA.)');
+    expect(items[0]?.text).toContain('(Hito del grupo.)');
+  });
+
   it('usa la clave interna para no chocar con el limite por IP', async () => {
     respondWith([]);
 
