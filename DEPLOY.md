@@ -223,9 +223,15 @@ Cuando la web esté publicada (paso 10), añade un segundo monitor con
 
 ---
 
-## 9. Cargar el contenido (una sola vez, desde tu PC)
+## 9. Cargar el contenido
 
-Las migraciones ya las aplicó Render. Falta el contenido. Desde la carpeta del proyecto:
+**Ya no hace falta hacerlo a mano.** Al arrancar, Render carga el contenido del repositorio en
+Neon, borra las filas que sobran y vacía la caché de Upstash, y solo cuando el contenido ha
+cambiado desde el arranque anterior: la huella se guarda en Redis (`deploy:seed-fingerprint`).
+En los registros de Render aparece como «Contenido cargado» o «El contenido no ha cambiado».
+Para desactivarlo, `SEED_ON_START=false` en las variables del servicio.
+
+Si alguna vez hiciera falta lanzarlo desde tu PC, desde la carpeta del proyecto:
 
 ```powershell
 $env:DATABASE_URL_CONTENT = "<directa de Neon>&schema=content"
@@ -378,7 +384,7 @@ sin IP y sin grabar sesiones. Sin DSN no se carga nada de Sentry.
 | Código de la web | `git push` → CI en verde → Vercel publica |
 | Código de un servicio | `git push` → CI en verde → Render reconstruye la API (~10 min) |
 | Una migración de Prisma | Nada: se aplica al arrancar |
-| Contenido (`seed-data/`) | `git push`, repite el paso 9, vacía la caché (Upstash → pestaña **CLI** → `FLUSHDB`) y *Restart service* en Render. Las páginas se refrescan en menos de una hora, o al momento con *Actions → Refresco de contenido → Run workflow* |
+| Contenido (`seed-data/`) | `git push`. Render despliega, carga el contenido y vacía la caché solo (paso 9), y PINKY reindexa al arrancar. Las páginas se refrescan en menos de una hora, o al momento con *Actions → Refresco de contenido → Run workflow* |
 
 ### Registros
 

@@ -15,7 +15,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", "prisma/*.bundle.cjs", ".next/**", "!.next/cache/**"]
     },
     "dev": {
       "dependsOn": ["^build"],

@@ -26,3 +26,6 @@ test-results/
 playwright-report/
 lighthouse-informes/
 .lighthouseci/
+
+# Seed empaquetado
+**/prisma/*.bundle.cjs

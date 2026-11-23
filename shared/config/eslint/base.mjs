@@ -15,6 +15,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/*.d.ts',
       '**/prisma/generated/**',
+      '**/prisma/*.bundle.cjs',
     ],
   },
   js.configs.recommended,

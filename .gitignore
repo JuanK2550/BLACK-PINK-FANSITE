@@ -44,3 +44,6 @@ playwright-report/
 blob-report/
 .lighthouseci/
 lighthouse-informes/
+
+# Seed empaquetado para producción (se genera en el build)
+**/prisma/*.bundle.cjs
